@@ -1,0 +1,53 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet author="nazar (generated)" id="create-user-location-table">
+        <createTable tableName="user_location">
+            <column defaultValueComputed="uuid_generate_v4()" name="ul_id" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_location"/>
+            </column>
+            <column name="ul_country" type="VARCHAR(100)"/>
+            <column name="ul_city" type="VARCHAR(100)"/>
+            <column name="ul_street" type="VARCHAR(120)"/>
+            <column name="ul_house_number" type="VARCHAR(5)"/>
+            <column name="ul_additional" type="VARCHAR(255)"/>
+            <column name="ul_latitude" type="numeric(9, 7)"/>
+            <column name="ul_longitude" type="numeric(9, 7)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="nazar (generated)" id="create-users-table">
+        <createTable tableName="users">
+            <column defaultValueComputed="uuid_generate_v4()" name="u_id" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_users"/>
+            </column>
+            <column name="u_email" type="VARCHAR(240)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="u_password" type="VARCHAR(170)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="nazar (generated)" id="create-user-details-table">
+        <createTable tableName="user_details">
+            <column defaultValueComputed="uuid_generate_v4()" name="ud_id" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_user_details"/>
+            </column>
+            <column name="ud_name" type="VARCHAR(40)"/>
+            <column name="ud_user_role" type="USER_ROLE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ud_location_id" type="UUID"/>
+            <column name="ud_user_id" type="UUID"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="nazar (generated)" id="set-users-foreign-key-1">
+        <addForeignKeyConstraint baseColumnNames="ud_location_id" baseTableName="user_details" constraintName="fk_user_details_ud_location_id" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="ul_id" referencedTableName="user_location" validate="true"/>
+    </changeSet>
+    <changeSet author="nazar (generated)" id="set-users-foreign-key-2">
+        <addForeignKeyConstraint baseColumnNames="ud_user_id" baseTableName="user_details" constraintName="fk_user_details_ud_user_id" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="u_id" referencedTableName="users" validate="true"/>
+    </changeSet>
+</databaseChangeLog>
