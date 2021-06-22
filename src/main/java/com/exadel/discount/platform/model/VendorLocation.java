@@ -2,6 +2,7 @@ package com.exadel.discount.platform.model;
 
 import lombok.Data;
 import lombok.ToString;
+import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
@@ -13,21 +14,22 @@ import java.util.UUID;
 
 @Entity
 @Data
+@SQLDelete(sql = "UPDATE vendor_location SET vl_deleted=true WHERE vl_id=?")
 public class VendorLocation {
 
     @Id
     @Type(type = "pg-uuid")
-    @Column(name = "l_id")
+    @Column(name = "vl_id")
     private UUID id;
     @NotBlank
     @Size(min = 3, max = 60)
-    @Column(name = "l_country")
+    @Column(name = "vl_country")
     private String country;
     @Size(min = 2, max = 50)
-    @Column(name = "l_city")
+    @Column(name = "vl_city")
     private String city;
     @Size(min = 2, max = 50)
-    @Column(name = "l_address_line")
+    @Column(name = "vl_address_line")
     private String addressLine;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -38,8 +40,9 @@ public class VendorLocation {
     @ManyToMany(mappedBy = "locations")
     @ToString.Exclude
     private List<Discount> discounts;
-    @Column(name = "l_deleted")
+    @Column(name = "vl_deleted")
     private boolean deleted;
     /*private int latitude;
     private int longitude;*/
+
 }

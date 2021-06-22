@@ -21,4 +21,6 @@ public class VendorLocationDto {
     private boolean deleted;
     @ToString.Exclude
     private List<DiscountDto> discounts;
+    /*private int latitude;
+    private int longitude;*/
 }

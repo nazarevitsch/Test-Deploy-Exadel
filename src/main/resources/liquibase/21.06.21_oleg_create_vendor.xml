@@ -1,0 +1,22 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+
+    <changeSet id="create_vendor_table" author="oleg">
+        <createTable tableName="vendor">
+            <column defaultValueComputed="uuid_generate_v4()" name="v_id" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_vendor"/>
+            </column>
+            <column name="v_name" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="v_description" type="varchar(256)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="v_email" type="varchar(100)"/>
+            <column name="v_image" type="varchar(256)"/>
+            <column name="v_deleted" type="boolean"/>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

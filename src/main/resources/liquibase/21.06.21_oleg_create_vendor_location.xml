@@ -1,0 +1,32 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+
+    <changeSet id="create_vendor_location_table" author="oleg">
+        <createTable tableName="vendor_location">
+            <column defaultValueComputed="uuid_generate_v4()" name="vl_id" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_vendor_location"/>
+            </column>
+            <column name="vl_country" type="varchar(60)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="vl_city" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="vl_address_line" type="varchar(50)"/>
+            <column name="vendor_id" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+            <column name="vl_deleted" type="boolean"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="fk_vendor_vendor_location" author="oleg">
+        <addForeignKeyConstraint baseTableName="vendor_location"
+                                   baseColumnNames="vendor_id"
+                                   constraintName="fk_vendor_location_vendor_id"
+                                   referencedTableName="vendor"
+                                   referencedColumnNames="v_id"/>
+    </changeSet>
+</databaseChangeLog>
