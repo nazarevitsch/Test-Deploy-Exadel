@@ -1,0 +1,1 @@
+delete from users where u_email = 'test_user@gmail.com';

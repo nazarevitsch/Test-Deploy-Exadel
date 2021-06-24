@@ -5,20 +5,16 @@
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd"
 >
-    <changeSet author="nazar" id="add-test-user1">
-        <insert tableName="users" >
-            <column name="u_email" value="testuser1@gmail.com"/>
-            <column name="u_password" value="$2a$10$HAGWAC6R4ZUFheJZGHptxuEtkqYt3tLr/24eO1sO4L.SYScYpLwb."/>
-            <column name="u_user_role" value="ADMINISTRATOR"/>
+    <changeSet id="insert_user_details_1" author="nazar">
+        <insert tableName="user_details">
+            <column name="ud_name" value="Test1"/>
+            <column name="ud_user_id" valueComputed="(select u_id from users where u_email = 'testuser1@gmail.com')" />
         </insert>
     </changeSet>
-    <changeSet author="nazar" id="add-test-user2">
-        <insert tableName="users" >
-            <column name="u_email" value="testuser2@gmail.com"/>
-            <column name="u_password" value="$2a$10$/scX/6pvMPztylmCY3wNk.iUmd6ADSZ7/XEbfQkHiyFrIDZco3kJW"/>
-            <column name="u_user_role" value="USER"/>
+    <changeSet id="insert_user_details_2" author="nazar">
+        <insert tableName="user_details">
+            <column name="ud_name" value="Test2"/>
+            <column name="ud_user_id" valueComputed="(select u_id from users where u_email = 'testuser2@gmail.com')" />
         </insert>
-
     </changeSet>
-
 </databaseChangeLog>

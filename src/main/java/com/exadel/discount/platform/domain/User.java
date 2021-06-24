@@ -1,12 +1,11 @@
 package com.exadel.discount.platform.domain;
 
 import lombok.Data;
+import lombok.ToString;
+import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.UUID;
 
 @Data
@@ -20,20 +19,18 @@ public class User {
 
     @Id
     @Column(name = "u_id")
-    @org.hibernate.annotations.Type(type = "pg-uuid")
+    @Type(type = "pg-uuid")
     private UUID id;
 
     @Column(name = "u_email")
     private String email;
 
+    @ToString.Exclude
     @Column(name = "u_password")
     private String password;
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", email='" + email + '\'' +
-                '}';
-    }
+    @Enumerated(EnumType.STRING)
+    @Column(name = "u_user_role")
+    @Type(type = "pgsql_enum")
+    private UserRole userRole;
 }

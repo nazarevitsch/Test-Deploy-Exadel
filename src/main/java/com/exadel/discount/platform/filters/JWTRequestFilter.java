@@ -2,6 +2,7 @@ package com.exadel.discount.platform.filters;
 
 import com.exadel.discount.platform.config.JWTUtil;
 import com.exadel.discount.platform.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -31,6 +32,7 @@ public class JWTRequestFilter extends OncePerRequestFilter {
 
         String jwt = null;
         String username = null;
+
 
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             jwt = authorizationHeader.substring(7);

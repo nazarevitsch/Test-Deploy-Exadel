@@ -7,6 +7,7 @@ import com.exadel.discount.platform.domain.User;
 import com.exadel.discount.platform.repository.UserRepository;
 import com.exadel.discount.platform.service.dto.MyUserDetails;
 import com.exadel.discount.platform.service.dto.UserLoginDTO;
+import com.fasterxml.jackson.core.JsonParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,19 +26,18 @@ public class UserService implements UserDetailsService {
     private UserRepository userRepository;
 
     @Autowired
-    private AuthenticationManager authenticationManager;
-
-    @Autowired
     private JWTUtil jwtUtil;
 
-    public ResponseEntity<?> login(UserLoginDTO userLogin){
-        try {
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userLogin.getEmail(), userLogin.getPassword()));
-        } catch (BadCredentialsException e) {
-            return new ResponseEntity<Message>(new Message("There isn't user with such password or email!"), HttpStatus.UNAUTHORIZED);
-        }
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+    public JWTResponse login(UserLoginDTO userLogin){
         UserDetails userDetails = loadUserByUsername(userLogin.getEmail());
-        return ResponseEntity.ok(new JWTResponse("Bearer " + jwtUtil.generateTOKEN(userDetails)));
+        return new JWTResponse("Bearer " + jwtUtil.generateTOKEN(userDetails));
+    }
+
+    public void authenticate(UserLoginDTO userLogin) throws BadCredentialsException{
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userLogin.getEmail(), userLogin.getPassword()));
     }
 
     public User findUserByEmail(String email){

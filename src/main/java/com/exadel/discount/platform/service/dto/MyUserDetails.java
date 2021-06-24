@@ -1,6 +1,7 @@
 package com.exadel.discount.platform.service.dto;
 
 import com.exadel.discount.platform.domain.User;
+import com.exadel.discount.platform.domain.UserRole;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -51,5 +52,9 @@ public class MyUserDetails implements UserDetails {
 
     public UUID getUserId(){
         return user.getId();
+    }
+
+    public UserRole getUserRole(){
+        return user.getUserRole();
     }
 }

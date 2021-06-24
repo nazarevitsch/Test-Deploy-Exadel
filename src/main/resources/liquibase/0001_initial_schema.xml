@@ -3,7 +3,18 @@
                    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
                    xmlns:pro="http://www.liquibase.org/xml/ns/pro"
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd"
+>
+    <changeSet id="create_enum_type_user_role" author="nazar">
+        <sql>
+            create type user_role as enum('USER', 'ADMINISTRATOR')
+        </sql>
+    </changeSet>
+    <changeSet id="create-uuid-extension" author="nazar">
+        <sql>
+            create extension if not exists "uuid-ossp"
+        </sql>
+    </changeSet>
     <changeSet author="nazar (generated)" id="create-user-location-table">
         <createTable tableName="user_location">
             <column defaultValueComputed="uuid_generate_v4()" name="ul_id" type="UUID">
@@ -27,6 +38,9 @@
                 <constraints nullable="false" unique="true"/>
             </column>
             <column name="u_password" type="VARCHAR(170)"/>
+            <column name="u_user_role" type="USER_ROLE">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
     </changeSet>
 
@@ -36,9 +50,6 @@
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_user_details"/>
             </column>
             <column name="ud_name" type="VARCHAR(40)"/>
-            <column name="ud_user_role" type="USER_ROLE">
-                <constraints nullable="false"/>
-            </column>
             <column name="ud_location_id" type="UUID"/>
             <column name="ud_user_id" type="UUID"/>
         </createTable>

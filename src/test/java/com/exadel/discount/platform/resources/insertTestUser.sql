@@ -1,0 +1,1 @@
+insert into users(u_email, u_password, u_user_role) values ('test_user@gmail.com', '$2a$10$Qs66Rk.r4fVYRdeOscT/AeUkxdOOaLsOU75nU7vFi1SiZXLyaVRg2', 'USER');

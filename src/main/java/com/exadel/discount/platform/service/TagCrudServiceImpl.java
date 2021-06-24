@@ -1,7 +1,5 @@
 package com.exadel.discount.platform.service;
 
-
-
 import com.exadel.discount.platform.exception.NotFoundException;
 import com.exadel.discount.platform.mapper.TagMapper;
 import com.exadel.discount.platform.model.Tag;
@@ -26,18 +24,18 @@ public class TagCrudServiceImpl implements TagCrudService {
     private final TagMapper mapper;
 
     @Override
-    public List<TagDto> getAll() {
-        return mapper.mapList(tagRepository.findAll(),TagDto.class);
+    public List<TagResponseDto> getAll() {
+        return mapper.mapList(tagRepository.findAll(), TagResponseDto.class);
     }
 
     @Override
-    public TagDto save(TagDto tagDto) {
+    public TagResponseDto save(TagDto tagDto) {
         Tag savedTag = tagRepository.save(mapper.dtoToEntity(tagDto));
         return mapper.entityToResponseDto(savedTag);
     }
 
     @Override
-    public TagDto getById(UUID id) {
+    public TagResponseDto getById(UUID id) {
         Tag tag = tagRepository
                 .findById(id)
                 .orElseThrow(() -> new NotFoundException("Tag with id " + id +

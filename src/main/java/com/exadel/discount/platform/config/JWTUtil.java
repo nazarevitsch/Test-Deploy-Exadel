@@ -1,5 +1,6 @@
 package com.exadel.discount.platform.config;
 
+import com.exadel.discount.platform.domain.UserRole;
 import com.exadel.discount.platform.service.dto.MyUserDetails;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -46,6 +47,7 @@ public class JWTUtil {
     public String generateTOKEN(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("userId", ((MyUserDetails)userDetails).getUserId());
+        claims.put("admin", ((MyUserDetails)userDetails).getUserRole() == UserRole.ADMINISTRATOR);
         return createToken(claims, userDetails.getUsername());
     }
 

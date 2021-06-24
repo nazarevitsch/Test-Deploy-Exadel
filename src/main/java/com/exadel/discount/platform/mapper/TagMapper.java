@@ -29,7 +29,7 @@ public class TagMapper {
         modelMapper.map(tagDto, tag);
     }
 
-    public List<TagDto> mapList(List<Tag> source, Class<TagDto> targetClass) {
+    public List<TagDto> mapList(List<Tag> source, Class<TagResponseDto> targetClass) {
         return source
                 .stream()
                 .map(element -> modelMapper.map(element, targetClass))
