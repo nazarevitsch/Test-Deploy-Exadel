@@ -4,6 +4,7 @@ import com.exadel.discount.platform.converter.VendorMapper;
 import com.exadel.discount.platform.exception.NotFoundException;
 import com.exadel.discount.platform.model.Vendor;
 import com.exadel.discount.platform.model.dto.VendorDto;
+import com.exadel.discount.platform.model.dto.VendorResponseDto;
 import com.exadel.discount.platform.repository.VendorRepository;
 import com.exadel.discount.platform.service.interfaces.VendorService;
 import lombok.RequiredArgsConstructor;
@@ -20,34 +21,34 @@ public class VendorServiceImpl implements VendorService {
 
 
     @Override
-    public List<VendorDto> getAll() {
-        return mapper.mapList(vendorRepository.findAll(), VendorDto.class);
+    public List<VendorResponseDto> getAll() {
+        return mapper.mapList(vendorRepository.findAll(), VendorResponseDto.class);
     }
 
     @Override
-    public VendorDto save(VendorDto vendorDto) {
+    public VendorResponseDto save(VendorDto vendorDto) {
         Vendor vendor = vendorRepository.save(mapper.dtoToEntity(vendorDto));
-        return mapper.entityToDto(vendor);
+        return mapper.entityToResponseDto(vendor);
     }
 
     @Override
-    public VendorDto getById(UUID id) {
+    public VendorResponseDto getById(UUID id) {
         Vendor vendor = vendorRepository
                 .findById(id)
                 .orElseThrow(() -> new NotFoundException("Vendor with id " + id +
                         " was not found"));
-        return mapper.entityToDto(vendor);
+        return mapper.entityToResponseDto(vendor);
     }
 
     @Override
-    public VendorDto update(UUID id, VendorDto vendorDto) {
+    public VendorResponseDto update(UUID id, VendorDto vendorDto) {
         Vendor vendor = vendorRepository
                 .findById(id)
                 .orElseThrow(() -> new NotFoundException("Vendor with id " + id +
                         " was not found"));
-        vendor = mapper.dtoToEntity(vendorDto);
+        mapper.updateVendor(vendorDto, vendor);
         vendor = vendorRepository.save(vendor);
-        return mapper.entityToDto(vendor);
+        return mapper.entityToResponseDto(vendor);
     }
 
     @Override
