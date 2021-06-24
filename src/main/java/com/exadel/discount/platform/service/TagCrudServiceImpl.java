@@ -1,5 +1,7 @@
 package com.exadel.discount.platform.service;
 
+
+
 import com.exadel.discount.platform.exception.NotFoundException;
 import com.exadel.discount.platform.mapper.TagMapper;
 import com.exadel.discount.platform.model.Tag;
@@ -25,7 +27,7 @@ public class TagCrudServiceImpl implements TagCrudService {
 
     @Override
     public List<TagResponseDto> getAll() {
-        return mapper.mapList(tagRepository.findAll(), TagResponseDto.class);
+        return mapper.mapList(tagRepository.findAll(),TagResponseDto.class);
     }
 
     @Override

@@ -2,9 +2,9 @@ package com.exadel.discount.platform.mapper;
 
 import com.exadel.discount.platform.model.Tag;
 import com.exadel.discount.platform.model.dto.TagDto;
+import com.exadel.discount.platform.model.dto.TagResponseDto;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
-import com.exadel.discount.platform.model.dto.TagResponseDto;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,6 +15,10 @@ public class TagMapper {
 
     public TagMapper() {
         modelMapper = new ModelMapper();
+    }
+
+    public TagDto entityToDto(Tag tag) {
+        return modelMapper.map(tag, TagDto.class);
     }
 
     public TagResponseDto entityToResponseDto(Tag tag) {
@@ -29,7 +33,7 @@ public class TagMapper {
         modelMapper.map(tagDto, tag);
     }
 
-    public List<TagDto> mapList(List<Tag> source, Class<TagResponseDto> targetClass) {
+    public <S, T> List<T> mapList(List<S> source, Class<T> targetClass) {
         return source
                 .stream()
                 .map(element -> modelMapper.map(element, targetClass))

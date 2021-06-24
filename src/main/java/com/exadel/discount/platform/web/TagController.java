@@ -24,32 +24,31 @@ public class TagController {
     private final TagCrudServiceImpl tagCrudService;
 
     @GetMapping(produces = APPLICATION_JSON_VALUE)
-    @PreAuthorize("hashRole('ADMINISTRATOR','USER')")
-    public ResponseEntity<List<TagDto>> getAll() {
+    @PreAuthorize("hasAnyRole('ADMINISTRATOR','USER')")
+    public ResponseEntity<List<TagResponseDto>> getAll() {
         return new ResponseEntity<>(tagCrudService.getAll(), HttpStatus.OK);
     }
 
     @GetMapping(value = "/{id}", produces = APPLICATION_JSON_VALUE)
-    @PreAuthorize("hashRole('ADMINISTRATOR')")
-    public ResponseEntity<TagDto> getTagById(@PathVariable UUID id) {
-        TagDto tagDto = tagCrudService.getById(id);
-        return new ResponseEntity<>(tagDto, HttpStatus.OK);
+    @PreAuthorize("hasRole('ADMINISTRATOR')")
+    public ResponseEntity<TagResponseDto> getTagById(@PathVariable UUID id) {
+        return new ResponseEntity<>(tagCrudService.getById(id), HttpStatus.OK);
     }
 
     @PostMapping(
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    @PreAuthorize("hashRole('ADMINISTRATOR')")
-    public ResponseEntity<TagDto> createTag(@RequestBody TagDto tagDto) {
-        TagDto tagDtoCreated = tagCrudService.save(tagDto);
+    @PreAuthorize("hasRole('ADMINISTRATOR')")
+    public ResponseEntity<TagResponseDto> createTag(@RequestBody TagDto tagDto) {
+        TagResponseDto tagDtoCreated = tagCrudService.save(tagDto);
         return new ResponseEntity<>(tagDtoCreated, HttpStatus.CREATED);
     }
 
     @PutMapping(value = "/{id}",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hashRole('ADMINISTRATOR')")
+    @PreAuthorize("hasRole('ADMINISTRATOR')")
     public ResponseEntity<TagResponseDto> updateTag(@PathVariable UUID id,
                                                     @RequestBody TagDto tagDto) {
         TagResponseDto tagResponseDtoUpdate = tagCrudService.update(id, tagDto);
@@ -58,7 +57,7 @@ public class TagController {
 
     @DeleteMapping(value = "/{id}",
         produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hashRole('ADMINISTRATOR')")
+    @PreAuthorize("hasRole('ADMINISTRATOR')")
     public ResponseEntity<TagDto> sendToArchive(@PathVariable UUID id) throws NotFoundException {
         tagCrudService.toArchive(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
