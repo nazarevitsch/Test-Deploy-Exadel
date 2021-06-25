@@ -11,6 +11,7 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.InputStream;
 import java.util.Date;
@@ -36,11 +37,12 @@ public class AmazonService {
                 .build();
     }
 
-    public String uploadFile(String name, String extension, InputStream inputStream){
+    public String uploadFile(MultipartFile file) throws Exception{
+        String[] parts = file.getOriginalFilename().split("\\.");
         ObjectMetadata metadata = new ObjectMetadata();
-        name += (new Date().getTime()) + "." + extension;
+        String name = (new Date().getTime()) + "." + parts[parts.length - 1];
         metadata.addUserMetadata("discount", name);
-        PutObjectRequest putObjectRequest = new PutObjectRequest(awsBucketName, name, inputStream, metadata);
+        PutObjectRequest putObjectRequest = new PutObjectRequest(awsBucketName, name, file.getInputStream(), metadata);
         s3client.putObject(putObjectRequest.withCannedAcl(CannedAccessControlList.PublicRead));
         return s3client.getUrl(awsBucketName, name).toString();
     }
