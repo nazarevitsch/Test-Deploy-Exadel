@@ -7,27 +7,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
+@RequestMapping("/upload_image")
 @Slf4j
 public class ImagesController {
     @Autowired
     private AmazonService amazonService;
 
-    @PostMapping(value = "/upload_image",
+    @PostMapping(value = "/{name}",
             consumes = {MediaType.MULTIPART_FORM_DATA_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE} )
-    @PreAuthorize("hasAuthority('ADMINISTRATOR')")
-    public ResponseEntity<Message> upload(@RequestParam MultipartFile file){
-        try {
-            String link = amazonService.uploadFile(file);
-            log.debug("File was uploaded to  Amazon. Link:{" + link + "}");
-            return new ResponseEntity<>(new Message(link), HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(new Message("Image Storage is temporarily unavailable!"), HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<Message> upload(@PathVariable String name, @RequestParam MultipartFile file) throws Exception{
+        String[] parts = file.getOriginalFilename().split("\\.");
+        String link = amazonService.uploadFile(file.getName(), parts[parts.length - 1], file.getInputStream());
+        log.info(link);
+        return new ResponseEntity<Message>(new Message(link), HttpStatus.OK);
     }
 }
