@@ -8,7 +8,8 @@ import java.util.UUID;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class TagResponseDto extends TagDto {
+public class SubCategoryResponseDto extends SubCategoryDto {
     @NotNull
     private UUID id;
+    private boolean deleted;
 }

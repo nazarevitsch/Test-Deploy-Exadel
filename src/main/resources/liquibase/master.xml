@@ -10,4 +10,5 @@
     <include file="21.06.21_oleg_create_vendor.xml" relativeToChangelogFile="true"/>
     <include file="21.06.21_oleg_create_vendor_location.xml" relativeToChangelogFile="true"/>
     <include file="18.06.2021_andrii_create_tag_table.xml" relativeToChangelogFile="true"/>
+    <include file="25.06.2021_andrii_rename_tag_to_sub_category_add_column.xml" relativeToChangelogFile="true"/>
 </databaseChangeLog>

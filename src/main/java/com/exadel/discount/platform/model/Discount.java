@@ -25,11 +25,11 @@ public class Discount {
     private String name;
     @ManyToMany
     @JoinTable(
-            name = "discount_tag",
+            name = "discount_sub_category",
             joinColumns = @JoinColumn(name = "discount_id"),
-            inverseJoinColumns = @JoinColumn(name = "tag_id")
+            inverseJoinColumns = @JoinColumn(name = "sc_id")
     )
-    private List<Tag> tags;
+    private List<SubCategory> subCategories;
 
     @ManyToMany
     @JoinTable(

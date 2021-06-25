@@ -15,7 +15,7 @@ public class DiscountDto {
     @NotBlank
     @Size(min = 2, max = 50)
     private String name;
-    private List<TagDto> tags;
+    private List<SubCategoryDto> subCategories;
     @NotEmpty
     private List<VendorLocationDto> locations;
     private Vendor vendor;
