@@ -1,10 +1,12 @@
 package com.exadel.discount.platform.service;
 
 import com.exadel.discount.platform.domain.UserDetails;
+import com.exadel.discount.platform.exception.NotFoundException;
 import com.exadel.discount.platform.repository.UserDetailsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -14,6 +16,7 @@ public class UserDetailsService {
     private UserDetailsRepository userDetailsRepository;
 
     public UserDetails findUserDetailsByUserId(UUID userId) {
-        return userDetailsRepository.findUserDetailsByUserId(userId);
+        Optional<UserDetails> userDetails = Optional.of(userDetailsRepository.findUserDetailsByUserId(userId));
+        return userDetails.orElseThrow(()-> new NotFoundException(("User details wasn't found.")));
     }
 }

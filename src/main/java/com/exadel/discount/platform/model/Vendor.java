@@ -35,9 +35,9 @@ public class Vendor {
     @NotBlank
     @Column(name = "v_image")
     private String image;
-    @OneToMany(mappedBy = "vendor")
-    @ToString.Exclude
-    private List<Discount> discounts;
+//    @OneToMany(mappedBy = "vendor")
+//    @ToString.Exclude
+//    private List<Discount> discounts;
 
     @OneToMany(mappedBy = "vendor", cascade = CascadeType.REMOVE)
     @ToString.Exclude

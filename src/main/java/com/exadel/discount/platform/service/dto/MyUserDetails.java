@@ -3,9 +3,12 @@ package com.exadel.discount.platform.service.dto;
 import com.exadel.discount.platform.domain.User;
 import com.exadel.discount.platform.domain.UserRole;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 public class MyUserDetails implements UserDetails {
@@ -17,7 +20,9 @@ public class MyUserDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        List<GrantedAuthority> list = new ArrayList<>();
+        list.add(new SimpleGrantedAuthority(user.getUserRole().toString()));
+        return list;
     }
 
     @Override

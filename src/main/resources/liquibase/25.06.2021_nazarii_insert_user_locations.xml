@@ -1,0 +1,35 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd"
+>
+    <changeSet id="insert_user_location_1" author="nazarii">
+        <insert tableName="user_location">
+            <column name="ul_city" value="Vinnytsia"></column>
+            <column name="ul_country" value="Ukraine"></column>
+        </insert>
+    </changeSet>
+
+    <changeSet id="update_user_details_1" author="nazarii">
+        <update tableName="user_details">
+            <column name="ud_location_id" valueComputed="(select ul_id from user_location where ul_city = 'Vinnytsia')"></column>
+            <where>ud_user_id = (select u_id from user_details join users on user_details.ud_user_id = users.u_id where u_email = 'testuser1@gmail.com')</where>
+        </update>
+    </changeSet>
+
+    <changeSet id="insert_user_location_2" author="nazarii">
+        <insert tableName="user_location">
+            <column name="ul_city" value="Kyiv"></column>
+            <column name="ul_country" value="Ukraine"></column>
+        </insert>
+    </changeSet>
+
+    <changeSet id="update_user_details_2" author="nazarii">
+        <update tableName="user_details">
+            <column name="ud_location_id" valueComputed="(select ul_id from user_location where ul_city = 'Kyiv')"></column>
+            <where>ud_user_id = (select u_id from user_details join users on user_details.ud_user_id = users.u_id where u_email = 'testuser2@gmail.com')</where>
+        </update>
+    </changeSet>
+</databaseChangeLog>

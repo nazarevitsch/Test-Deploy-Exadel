@@ -41,11 +41,11 @@ public class UserController {
         try {
             userDetails = userService.loadUserByUsername(jwtUtil.extractUsername(token));
         } catch (Exception e) {
-            return new ResponseEntity<Message>(new Message("Token is invalid."), HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(new Message("Token is invalid."), HttpStatus.UNAUTHORIZED);
         }
         if (jwtUtil.validateToken(token, userDetails)) {
-            return new ResponseEntity<Message>(new Message("Token is valid."), HttpStatus.OK);
+            return new ResponseEntity<>(new Message("Token is valid."), HttpStatus.OK);
         }
-        return new ResponseEntity<Message>(new Message("Token is invalid."), HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(new Message("Token is invalid."), HttpStatus.UNAUTHORIZED);
     }
 }

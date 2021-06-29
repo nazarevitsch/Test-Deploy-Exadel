@@ -36,10 +36,10 @@ public class VendorLocation {
     @JoinColumn(name = "vendor_id")
     @NotNull
     private Vendor vendor;
-
-    @ManyToMany(mappedBy = "locations")
-    @ToString.Exclude
-    private List<Discount> discounts;
+//
+//    @ManyToMany(mappedBy = "locations")
+//    @ToString.Exclude
+//    private List<Discount> discounts;
     @Column(name = "vl_deleted")
     private boolean deleted;
     /*private int latitude;

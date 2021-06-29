@@ -19,9 +19,9 @@ public class UserDetails {
     @Column(name = "ud_name")
     private String name;
 
-    @Type(type = "pg-uuid")
-    @Column(name = "ud_location_id")
-    private UUID locationId;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "ud_location_id", referencedColumnName = "ul_id")
+    private UserLocation userLocation;
 
     @Column(name = "ud_user_id")
     @Type(type = "pg-uuid")
