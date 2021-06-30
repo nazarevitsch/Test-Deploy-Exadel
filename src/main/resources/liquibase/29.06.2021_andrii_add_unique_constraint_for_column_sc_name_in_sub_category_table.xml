@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd"
+>
+    <changeSet id="drop_primary_key_name_sub_category_pk_tag" author="andrii">
+        <preConditions onFail="MARK_RAN">
+            <primaryKeyExists primaryKeyName="pk_tag"
+                              tableName="sub_category"/>
+        </preConditions>
+        <dropPrimaryKey constraintName="pk_tag"
+                        schemaName="public"
+                        tableName="sub_category"/>
+    </changeSet>
+    <changeSet id="drop_primary_key_sub_category_index_pk_tag" author="andrii">
+        <preConditions onFail="MARK_RAN">
+            <indexExists indexName="pk_tag"
+                         tableName="sub_category"/>
+        </preConditions>
+        <dropIndex tableName="sub_category"
+                   indexName="pk_tag"/>
+    </changeSet>
+    <changeSet id="add_primary_key_sub_category" author="andrii">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <primaryKeyExists primaryKeyName="pk_sub_category"/>
+            </not>
+        </preConditions>
+        <addPrimaryKey tableName="sub_category" columnNames="sc_id" constraintName="pk_sub_category"/>
+    </changeSet>
+    <changeSet id="delete_duplicated_sub_category_sc_name" author="andrii">
+        <preConditions onFail="MARK_RAN">
+            <columnExists tableName="sub_category" columnName="sc_name"/>
+        </preConditions>
+        <sql>
+            DELETE FROM sub_category WHERE sc_id in (SELECT c1.sc_id FROM sub_category c1, sub_category c2 WHERE
+            c1.sc_id > c2.sc_id AND c1.sc_name = c2.sc_name);
+        </sql>
+    </changeSet>
+    <changeSet id="add_unique_constraint_to_sub_category_sc_name" author="andrii">
+        <preConditions onFail="MARK_RAN">
+            <columnExists tableName="sub_category" columnName="sc_name"/>
+        </preConditions>
+        <addUniqueConstraint tableName="sub_category" columnNames="sc_name" constraintName="uc_sub_category_sc_name"/>
+    </changeSet>
+</databaseChangeLog>
