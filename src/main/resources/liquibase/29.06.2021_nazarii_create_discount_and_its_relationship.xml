@@ -1,0 +1,43 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd"
+>
+    <changeSet id="create_discount_table" author="nazarii">
+        <createTable tableName="discount">
+            <column defaultValueComputed="uuid_generate_v4()" name="d_id" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_discount"/>
+            </column>
+            <column name="d_name" type="VARCHAR(50)"/>
+            <column name="d_vendor_id" type="UUID"/>
+            <column name="d_full_description" type="text"/>
+            <column name="d_is_online" type="boolean"/>
+            <column name="d_is_deleted" type="boolean"/>
+            <column name="d_image_link" type="VARCHAR(200)"/>
+            <column name="d_start_date" type="timestamptz"/>
+            <column name="d_end_date" type="timestamptz"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="create_discount_sub_category_table" author="nazarii">
+        <createTable tableName="discount_sub_category">
+            <column defaultValueComputed="uuid_generate_v4()" name="dsc_id" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_discount_sub_category"/>
+            </column>
+            <column name="dsc_discount_id" type="UUID"/>
+            <column name="dsc_sub_category_id" type="UUID"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="create_discount_vendor_location_table" author="nazarii">
+        <createTable tableName="discount_vendor_location">
+            <column defaultValueComputed="uuid_generate_v4()" name="dvl_id" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_discount_vendor_location"/>
+            </column>
+            <column name="dvl_discount_id" type="UUID"/>
+            <column name="dvl_vendor_location_id" type="UUID"/>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

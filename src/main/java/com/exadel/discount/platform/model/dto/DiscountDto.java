@@ -1,13 +1,13 @@
 package com.exadel.discount.platform.model.dto;
 
-import com.exadel.discount.platform.model.Vendor;
+import com.exadel.discount.platform.domain.Discount;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Data
 public class DiscountDto {
@@ -15,17 +15,37 @@ public class DiscountDto {
     @NotBlank
     @Size(min = 2, max = 50)
     private String name;
-    private List<SubCategoryDto> subCategories;
-    @NotEmpty
-    private List<VendorLocationDto> locations;
-    private Vendor vendor;
-    @Size(min = 50, max = 200)
+
+    private List<UUID> subCategories;
+
+    private List<UUID> categories;
+
+    private List<UUID> locations;
+
+    private UUID vendorId;
+
+    @Size(min = 50, max = 2000)
     private String fullDescription;
-    private boolean isActive;
+
     private boolean isOnline;
-    @Size(min = 2, max = 80)
+
     private String imageLink;
+
     private ZonedDateTime startDate;
+
     private ZonedDateTime endDate;
-    private boolean deleted;
+
+    public Discount getDiscount(){
+        Discount discount = new Discount();
+        discount.setName(this.name);
+        discount.setFullDescription(this.fullDescription);
+        discount.setOnline(this.isOnline);
+        discount.setEndDate(this.endDate);
+        discount.setStartDate(this.startDate);
+        discount.setImageLink(this.imageLink);
+        discount.setVendorId(this.vendorId);
+
+        discount.setDeleted(false);
+        return discount;
+    }
 }

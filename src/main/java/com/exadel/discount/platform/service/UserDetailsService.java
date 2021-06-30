@@ -17,6 +17,6 @@ public class UserDetailsService {
 
     public UserDetails findUserDetailsByUserId(UUID userId) {
         Optional<UserDetails> userDetails = Optional.of(userDetailsRepository.findUserDetailsByUserId(userId));
-        return userDetails.orElseThrow(()-> new NotFoundException(("User details wasn't found.")));
+        return userDetails.orElseThrow(()-> new NotFoundException("User details wasn't found."));
     }
 }
