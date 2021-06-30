@@ -1,6 +1,7 @@
 package com.exadel.discount.platform.service;
 
 import com.exadel.discount.platform.converter.VendorMapper;
+import com.exadel.discount.platform.exception.DeletedException;
 import com.exadel.discount.platform.exception.NotFoundException;
 import com.exadel.discount.platform.model.Vendor;
 import com.exadel.discount.platform.model.dto.VendorDto;
@@ -46,6 +47,11 @@ public class VendorServiceImpl implements VendorService {
                 .findById(id)
                 .orElseThrow(() -> new NotFoundException("Vendor with id " + id +
                         " was not found"));
+
+        if (vendor.isDeleted()) {
+            throw new DeletedException("Cannot update deleted Vendor with id" + id
+            );
+        }
         mapper.updateVendor(vendorDto, vendor);
         vendor = vendorRepository.save(vendor);
         return mapper.entityToResponseDto(vendor);

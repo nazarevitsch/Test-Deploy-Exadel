@@ -5,9 +5,11 @@ package com.exadel.discount.platform.service;
 import com.exadel.discount.platform.exception.DeletedException;
 import com.exadel.discount.platform.exception.NotFoundException;
 import com.exadel.discount.platform.mapper.SubCategoryMapper;
+import com.exadel.discount.platform.model.Category;
 import com.exadel.discount.platform.model.SubCategory;
 import com.exadel.discount.platform.model.dto.SubCategoryDto;
 import com.exadel.discount.platform.model.dto.SubCategoryResponseDto;
+import com.exadel.discount.platform.repository.CategoryRepository;
 import com.exadel.discount.platform.repository.SubCategoryRepository;
 import com.exadel.discount.platform.service.interfaces.SubCategoryService;
 
@@ -25,6 +27,7 @@ public class SubCategoryServiceImpl implements SubCategoryService {
 
     private final SubCategoryRepository subCategoryRepository;
     private final SubCategoryMapper mapper;
+    private final CategoryRepository categoryRepository;
 
     @Override
     public List<SubCategoryResponseDto> getAll() {
@@ -33,6 +36,11 @@ public class SubCategoryServiceImpl implements SubCategoryService {
 
     @Override
     public SubCategoryResponseDto save(SubCategoryDto subCategoryDto) {
+        Category category = categoryRepository.getById(subCategoryDto.getCategoryId());
+        if (category.isDeleted()) {
+            throw new DeletedException("Cannot create SubCategory with deleted Category");
+        }
+
         SubCategory savedSubCategory = subCategoryRepository.save(mapper.dtoToEntity(subCategoryDto));
         return mapper.entityToResponseDto(savedSubCategory);
     }

@@ -7,12 +7,13 @@ import org.hibernate.annotations.SQLDelete;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
 @Data
-@SQLDelete(sql = "UPDATE sub_category SET sc_deleted=true WHERE sc_id=?")
-public class SubCategory {
+@SQLDelete(sql = "UPDATE category SET c_deleted=true WHERE c_id=?")
+public class Category {
 
     @Id
     @GeneratedValue(generator = "UUID")
@@ -20,15 +21,14 @@ public class SubCategory {
             name = "UUID",
             strategy = "org.hibernate.id.UUIDGenerator"
     )
-    @Column(name = "sc_id")
+    @Column(name = "c_id")
     private UUID id;
     @NotBlank
-    @Size(min = 3, max = 20)
-    @Column(name = "sc_name")
+    @Size(min = 3, max = 50)
+    @Column(name = "c_name")
     private String name;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id")
-    private Category category;
-    @Column(name = "sc_deleted")
+    @OneToMany(mappedBy = "category")
+    private List<SubCategory> subCategories;
+    @Column(name = "c_deleted")
     private boolean deleted;
 }

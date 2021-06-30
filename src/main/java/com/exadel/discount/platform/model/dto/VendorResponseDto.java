@@ -11,4 +11,5 @@ import java.util.UUID;
 public class VendorResponseDto extends VendorDto{
     @NotNull
     private UUID id;
+    private boolean deleted;
 }

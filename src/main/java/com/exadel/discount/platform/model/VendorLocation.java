@@ -2,8 +2,8 @@ package com.exadel.discount.platform.model;
 
 import lombok.Data;
 import lombok.ToString;
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -18,7 +18,11 @@ import java.util.UUID;
 public class VendorLocation {
 
     @Id
-    @Type(type = "pg-uuid")
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(
+            name = "UUID",
+            strategy = "org.hibernate.id.UUIDGenerator"
+    )
     @Column(name = "vl_id")
     private UUID id;
     @NotBlank

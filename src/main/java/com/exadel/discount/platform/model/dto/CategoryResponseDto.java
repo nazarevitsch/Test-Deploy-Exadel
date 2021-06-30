@@ -8,7 +8,8 @@ import java.util.UUID;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class VendorLocationResponseDto extends VendorLocationDto{
+public class CategoryResponseDto extends CategoryDto{
+
     @NotNull
     private UUID id;
     private boolean deleted;

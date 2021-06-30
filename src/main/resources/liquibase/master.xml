@@ -12,4 +12,5 @@
     <include file="18.06.2021_andrii_create_tag_table.xml" relativeToChangelogFile="true"/>
     <include file="25.06.2021_andrii_rename_tag_to_sub_category_add_column.xml" relativeToChangelogFile="true"/>
     <include file="29.06.2021_andrii_add_unique_constraint_for_column_sc_name_in_sub_category_table.xml" relativeToChangelogFile="true"/>
+    <include file="29.06.2021_oleg_category_relationship_with_subCategory.xml" relativeToChangelogFile="true"/>
 </databaseChangeLog>
