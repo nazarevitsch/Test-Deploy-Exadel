@@ -4,11 +4,14 @@ import com.exadel.discount.platform.domain.Discount;
 import com.exadel.discount.platform.exception.NotFoundException;
 import com.exadel.discount.platform.model.SubCategory;
 import com.exadel.discount.platform.model.dto.DiscountDto;
+import com.exadel.discount.platform.repository.CategoryRepository;
 import com.exadel.discount.platform.repository.DiscountRepository;
 import com.exadel.discount.platform.repository.SubCategoryRepository;
 import com.exadel.discount.platform.repository.VendorLocationRepository;
+import liquibase.pro.packaged.A;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,17 +30,23 @@ public class DiscountService {
     private DiscountRepository discountRepository;
 
     @Autowired
-    private SubCategoryRepository subCategoryRepository;
-
-    @Autowired
     private VendorLocationRepository vendorLocationRepository;
 
-    public void save(DiscountDto discountDto){
+    @Autowired
+    private CategoryRepository categoryRepository;
+
+    @Autowired
+    private SubCategoryRepository subCategoryRepository;
+
+    public void save(DiscountDto discountDto) {
         log.info(discountDto.toString());
 
         Discount discount = discountDto.getDiscount();
+        if (!discountDto.isOnline()) {
+            discount.setVendorLocations(vendorLocationRepository.findAllById(discountDto.getLocations()));
+        }
+        discount.setCategories(categoryRepository.findAllById(discountDto.getCategories()));
         discount.setSubCategories(subCategoryRepository.findAllById(discountDto.getSubCategories()));
-//        discount.setVendorLocations(vendorLocationRepository.findAllById(discountDto.getLocations()));
 
         Discount discountWithID = discountRepository.save(discount);
 
@@ -49,8 +58,7 @@ public class DiscountService {
         return discount.orElseThrow(()-> new NotFoundException("Discount wasn't found."));
     }
 
-
-    public List<Discount> findAll(int page, int size, List<UUID> subCategories) {
+    public Page<Discount> findAll(int page, int size, List<UUID> categories, List<UUID> subCategories) {
         List<SubCategory> subList = subCategoryRepository.findAllById(subCategories == null ? new ArrayList<UUID>() : subCategories);
         return discountRepository.findAllBySubCategoriesIn(subList, PageRequest.of(page, size));
     }

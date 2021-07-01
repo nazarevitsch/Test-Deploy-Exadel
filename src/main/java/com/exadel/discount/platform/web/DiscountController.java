@@ -5,6 +5,7 @@ import com.exadel.discount.platform.domain.Message;
 import com.exadel.discount.platform.model.dto.DiscountDto;
 import com.exadel.discount.platform.service.DiscountService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -22,11 +23,12 @@ public class DiscountController {
 
     @GetMapping()
     @PreAuthorize("hasAnyAuthority('ADMINISTRATOR', 'USER')")
-    public ResponseEntity<List<Discount>> getAll(
+    public ResponseEntity<Page<Discount>> getAll(
             @RequestParam("page") int page,
             @RequestParam("size") int size,
-            @RequestParam(value = "subCategories", required = false) List<UUID> ids) {
-        return new ResponseEntity<>(discountService.findAll(page, size, ids),
+            @RequestParam(value = "subCategories", required = false) List<UUID> subCategoriesId,
+            @RequestParam(value = "subCategories", required = false) List<UUID> categoriesId) {
+        return new ResponseEntity<>(discountService.findAll(page, size, categoriesId, subCategoriesId),
                 HttpStatus.OK);
     }
 
