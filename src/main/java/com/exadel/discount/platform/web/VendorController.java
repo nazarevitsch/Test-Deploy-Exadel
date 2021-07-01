@@ -20,13 +20,13 @@ public class VendorController {
     private final VendorService vendorService;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAnyRole('ADMINISTRATOR', 'USER')")
+    @PreAuthorize("hasAnyAuthority('ADMINISTRATOR', 'USER')")
     public ResponseEntity<List<VendorResponseDto>> getAllVendors() {
         return new ResponseEntity<>(vendorService.getAll(), HttpStatus.OK);
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasRole('ADMINISTRATOR')")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR')")
     public ResponseEntity<VendorResponseDto> getVendorById(@PathVariable UUID id) {
         return new ResponseEntity<>(vendorService.getById(id), HttpStatus.OK);
     }
@@ -35,7 +35,7 @@ public class VendorController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    @PreAuthorize("hasRole('ADMINISTRATOR')")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR')")
     public ResponseEntity<VendorResponseDto> createVendor(@RequestBody VendorDto vendorDto) {
         VendorResponseDto savedVendor = vendorService.save(vendorDto);
         return new ResponseEntity<>(savedVendor, HttpStatus.CREATED);
@@ -44,7 +44,7 @@ public class VendorController {
     @PutMapping(value = "/{id}",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasRole('ADMINISTRATOR')")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR')")
     public ResponseEntity<VendorResponseDto> updateVendor(@PathVariable UUID id,
                                                               @RequestBody VendorDto vendorDto) {
         VendorResponseDto updatedVendor = vendorService.update(id, vendorDto);
@@ -52,7 +52,7 @@ public class VendorController {
     }
 
     @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasRole('ADMINISTRATOR')")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR')")
     public ResponseEntity<VendorResponseDto> sendToArchive(@PathVariable UUID id) {
         vendorService.toArchive(id);
         VendorResponseDto archivedVendor = vendorService.getById(id);

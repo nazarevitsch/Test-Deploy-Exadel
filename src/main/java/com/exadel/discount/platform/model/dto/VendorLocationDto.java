@@ -4,8 +4,10 @@ import lombok.Data;
 import lombok.ToString;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.List;
+import java.util.UUID;
 
 @Data
 public class VendorLocationDto {
@@ -17,8 +19,8 @@ public class VendorLocationDto {
     private String city;
     @Size(min = 2, max = 50)
     private String addressLine;
-    private VendorDto vendorDto;
-    private boolean deleted;
+    @NotNull
+    private UUID vendorId;
     @ToString.Exclude
     private List<DiscountDto> discounts;
     /*private int latitude;

@@ -20,12 +20,13 @@ public class VendorLocationController {
     private final VendorLocationService locationService;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAnyRole('ADMINISTRATOR', 'USER')")
+    @PreAuthorize("hasAnyAuthority('ADMINISTRATOR', 'USER')")
     public ResponseEntity<List<VendorLocationResponseDto>> getAllLocations() {
         return new ResponseEntity<>(locationService.getAll(), HttpStatus.OK);
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('ADMINISTRATOR')")
     public ResponseEntity<VendorLocationResponseDto> getLocationById(@PathVariable UUID id) {
         return new ResponseEntity<>(locationService.getById(id), HttpStatus.OK);
     }
@@ -34,7 +35,7 @@ public class VendorLocationController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    @PreAuthorize("hasRole('ADMINISTRATOR')")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR')")
     public ResponseEntity<VendorLocationResponseDto> createLocation(@RequestBody VendorLocationDto vendorLocationDto) {
         VendorLocationResponseDto savedLocation = locationService.save(vendorLocationDto);
         return new ResponseEntity<>(savedLocation, HttpStatus.CREATED);
@@ -43,7 +44,7 @@ public class VendorLocationController {
     @PutMapping(value = "/{id}",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasRole('ADMINISTRATOR')")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR')")
     public ResponseEntity<VendorLocationResponseDto> updateLocation(@PathVariable UUID id,
                                                                         @RequestBody VendorLocationDto locationDto) {
         VendorLocationResponseDto updatedLocation = locationService.update(id, locationDto);
@@ -51,7 +52,7 @@ public class VendorLocationController {
     }
 
     @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasRole('ADMINISTRATOR')")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR')")
     public ResponseEntity<VendorLocationDto> sendToArchive(@PathVariable UUID id) {
         locationService.toArchive(id);
         VendorLocationResponseDto archivedLocation = locationService.getById(id);
