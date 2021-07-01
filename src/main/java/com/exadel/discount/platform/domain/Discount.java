@@ -1,5 +1,6 @@
 package com.exadel.discount.platform.domain;
 
+import com.exadel.discount.platform.model.Category;
 import com.exadel.discount.platform.model.SubCategory;
 import com.exadel.discount.platform.model.Vendor;
 import com.exadel.discount.platform.model.VendorLocation;
@@ -37,20 +38,27 @@ public class Discount {
 
     @ManyToMany
     @JoinTable(
+            name = "discount_vendor_location",
+            joinColumns = @JoinColumn(name = "dvl_discount_id"),
+            inverseJoinColumns = @JoinColumn(name = "dvl_vendor_location_id")
+    )
+    private List<VendorLocation> vendorLocations;
+
+    @ManyToMany
+    @JoinTable(
             name = "discount_sub_category",
             joinColumns = @JoinColumn(name = "dsc_discount_id"),
             inverseJoinColumns = @JoinColumn(name = "dsc_sub_category_id")
     )
     private List<SubCategory> subCategories;
 
-
     @ManyToMany
     @JoinTable(
-            name = "discount_vendor_location",
-            joinColumns = @JoinColumn(name = "dvl_discount_id"),
-            inverseJoinColumns = @JoinColumn(name = "dvl_vendor_location_id")
+            name = "discount_category",
+            joinColumns = @JoinColumn(name = "dc_discount_id"),
+            inverseJoinColumns = @JoinColumn(name = "dc_category_id")
     )
-    private List<VendorLocation> vendorLocations;
+    private List<Category> categories;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "d_vendor_id", referencedColumnName = "v_id", insertable = false, updatable = false)
