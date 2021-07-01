@@ -10,7 +10,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -20,10 +22,14 @@ public class DiscountController {
     @Autowired
     private DiscountService discountService;
 
-    @GetMapping
+    @GetMapping()
     @PreAuthorize("hasAnyAuthority('ADMINISTRATOR', 'USER')")
-    public ResponseEntity<List<Discount>> getAll(){
-        return new ResponseEntity<>(discountService.findAll(), HttpStatus.OK);
+    public ResponseEntity<List<Discount>> getAll(
+            @RequestParam("page") int page,
+            @RequestParam("size") int size,
+            @RequestParam(value = "subCategories", required = false) List<UUID> ids) {
+        return new ResponseEntity<>(discountService.findAll(page, size, ids),
+                HttpStatus.OK);
     }
 
     @GetMapping(value = "/{id}")

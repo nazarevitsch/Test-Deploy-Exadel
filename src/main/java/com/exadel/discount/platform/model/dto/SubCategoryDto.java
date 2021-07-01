@@ -12,6 +12,6 @@ public class SubCategoryDto {
     @NotBlank
     @Size(min = 3, max = 20)
     private String name;
-    @ToString.Exclude
-    private List<DiscountDto> discounts;
+//    @ToString.Exclude
+//    private List<DiscountDto> discounts;
 }
