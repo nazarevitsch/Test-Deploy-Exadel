@@ -27,6 +27,8 @@ public class DiscountDto {
     @Size(min = 50, max = 2000)
     private String fullDescription;
 
+    private int percent;
+
     private boolean isOnline;
 
     private String imageLink;
@@ -45,6 +47,7 @@ public class DiscountDto {
         discount.setImageLink(this.imageLink);
         discount.setVendorId(this.vendorId);
         discount.setCategoryId(this.categoryId);
+        discount.setPercent(this.percent);
 
         discount.setDeleted(false);
         return discount;

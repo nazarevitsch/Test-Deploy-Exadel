@@ -8,6 +8,7 @@
     <changeSet id="alter_discount_table" author="nazarii">
         <addColumn tableName="discount" >
             <column name="d_category_id" type="UUID"/>
+            <column name="d_percent" type="int"/>
         </addColumn>
     </changeSet>
 </databaseChangeLog>
