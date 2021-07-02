@@ -52,13 +52,12 @@ public class Discount {
     )
     private List<SubCategory> subCategories;
 
-    @ManyToMany
-    @JoinTable(
-            name = "discount_category",
-            joinColumns = @JoinColumn(name = "dc_discount_id"),
-            inverseJoinColumns = @JoinColumn(name = "dc_category_id")
-    )
-    private List<Category> categories;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "d_category_id", referencedColumnName = "c_id", insertable = false, updatable = false)
+    private Category category;
+
+    @Column(name = "d_category_id")
+    private UUID categoryId;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "d_vendor_id", referencedColumnName = "v_id", insertable = false, updatable = false)

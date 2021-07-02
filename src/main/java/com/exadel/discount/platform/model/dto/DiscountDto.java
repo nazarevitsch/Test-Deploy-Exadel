@@ -16,11 +16,11 @@ public class DiscountDto {
     @Size(min = 2, max = 50)
     private String name;
 
-    private List<UUID> subCategories;
-
-    private List<UUID> categories;
-
     private List<UUID> locations;
+
+    private UUID categoryId;
+
+    private List<UUID> subCategories;
 
     private UUID vendorId;
 
@@ -44,6 +44,7 @@ public class DiscountDto {
         discount.setStartDate(this.startDate);
         discount.setImageLink(this.imageLink);
         discount.setVendorId(this.vendorId);
+        discount.setCategoryId(this.categoryId);
 
         discount.setDeleted(false);
         return discount;
