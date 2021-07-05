@@ -2,6 +2,7 @@ package com.exadel.discount.platform.web;
 
 import com.exadel.discount.platform.model.dto.VendorLocationDto;
 import com.exadel.discount.platform.model.dto.VendorLocationResponseDto;
+import com.exadel.discount.platform.model.dto.update.VendorLocationBaseDto;
 import com.exadel.discount.platform.service.interfaces.VendorLocationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -46,7 +47,7 @@ public class VendorLocationController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('ADMINISTRATOR')")
     public ResponseEntity<VendorLocationResponseDto> updateLocation(@PathVariable UUID id,
-                                                                        @RequestBody VendorLocationDto locationDto) {
+                                                                    @RequestBody VendorLocationBaseDto locationDto) {
         VendorLocationResponseDto updatedLocation = locationService.update(id, locationDto);
         return new ResponseEntity<>(updatedLocation, HttpStatus.OK);
     }

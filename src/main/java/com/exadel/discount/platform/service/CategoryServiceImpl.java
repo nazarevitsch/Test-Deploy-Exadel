@@ -7,17 +7,21 @@ import com.exadel.discount.platform.model.Category;
 import com.exadel.discount.platform.model.dto.CategoryDto;
 import com.exadel.discount.platform.model.dto.CategoryResponseDto;
 import com.exadel.discount.platform.repository.CategoryRepository;
+import com.exadel.discount.platform.repository.SubCategoryRepository;
 import com.exadel.discount.platform.service.interfaces.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
 
+@Transactional
 @Service
 @RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
+    private final SubCategoryRepository subCategoryRepository;
     private final CategoryMapper mapper;
 
     @Override
@@ -58,11 +62,12 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public void toArchive(UUID id) {
-        boolean exists = categoryRepository.existsById(id);
-        if (exists){
-            categoryRepository.deleteById(id);
-            return;
-        }
+            boolean exists = categoryRepository.existsById(id);
+            if (exists){
+                categoryRepository.deleteById(id);
+                subCategoryRepository.deleteAllByCategoryId(id);
+                return;
+            }
             throw new NotFoundException("Category with id" + id + " was not found");
-    }
+        }
 }

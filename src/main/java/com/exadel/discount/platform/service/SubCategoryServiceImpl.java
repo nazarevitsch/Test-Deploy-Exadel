@@ -9,6 +9,7 @@ import com.exadel.discount.platform.model.Category;
 import com.exadel.discount.platform.model.SubCategory;
 import com.exadel.discount.platform.model.dto.SubCategoryDto;
 import com.exadel.discount.platform.model.dto.SubCategoryResponseDto;
+import com.exadel.discount.platform.model.dto.update.SubCategoryBaseDto;
 import com.exadel.discount.platform.repository.CategoryRepository;
 import com.exadel.discount.platform.repository.SubCategoryRepository;
 import com.exadel.discount.platform.service.interfaces.SubCategoryService;
@@ -31,7 +32,7 @@ public class SubCategoryServiceImpl implements SubCategoryService {
 
     @Override
     public List<SubCategoryResponseDto> getAll() {
-        return mapper.mapList(subCategoryRepository.findAll(), SubCategoryResponseDto.class);
+        return mapper.mapList(subCategoryRepository.findAll());
     }
 
     @Override
@@ -41,7 +42,9 @@ public class SubCategoryServiceImpl implements SubCategoryService {
             throw new DeletedException("Cannot create SubCategory with deleted Category");
         }
 
-        SubCategory savedSubCategory = subCategoryRepository.save(mapper.dtoToEntity(subCategoryDto));
+        SubCategory savedSubCategory = mapper.dtoToEntity(subCategoryDto);
+        savedSubCategory.setCategory(category);
+        savedSubCategory = subCategoryRepository.save(savedSubCategory);
         return mapper.entityToResponseDto(savedSubCategory);
     }
 
@@ -55,7 +58,7 @@ public class SubCategoryServiceImpl implements SubCategoryService {
     }
 
     @Override
-    public SubCategoryResponseDto update(UUID id, SubCategoryDto subCategoryDto){
+    public SubCategoryResponseDto update(UUID id, SubCategoryBaseDto subCategoryDto){
         SubCategory subCategory = subCategoryRepository
                 .findById(id)
                 .orElseThrow(() -> new NotFoundException("SubCategory with id " + id +
