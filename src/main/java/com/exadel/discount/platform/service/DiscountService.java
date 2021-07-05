@@ -75,6 +75,5 @@ public class DiscountService {
         System.out.println(searchWord);
         return discountRepository.findAllByFilters(vendorIds, categoryId, subCategoriesIds,
                 country, city, searchWord, PageRequest.of(page, size));
-//        return discountRepository.findAllByFilters("select * from discount", PageRequest.of(page, size));
     }
 }

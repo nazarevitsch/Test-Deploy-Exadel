@@ -36,8 +36,7 @@ public class UserController {
         } catch (BadCredentialsException e) {
             return new ResponseEntity<Message>(new Message("There isn't user with such password or email!"), HttpStatus.UNAUTHORIZED);
         }
-        emailNotificationService.sendSimpleTextMessageMessage("bidaritterhm@gmail.com", "You are logined", "You are logined");
-        return new ResponseEntity<>(userService.login(userLogin), HttpStatus.OK);
+       return new ResponseEntity<>(userService.login(userLogin), HttpStatus.OK);
     }
 
     @GetMapping("/validate_token")
