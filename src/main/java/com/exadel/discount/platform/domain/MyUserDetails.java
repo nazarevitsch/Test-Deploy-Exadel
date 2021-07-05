@@ -1,4 +1,4 @@
-package com.exadel.discount.platform.service.dto;
+package com.exadel.discount.platform.domain;
 
 import com.exadel.discount.platform.domain.User;
 import com.exadel.discount.platform.domain.UserRole;

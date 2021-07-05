@@ -14,9 +14,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -42,7 +40,7 @@ public class DiscountService {
             }
             discount.setVendorLocations(vendorLocationRepository.findAllById(discountDto.getLocations()));
         }
-        if (discountDto.getSubCategories() == null || discount.getSubCategories().isEmpty()){
+        if (discountDto.getSubCategories() == null || discountDto.getSubCategories().isEmpty()){
             throw new UnacceptableDiscountDtoException("Discount hasn't full data!");
         }
         discount.setSubCategories(subCategoryRepository.findAllById(discountDto.getSubCategories()));
@@ -60,8 +58,23 @@ public class DiscountService {
 
     public Page<Discount> findAllByFilters(int page, int size, UUID categoryId, List<UUID> subCategoriesIds,
                                            List<UUID> vendorIds, String country, String city, String searchWord) {
-        searchWord = "^.*" + searchWord + ".*$";
-        return discountRepository.findAllByFilters(vendorIds, categoryId, subCategoriesIds, country, city, searchWord,
-                PageRequest.of(page, size));
+        if (searchWord != null) {
+            searchWord = "^.*" + searchWord + ".*$";
+        }
+        if (subCategoriesIds == null) {
+            subCategoriesIds = new ArrayList<UUID>();
+        }
+        if (vendorIds == null) {
+            vendorIds = new ArrayList<UUID>();
+        }
+        System.out.println(subCategoriesIds);
+        System.out.println(vendorIds);
+        System.out.println(categoryId);
+        System.out.println(country);
+        System.out.println(city);
+        System.out.println(searchWord);
+        return discountRepository.findAllByFilters(vendorIds, categoryId, subCategoriesIds,
+                country, city, searchWord, PageRequest.of(page, size));
+//        return discountRepository.findAllByFilters("select * from discount", PageRequest.of(page, size));
     }
 }

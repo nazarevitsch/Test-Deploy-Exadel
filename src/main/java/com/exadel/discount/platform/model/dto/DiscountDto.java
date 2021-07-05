@@ -14,28 +14,28 @@ public class DiscountDto {
 
     @NotBlank
     @Size(min = 2, max = 50)
-    private String name;
+    private String name;//
 
-    private List<UUID> locations;
+    private List<UUID> locations;//
 
-    private UUID categoryId;
+    private UUID categoryId;//
 
-    private List<UUID> subCategories;
+    private List<UUID> subCategories;//
 
-    private UUID vendorId;
+    private UUID vendorId;//
 
     @Size(min = 50, max = 2000)
-    private String fullDescription;
+    private String fullDescription;//
 
-    private int percent;
+    private int percent;//
 
-    private boolean isOnline;
+    private boolean isOnline;//
 
-    private String imageLink;
+    private String imageLink;//
 
-    private ZonedDateTime startDate;
+    private ZonedDateTime startDate;//
 
-    private ZonedDateTime endDate;
+    private ZonedDateTime endDate;//
 
     public Discount getDiscount(){
         Discount discount = new Discount();

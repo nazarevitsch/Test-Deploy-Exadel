@@ -1,4 +1,4 @@
-package com.exadel.discount.platform.service.dto;
+package com.exadel.discount.platform.model.dto;
 
 import lombok.Data;
 import lombok.ToString;

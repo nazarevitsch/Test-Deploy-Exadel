@@ -21,14 +21,14 @@ public class DiscountController {
     @Autowired
     private DiscountService discountService;
 
-    @GetMapping()
+    @GetMapping("/get_discounts")
     @PreAuthorize("hasAnyAuthority('ADMINISTRATOR', 'USER')")
     public ResponseEntity<Page<Discount>> getAll(
             @RequestParam("page") int page,
             @RequestParam("size") int size,
-            @RequestParam(value = "category") UUID categoryId,
-            @RequestParam(value = "subCategories", required = false) List<UUID> subCategoriesIds,
-            @RequestParam(value = "vendor", required = false) List<UUID> vendorIds,
+            @RequestParam(value = "categoryId", required = false) UUID categoryId,
+            @RequestParam(value = "subCategoriesIds", required = false) List<UUID> subCategoriesIds,
+            @RequestParam(value = "vendorIds", required = false) List<UUID> vendorIds,
             @RequestParam(value = "country", required = false) String country,
             @RequestParam(value = "city", required = false) String city,
             @RequestParam(value = "searchWord", required = false) String searchWord
