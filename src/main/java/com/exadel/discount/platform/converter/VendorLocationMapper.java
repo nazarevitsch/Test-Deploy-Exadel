@@ -1,9 +1,13 @@
 package com.exadel.discount.platform.converter;
 
+import com.exadel.discount.platform.model.SubCategory;
 import com.exadel.discount.platform.model.VendorLocation;
+import com.exadel.discount.platform.model.dto.SubCategoryResponseDto;
 import com.exadel.discount.platform.model.dto.VendorLocationDto;
 import com.exadel.discount.platform.model.dto.VendorLocationResponseDto;
+import com.exadel.discount.platform.model.dto.update.VendorLocationBaseDto;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -15,6 +19,7 @@ public class VendorLocationMapper {
 
     public VendorLocationMapper() {
         modelMapper = new ModelMapper();
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
     }
 
     public VendorLocationDto entityToDto(VendorLocation vendorLocation) {
@@ -22,10 +27,12 @@ public class VendorLocationMapper {
     }
 
     public VendorLocationResponseDto entityToResponseDto(VendorLocation vendorLocation) {
-        return modelMapper.map(vendorLocation, VendorLocationResponseDto.class);
+        VendorLocationResponseDto responseDto = modelMapper.map(vendorLocation, VendorLocationResponseDto.class);
+        responseDto.setVendorId(vendorLocation.getVendor().getId());
+        return responseDto;
     }
 
-    public void update(VendorLocationDto vendorLocationDto, VendorLocation vendorLocation) {
+    public void update(VendorLocationBaseDto vendorLocationDto, VendorLocation vendorLocation) {
         modelMapper.map(vendorLocationDto, vendorLocation);
     }
 
@@ -33,10 +40,7 @@ public class VendorLocationMapper {
         return modelMapper.map(locationDto, VendorLocation.class);
     }
 
-    public <S, T> List<T> mapList(List<S> source, Class<T> targetClass) {
-        return source
-                .stream()
-                .map(element -> modelMapper.map(element, targetClass))
-                .collect(Collectors.toList());
+    public List<VendorLocationResponseDto> mapList(List<VendorLocation> locations){
+        return locations.stream().map(this::entityToResponseDto).collect(Collectors.toList());
     }
 }

@@ -1,19 +1,18 @@
 package com.exadel.discount.platform.model.dto;
 
+import com.exadel.discount.platform.model.dto.update.SubCategoryBaseDto;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.util.List;
 import java.util.UUID;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
-public class SubCategoryDto {
-    @NotBlank
-    @Size(min = 3, max = 20)
-    private String name;
+public class SubCategoryDto extends SubCategoryBaseDto {
+
     @NotNull
     private UUID categoryId;
     @ToString.Exclude

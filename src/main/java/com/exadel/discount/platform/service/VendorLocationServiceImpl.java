@@ -7,6 +7,7 @@ import com.exadel.discount.platform.model.Vendor;
 import com.exadel.discount.platform.model.VendorLocation;
 import com.exadel.discount.platform.model.dto.VendorLocationDto;
 import com.exadel.discount.platform.model.dto.VendorLocationResponseDto;
+import com.exadel.discount.platform.model.dto.update.VendorLocationBaseDto;
 import com.exadel.discount.platform.repository.VendorLocationRepository;
 import com.exadel.discount.platform.repository.VendorRepository;
 import com.exadel.discount.platform.service.interfaces.VendorLocationService;
@@ -25,7 +26,7 @@ public class VendorLocationServiceImpl implements VendorLocationService {
 
     @Override
     public List<VendorLocationResponseDto> getAll() {
-        return mapper.mapList(locationRepository.findAll(), VendorLocationResponseDto.class);
+        return mapper.mapList(locationRepository.findAll());
     }
 
     @Override
@@ -34,7 +35,9 @@ public class VendorLocationServiceImpl implements VendorLocationService {
         if (vendor.isDeleted()) {
             throw new DeletedException("Cannot create Vendor Location with deleted Vendor");
         }
-        VendorLocation location = locationRepository.save(mapper.dtoToEntity(vendorLocationDto));
+        VendorLocation location = mapper.dtoToEntity(vendorLocationDto);
+        location.setVendor(vendor);
+        location = locationRepository.save(location);
         return mapper.entityToResponseDto(location);
     }
 
@@ -48,7 +51,7 @@ public class VendorLocationServiceImpl implements VendorLocationService {
     }
 
     @Override
-    public VendorLocationResponseDto update(UUID id, VendorLocationDto vendorLocationDto) {
+    public VendorLocationResponseDto update(UUID id, VendorLocationBaseDto vendorLocationDto) {
         VendorLocation location = locationRepository
                 .findById(id)
                 .orElseThrow(() -> new NotFoundException("Vendor location with id " + id +

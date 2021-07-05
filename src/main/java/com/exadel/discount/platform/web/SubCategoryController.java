@@ -3,6 +3,7 @@ package com.exadel.discount.platform.web;
 import com.exadel.discount.platform.exception.NotFoundException;
 import com.exadel.discount.platform.model.dto.SubCategoryDto;
 import com.exadel.discount.platform.model.dto.SubCategoryResponseDto;
+import com.exadel.discount.platform.model.dto.update.SubCategoryBaseDto;
 import com.exadel.discount.platform.service.interfaces.SubCategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -50,7 +51,7 @@ public class SubCategoryController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('ADMINISTRATOR')")
     public ResponseEntity<SubCategoryResponseDto> updateSubCategory(@PathVariable UUID id,
-                                                            @RequestBody SubCategoryDto subCategoryDto) {
+                                                                    @RequestBody SubCategoryBaseDto subCategoryDto) {
         SubCategoryResponseDto updateSubCategory = subCategoryService.update(id, subCategoryDto);
         return new ResponseEntity<>(updateSubCategory, HttpStatus.OK);
     }
