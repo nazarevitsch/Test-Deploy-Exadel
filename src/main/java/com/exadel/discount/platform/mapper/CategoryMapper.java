@@ -1,12 +1,15 @@
 package com.exadel.discount.platform.mapper;
 
 import com.exadel.discount.platform.model.Category;
+import com.exadel.discount.platform.model.SubCategory;
 import com.exadel.discount.platform.model.dto.CategoryDto;
 import com.exadel.discount.platform.model.dto.CategoryResponseDto;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Component
@@ -15,6 +18,7 @@ public class CategoryMapper {
 
     public CategoryMapper() {
         modelMapper = new ModelMapper();
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
     }
 
     public CategoryDto entityToDto(Category category) {
@@ -22,7 +26,10 @@ public class CategoryMapper {
     }
 
     public CategoryResponseDto entityToResponseDto(Category category) {
-        return modelMapper.map(category, CategoryResponseDto.class);
+        CategoryResponseDto categoryResponseDto = modelMapper.map(category, CategoryResponseDto.class);
+        List<UUID> subCategoryIds  = category.getSubCategories().stream().map(SubCategory::getId).collect(Collectors.toList());
+        categoryResponseDto.setSubCategoryIds(subCategoryIds);
+        return categoryResponseDto;
     }
 
     public void update(CategoryDto categoryDto, Category category) {

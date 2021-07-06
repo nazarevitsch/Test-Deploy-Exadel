@@ -15,6 +15,4 @@ public class SubCategoryDto extends SubCategoryBaseDto {
 
     @NotNull
     private UUID categoryId;
-    @ToString.Exclude
-    private List<DiscountDto> discounts;
 }
