@@ -3,6 +3,7 @@ package com.exadel.discount.platform.web;
 import com.exadel.discount.platform.model.dto.VendorLocationDto;
 import com.exadel.discount.platform.model.dto.VendorLocationResponseDto;
 import com.exadel.discount.platform.model.dto.update.VendorLocationBaseDto;
+import com.exadel.discount.platform.service.RoleCheckService;
 import com.exadel.discount.platform.service.interfaces.VendorLocationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,16 +20,26 @@ import java.util.UUID;
 @RequestMapping("/vendor/location")
 public class VendorLocationController {
     private final VendorLocationService locationService;
+    private final RoleCheckService roleCheckService;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyAuthority('ADMINISTRATOR', 'USER')")
-    public ResponseEntity<List<VendorLocationResponseDto>> getAllLocations() {
-        return new ResponseEntity<>(locationService.getAll(), HttpStatus.OK);
+    public ResponseEntity<List<VendorLocationResponseDto>> getAllLocations(
+            @RequestParam(value = "isDeleted", required = false, defaultValue = "false") boolean isDeleted
+    ) {
+        if (isDeleted && !roleCheckService.isAdmin()) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+        return new ResponseEntity<>(locationService.getAll(isDeleted), HttpStatus.OK);
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAuthority('ADMINISTRATOR')")
+    @PreAuthorize("hasAnyAuthority('ADMINISTRATOR', 'USER')")
     public ResponseEntity<VendorLocationResponseDto> getLocationById(@PathVariable UUID id) {
+        VendorLocationResponseDto locationResponseDto = locationService.getById(id);
+        if (locationResponseDto.isDeleted() && !roleCheckService.isAdmin()) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
         return new ResponseEntity<>(locationService.getById(id), HttpStatus.OK);
     }
 
