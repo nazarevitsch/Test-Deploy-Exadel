@@ -11,6 +11,7 @@ import java.util.UUID;
 
 @Entity
 @Data
+@Table(name = "sub_category")
 @SQLDelete(sql = "UPDATE sub_category SET sc_deleted=true WHERE sc_id=?")
 public class SubCategory {
 

@@ -5,6 +5,7 @@ import com.exadel.discount.platform.exception.NotFoundException;
 import com.exadel.discount.platform.exception.UnacceptableDiscountDtoException;
 import com.exadel.discount.platform.model.dto.DiscountDto;
 import com.exadel.discount.platform.repository.DiscountRepository;
+import com.exadel.discount.platform.repository.DiscountRepositoryCustom;
 import com.exadel.discount.platform.repository.SubCategoryRepository;
 import com.exadel.discount.platform.repository.VendorLocationRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +30,9 @@ public class DiscountService {
 
     @Autowired
     private VendorLocationRepository vendorLocationRepository;
+
+    @Autowired
+    private DiscountRepositoryCustom discountRepositoryCustom;
 
     public void save(DiscountDto discountDto){
         log.info(discountDto.toString());
@@ -56,16 +60,10 @@ public class DiscountService {
     }
 
 
-    public Page<Discount> findAllByFilters(int page, int size, UUID categoryId, List<UUID> subCategoriesIds,
+    public List<Discount> findAllByFilters(int page, int size, UUID categoryId, List<UUID> subCategoriesIds,
                                            List<UUID> vendorIds, String country, String city, String searchWord) {
         if (searchWord != null) {
             searchWord = "^.*" + searchWord + ".*$";
-        }
-        if (subCategoriesIds == null) {
-            subCategoriesIds = new ArrayList<UUID>();
-        }
-        if (vendorIds == null) {
-            vendorIds = new ArrayList<UUID>();
         }
         System.out.println(subCategoriesIds);
         System.out.println(vendorIds);
@@ -73,7 +71,7 @@ public class DiscountService {
         System.out.println(country);
         System.out.println(city);
         System.out.println(searchWord);
-        return discountRepository.findAllByFilters(vendorIds, categoryId, subCategoriesIds,
+        return discountRepositoryCustom.findAllByFilters(vendorIds, categoryId, subCategoriesIds,
                 country, city, searchWord, PageRequest.of(page, size));
     }
 }

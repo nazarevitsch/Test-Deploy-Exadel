@@ -27,8 +27,10 @@ public class Category {
     @Size(min = 3, max = 50)
     @Column(name = "c_name")
     private String name;
-    @OneToMany(mappedBy = "category")
+
+    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
     private List<SubCategory> subCategories;
+
     @Column(name = "c_deleted")
     private boolean deleted;
 }
