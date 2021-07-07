@@ -57,6 +57,11 @@ public class DiscountRepositoryCustom {
             predicates.add(predicateCountry);
         }
 
+        if (searchWordRegularExpression != null) {
+            Predicate predicateLikeSearchWord = criteriaBuilder.like(criteriaBuilder.upper(discountRoot.get("name")), searchWordRegularExpression.toUpperCase());
+            predicates.add(predicateLikeSearchWord);
+        }
+
         if (predicates.size() != 0) {
             Predicate[] predicatesFinal = new Predicate[predicates.size()];
             predicates.toArray(predicatesFinal);

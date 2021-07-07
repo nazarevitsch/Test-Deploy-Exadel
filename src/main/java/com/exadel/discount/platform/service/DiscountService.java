@@ -63,7 +63,7 @@ public class DiscountService {
     public List<Discount> findAllByFilters(int page, int size, UUID categoryId, List<UUID> subCategoriesIds,
                                            List<UUID> vendorIds, String country, String city, String searchWord) {
         if (searchWord != null) {
-            searchWord = "^.*" + searchWord + ".*$";
+            searchWord = "%" + searchWord + "%";
         }
         System.out.println(subCategoriesIds);
         System.out.println(vendorIds);
