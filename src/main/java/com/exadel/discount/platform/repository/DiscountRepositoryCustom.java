@@ -5,6 +5,7 @@ import com.exadel.discount.platform.model.SubCategory;
 import com.exadel.discount.platform.model.VendorLocation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -23,7 +24,7 @@ public class DiscountRepositoryCustom {
     @Autowired
     private EntityManager entityManager;
 
-    public List<Discount> findAllByFilters(List<UUID> vendorIds, UUID categoryId, List<UUID> subCategoriesIds,
+    public Page<Discount> findAllByFilters(List<UUID> vendorIds, UUID categoryId, List<UUID> subCategoriesIds,
                                            String country, String city, String searchWordRegularExpression, Pageable pageable) {
 
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
@@ -69,6 +70,6 @@ public class DiscountRepositoryCustom {
         }
 
         TypedQuery<Discount> query = entityManager.createQuery(criteriaQuery);
-        return query.getResultList();
+        return new PageImpl<>(query.getResultList(), pageable, query.getResultList().size());
     }
 }

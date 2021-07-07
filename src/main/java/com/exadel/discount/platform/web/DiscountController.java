@@ -23,7 +23,7 @@ public class DiscountController {
 
     @GetMapping("/get_discounts")
     @PreAuthorize("hasAnyAuthority('ADMINISTRATOR', 'USER')")
-    public ResponseEntity<List<Discount>> getAll(
+    public ResponseEntity<Page<Discount>> getAll(
             @RequestParam("page") int page,
             @RequestParam("size") int size,
             @RequestParam(value = "categoryId", required = false) UUID categoryId,

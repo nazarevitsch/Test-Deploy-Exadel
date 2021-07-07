@@ -60,17 +60,11 @@ public class DiscountService {
     }
 
 
-    public List<Discount> findAllByFilters(int page, int size, UUID categoryId, List<UUID> subCategoriesIds,
+    public Page<Discount> findAllByFilters(int page, int size, UUID categoryId, List<UUID> subCategoriesIds,
                                            List<UUID> vendorIds, String country, String city, String searchWord) {
         if (searchWord != null) {
             searchWord = "%" + searchWord + "%";
         }
-        System.out.println(subCategoriesIds);
-        System.out.println(vendorIds);
-        System.out.println(categoryId);
-        System.out.println(country);
-        System.out.println(city);
-        System.out.println(searchWord);
         return discountRepositoryCustom.findAllByFilters(vendorIds, categoryId, subCategoriesIds,
                 country, city, searchWord, PageRequest.of(page, size));
     }
