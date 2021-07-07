@@ -4,6 +4,7 @@ import com.exadel.discount.platform.model.Category;
 import com.exadel.discount.platform.model.SubCategory;
 import com.exadel.discount.platform.model.Vendor;
 import com.exadel.discount.platform.model.VendorLocation;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
@@ -54,6 +55,7 @@ public class Discount {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "d_category_id", referencedColumnName = "c_id", insertable = false, updatable = false)
+    @JsonIgnore
     private Category category;
 
     @Column(name = "d_category_id")
@@ -61,6 +63,7 @@ public class Discount {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "d_vendor_id", referencedColumnName = "v_id", insertable = false, updatable = false)
+    @JsonIgnore
     private Vendor vendor;
 
     @Column(name = "d_vendor_id")
@@ -84,6 +87,7 @@ public class Discount {
     private ZonedDateTime endDate;
 
     @Column(name = "d_is_deleted")
+    @JsonIgnore
     private boolean isDeleted;
 
     @Column(name = "d_percent")
