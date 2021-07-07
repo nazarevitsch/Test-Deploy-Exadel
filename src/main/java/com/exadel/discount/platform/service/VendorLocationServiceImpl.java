@@ -25,8 +25,8 @@ public class VendorLocationServiceImpl implements VendorLocationService {
     private final VendorLocationMapper mapper;
 
     @Override
-    public List<VendorLocationResponseDto> getAll() {
-        return mapper.mapList(locationRepository.findAll());
+    public List<VendorLocationResponseDto> getAll(boolean isDeleted) {
+        return mapper.mapList(locationRepository.findAllByDeleted(isDeleted));
     }
 
     @Override

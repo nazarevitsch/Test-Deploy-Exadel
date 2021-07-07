@@ -31,8 +31,8 @@ public class SubCategoryServiceImpl implements SubCategoryService {
     private final CategoryRepository categoryRepository;
 
     @Override
-    public List<SubCategoryResponseDto> getAll() {
-        return mapper.mapList(subCategoryRepository.findAll());
+    public List<SubCategoryResponseDto> getAll(boolean isDeleted) {
+        return mapper.mapList(subCategoryRepository.findAllByDeleted(isDeleted));
     }
 
     @Override

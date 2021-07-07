@@ -4,6 +4,7 @@ import com.exadel.discount.platform.exception.NotFoundException;
 import com.exadel.discount.platform.model.dto.SubCategoryDto;
 import com.exadel.discount.platform.model.dto.SubCategoryResponseDto;
 import com.exadel.discount.platform.model.dto.update.SubCategoryBaseDto;
+import com.exadel.discount.platform.service.RoleCheckService;
 import com.exadel.discount.platform.service.interfaces.SubCategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,16 +24,26 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public class SubCategoryController {
 
     private final SubCategoryService subCategoryService;
+    private final RoleCheckService roleCheckService;
 
     @GetMapping(produces = APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyAuthority('ADMINISTRATOR','USER')")
-    public ResponseEntity<List<SubCategoryResponseDto>> getAllSubCategories() {
-        return new ResponseEntity<>(subCategoryService.getAll(), HttpStatus.OK);
+    public ResponseEntity<List<SubCategoryResponseDto>> getAllSubCategories(
+            @RequestParam(value = "isDeleted", required = false, defaultValue = "false") boolean isDeleted
+    ) {
+        if (isDeleted && !roleCheckService.isAdmin()) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+        return new ResponseEntity<>(subCategoryService.getAll(isDeleted), HttpStatus.OK);
     }
 
     @GetMapping(value = "/{id}", produces = APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAuthority('ADMINISTRATOR')")
+    @PreAuthorize("hasAnyAuthority('ADMINISTRATOR', 'USER')")
     public ResponseEntity<SubCategoryResponseDto> getSubCategoryById(@PathVariable UUID id) {
+        SubCategoryResponseDto subCategoryDto = subCategoryService.getById(id);
+        if (subCategoryDto.isDeleted() && !roleCheckService.isAdmin()) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
         return new ResponseEntity<>(subCategoryService.getById(id), HttpStatus.OK);
     }
 

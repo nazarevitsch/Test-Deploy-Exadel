@@ -2,6 +2,7 @@ package com.exadel.discount.platform.web;
 
 import com.exadel.discount.platform.model.dto.CategoryDto;
 import com.exadel.discount.platform.model.dto.CategoryResponseDto;
+import com.exadel.discount.platform.service.RoleCheckService;
 import com.exadel.discount.platform.service.interfaces.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,16 +19,26 @@ import java.util.UUID;
 @RequestMapping("/category")
 public class CategoryController {
     private final CategoryService categoryService;
+    private final RoleCheckService roleCheckService;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyAuthority('ADMINISTRATOR', 'USER')")
-    public ResponseEntity<List<CategoryResponseDto>> getAllCategories() {
-        return new ResponseEntity<>(categoryService.getAll(), HttpStatus.OK);
+    public ResponseEntity<List<CategoryResponseDto>> getAllCategories(
+            @RequestParam(value = "isDeleted", required = false, defaultValue = "false") boolean isDeleted
+    ) {
+        if (isDeleted && !roleCheckService.isAdmin()) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+        return new ResponseEntity<>(categoryService.getAll(isDeleted), HttpStatus.OK);
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAuthority('ADMINISTRATOR')")
+    @PreAuthorize("hasAnyAuthority('ADMINISTRATOR', 'USER')")
     public ResponseEntity<CategoryResponseDto> getCategoryById(@PathVariable UUID id) {
+        CategoryResponseDto categoryDto = categoryService.getById(id);
+        if (categoryDto.isDeleted() && !roleCheckService.isAdmin()) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
         return new ResponseEntity<>(categoryService.getById(id), HttpStatus.OK);
     }
 

@@ -2,6 +2,7 @@ package com.exadel.discount.platform.web;
 
 import com.exadel.discount.platform.model.dto.VendorDto;
 import com.exadel.discount.platform.model.dto.VendorResponseDto;
+import com.exadel.discount.platform.service.RoleCheckService;
 import com.exadel.discount.platform.service.interfaces.VendorService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,16 +19,26 @@ import java.util.UUID;
 @RequestMapping("/vendor")
 public class VendorController {
     private final VendorService vendorService;
+    private final RoleCheckService roleCheckService;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyAuthority('ADMINISTRATOR', 'USER')")
-    public ResponseEntity<List<VendorResponseDto>> getAllVendors() {
-        return new ResponseEntity<>(vendorService.getAll(), HttpStatus.OK);
+    public ResponseEntity<List<VendorResponseDto>> getAllVendors(
+            @RequestParam(value = "isDeleted", required = false, defaultValue = "false") boolean isDeleted
+    ) {
+        if (isDeleted && !roleCheckService.isAdmin()) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+        return new ResponseEntity<>(vendorService.getAll(isDeleted), HttpStatus.OK);
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAuthority('ADMINISTRATOR')")
+    @PreAuthorize("hasAnyAuthority('ADMINISTRATOR', 'USER')")
     public ResponseEntity<VendorResponseDto> getVendorById(@PathVariable UUID id) {
+        VendorResponseDto vendorResponseDto = vendorService.getById(id);
+        if (vendorResponseDto.isDeleted() && !roleCheckService.isAdmin()) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
         return new ResponseEntity<>(vendorService.getById(id), HttpStatus.OK);
     }
 

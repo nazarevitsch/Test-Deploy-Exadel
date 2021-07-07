@@ -25,8 +25,8 @@ public class CategoryServiceImpl implements CategoryService {
     private final CategoryMapper mapper;
 
     @Override
-    public List<CategoryResponseDto> getAll() {
-        return mapper.mapList(categoryRepository.findAll(), CategoryResponseDto.class);
+    public List<CategoryResponseDto> getAll(boolean isDeleted) {
+        return mapper.mapList(categoryRepository.findAllByDeleted(isDeleted), CategoryResponseDto.class);
     }
 
     @Override

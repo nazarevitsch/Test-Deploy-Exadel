@@ -22,8 +22,8 @@ public class VendorServiceImpl implements VendorService {
 
 
     @Override
-    public List<VendorResponseDto> getAll() {
-        return mapper.mapList(vendorRepository.findAll(), VendorResponseDto.class);
+    public List<VendorResponseDto> getAll(boolean isDeleted) {
+        return mapper.mapList(vendorRepository.findAllByDeleted(isDeleted), VendorResponseDto.class);
     }
 
     @Override
