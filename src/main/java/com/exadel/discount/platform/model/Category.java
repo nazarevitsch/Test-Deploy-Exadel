@@ -1,6 +1,7 @@
 package com.exadel.discount.platform.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.SQLDelete;
@@ -29,7 +30,9 @@ public class Category {
     @Column(name = "c_name")
     private String name;
 
-    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
+//    @JsonIgnore
+    @OneToMany(mappedBy = "category")
+//    @JoinColumn(name = "category_id")
     private List<SubCategory> subCategories;
 
     @Column(name = "c_deleted")

@@ -24,7 +24,7 @@ public class DiscountRepositoryCustom {
     @Autowired
     private EntityManager entityManager;
 
-    public Page<Discount> findAllByFilters(List<UUID> vendorIds, UUID categoryId, List<UUID> subCategoriesIds,
+    public List<Discount> findAllByFilters(List<UUID> vendorIds, UUID categoryId, List<UUID> subCategoriesIds,
                                            String country, String city, String searchWordRegularExpression, Pageable pageable) {
 
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
@@ -70,6 +70,7 @@ public class DiscountRepositoryCustom {
         }
 
         TypedQuery<Discount> query = entityManager.createQuery(criteriaQuery);
-        return new PageImpl<>(query.getResultList(), pageable, query.getResultList().size());
+//        return new PageImpl<>(query.getResultList(), pageable, query.getResultList().size());
+        return query.getResultList();
     }
 }

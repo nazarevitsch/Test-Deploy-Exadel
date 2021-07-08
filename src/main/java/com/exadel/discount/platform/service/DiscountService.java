@@ -3,7 +3,9 @@ package com.exadel.discount.platform.service;
 import com.exadel.discount.platform.domain.Discount;
 import com.exadel.discount.platform.exception.NotFoundException;
 import com.exadel.discount.platform.exception.UnacceptableDiscountDtoException;
+import com.exadel.discount.platform.mapper.DiscountMapper;
 import com.exadel.discount.platform.model.dto.DiscountDto;
+import com.exadel.discount.platform.model.dto.DiscountDtoResponse;
 import com.exadel.discount.platform.repository.DiscountRepository;
 import com.exadel.discount.platform.repository.DiscountRepositoryCustom;
 import com.exadel.discount.platform.repository.SubCategoryRepository;
@@ -34,9 +36,10 @@ public class DiscountService {
     @Autowired
     private DiscountRepositoryCustom discountRepositoryCustom;
 
-    public void save(DiscountDto discountDto){
-        log.info(discountDto.toString());
+    @Autowired
+    private DiscountMapper discountMapper;
 
+    public void save(DiscountDto discountDto){
         Discount discount = discountDto.getDiscount();
         if (!discountDto.isOnline()) {
             if (discountDto.getLocations() == null || discountDto.getLocations().isEmpty()){
@@ -48,24 +51,21 @@ public class DiscountService {
             throw new UnacceptableDiscountDtoException("Discount hasn't full data!");
         }
         discount.setSubCategories(subCategoryRepository.findAllById(discountDto.getSubCategories()));
-
-        Discount discountWithID = discountRepository.save(discount);
-
-        log.info(discountWithID.toString());
+        discountRepository.save(discount);
     }
 
-    public Discount findById(UUID id){
+    public DiscountDtoResponse findById(UUID id){
         Optional<Discount> discount = Optional.of(discountRepository.getById(id));
-        return discount.orElseThrow(()-> new NotFoundException("Discount wasn't found."));
+        return discountMapper.entityToDto(discount.orElseThrow(()-> new NotFoundException("Discount wasn't found.")));
     }
 
 
-    public Page<Discount> findAllByFilters(int page, int size, UUID categoryId, List<UUID> subCategoriesIds,
-                                           List<UUID> vendorIds, String country, String city, String searchWord) {
+    public List<DiscountDtoResponse> findAllByFilters(int page, int size, UUID categoryId, List<UUID> subCategoriesIds,
+                                                      List<UUID> vendorIds, String country, String city, String searchWord) {
         if (searchWord != null) {
             searchWord = "%" + searchWord + "%";
         }
-        return discountRepositoryCustom.findAllByFilters(vendorIds, categoryId, subCategoriesIds,
-                country, city, searchWord, PageRequest.of(page, size));
+        return discountMapper.map(discountRepositoryCustom.findAllByFilters(vendorIds, categoryId, subCategoriesIds,
+                country, city, searchWord, PageRequest.of(page, size)));
     }
 }

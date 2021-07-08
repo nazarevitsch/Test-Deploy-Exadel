@@ -3,6 +3,7 @@ package com.exadel.discount.platform.web;
 import com.exadel.discount.platform.domain.Discount;
 import com.exadel.discount.platform.domain.Message;
 import com.exadel.discount.platform.model.dto.DiscountDto;
+import com.exadel.discount.platform.model.dto.DiscountDtoResponse;
 import com.exadel.discount.platform.service.DiscountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -23,7 +24,7 @@ public class DiscountController {
 
     @GetMapping("/get_discounts")
     @PreAuthorize("hasAnyAuthority('ADMINISTRATOR', 'USER')")
-    public ResponseEntity<Page<Discount>> getAll(
+    public ResponseEntity<List<DiscountDtoResponse>> getAll(
             @RequestParam("page") int page,
             @RequestParam("size") int size,
             @RequestParam(value = "categoryId", required = false) UUID categoryId,
@@ -39,7 +40,8 @@ public class DiscountController {
 
     @GetMapping(value = "/{id}")
     @PreAuthorize("hasAnyAuthority('ADMINISTRATOR', 'USER')")
-    public ResponseEntity<Discount> getById(@PathVariable UUID id){
+    public ResponseEntity<DiscountDtoResponse> getById(@PathVariable UUID id){
+        System.out.println(id);
         return new ResponseEntity<>(discountService.findById(id), HttpStatus.OK);
     }
 
