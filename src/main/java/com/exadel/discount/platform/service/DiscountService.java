@@ -46,6 +46,7 @@ public class DiscountService {
     public void save(DiscountDto discountDto){
         Discount discount = discountDto.getDiscount();
         if (!discountDto.isOnline()) {
+
             if (discountDto.getLocations() == null || discountDto.getLocations().isEmpty()){
                 throw new UnacceptableDiscountDtoException("Discount hasn't full data!");
             }
@@ -54,6 +55,7 @@ public class DiscountService {
                 if (!vendorLocations.get(i).getVendor().getId().equals(discountDto.getVendorId())) throw new DiscrepancyException("Vendor location doesn't belong to vendor.");
                 if (vendorLocations.get(i).isDeleted()) throw new DeletedException("Vendor location is deleted.");
             }
+            discount.setVendorLocations(vendorLocations);
         }
         if (discountDto.getSubCategories() == null || discountDto.getSubCategories().isEmpty()){
             throw new UnacceptableDiscountDtoException("Discount hasn't full data!");
