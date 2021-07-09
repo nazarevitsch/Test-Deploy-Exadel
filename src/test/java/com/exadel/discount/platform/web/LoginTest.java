@@ -1,4 +1,4 @@
-package com.exadel.discount.platform.controllers;
+package com.exadel.discount.platform.web;
 
 import com.exadel.discount.platform.service.dto.UserLoginDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;

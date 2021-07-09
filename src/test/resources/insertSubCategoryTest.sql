@@ -1,0 +1,2 @@
+INSERT INTO category(c_id, c_name, c_deleted) VALUES ('e84858db-1b05-45da-bd31-e48aaab43a33', 'test_food', 'false');
+INSERT INTO sub_category(sc_id, sc_name, sc_deleted, category_id) VALUES ('35f97267-404e-4d95-98f6-9a399bc3a9de', 'test_cake', 'false', 'e84858db-1b05-45da-bd31-e48aaab43a33');
