@@ -77,7 +77,7 @@ public class DiscountService {
     public Page<DiscountDtoResponse> findAllByFilters(int page, int size, UUID categoryId, List<UUID> subCategoriesIds,
                                                       List<UUID> vendorIds, String country, String city, String searchWord) {
         return discountMapper.map(discountRepositoryCustom.findAllByFilters(vendorIds, categoryId, subCategoriesIds,
-                country, city, searchWord), PageRequest.of(page, size));
+                country, city, searchWord, PageRequest.of(page, size)));
     }
 
     public void toArchive(UUID id) {

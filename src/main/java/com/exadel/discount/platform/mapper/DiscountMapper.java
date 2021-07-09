@@ -6,6 +6,7 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
@@ -25,7 +26,7 @@ public class DiscountMapper {
         return modelMapper.map(discount, DiscountDtoResponse.class);
     }
 
-    public Page<DiscountDtoResponse> map(List<Discount> discount, Pageable pageable) {
-        return new PageImpl<>(discount.stream().map(this::entityToDto).collect(Collectors.toList()), pageable, discount.size());
+    public Page<DiscountDtoResponse> map(Page<Discount> discount) {
+       return discount.map(this::entityToDto);
     }
 }
