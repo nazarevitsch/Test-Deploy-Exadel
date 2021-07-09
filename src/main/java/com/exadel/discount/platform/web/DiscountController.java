@@ -24,7 +24,7 @@ public class DiscountController {
 
     @GetMapping("/get_discounts")
     @PreAuthorize("hasAnyAuthority('ADMINISTRATOR', 'USER')")
-    public ResponseEntity<List<DiscountDtoResponse>> getAll(
+    public ResponseEntity<Page<DiscountDtoResponse>> getAll(
             @RequestParam("page") int page,
             @RequestParam("size") int size,
             @RequestParam(value = "categoryId", required = false) UUID categoryId,
@@ -41,7 +41,6 @@ public class DiscountController {
     @GetMapping(value = "/{id}")
     @PreAuthorize("hasAnyAuthority('ADMINISTRATOR', 'USER')")
     public ResponseEntity<DiscountDtoResponse> getById(@PathVariable UUID id){
-        System.out.println(id);
         return new ResponseEntity<>(discountService.findById(id), HttpStatus.OK);
     }
 

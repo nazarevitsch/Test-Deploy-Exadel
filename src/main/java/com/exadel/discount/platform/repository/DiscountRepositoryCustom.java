@@ -25,8 +25,7 @@ public class DiscountRepositoryCustom {
     private EntityManager entityManager;
 
     public List<Discount> findAllByFilters(List<UUID> vendorIds, UUID categoryId, List<UUID> subCategoriesIds,
-                                           String country, String city, String searchWordRegularExpression, Pageable pageable) {
-
+                                           String country, String city, String searchWordRegularExpression) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Discount> criteriaQuery = criteriaBuilder.createQuery(Discount.class);
         Root<Discount> discountRoot = criteriaQuery.from(Discount.class);
@@ -42,14 +41,12 @@ public class DiscountRepositoryCustom {
             Predicate predicateVendorIds = vendors.in(vendorIds);
             predicates.add(predicateVendorIds);
         }
-
         if (subCategoriesIds != null) {
             Join<Discount, SubCategory> join1 = discountRoot.join("subCategories");
             Expression<Object> subCategories = join1.get("id");
             Predicate predicateSubCategories = subCategories.in(subCategoriesIds);
             predicates.add(predicateSubCategories);
         }
-
         if (city != null && country != null) {
             Join<Discount, VendorLocation> join2 = discountRoot.join("vendorLocations");
             Predicate predicateCity = criteriaBuilder.equal(join2.get("city"), city);
@@ -57,20 +54,17 @@ public class DiscountRepositoryCustom {
             predicates.add(predicateCity);
             predicates.add(predicateCountry);
         }
-
         if (searchWordRegularExpression != null) {
-            Predicate predicateLikeSearchWord = criteriaBuilder.like(criteriaBuilder.upper(discountRoot.get("name")), searchWordRegularExpression.toUpperCase());
+            Predicate predicateLikeSearchWord = criteriaBuilder.like(criteriaBuilder.upper(discountRoot.get("name")),
+                    "%" + searchWordRegularExpression.toUpperCase() + "%");
             predicates.add(predicateLikeSearchWord);
         }
-
         if (predicates.size() != 0) {
             Predicate[] predicatesFinal = new Predicate[predicates.size()];
             predicates.toArray(predicatesFinal);
             criteriaQuery.where(predicatesFinal);
         }
-
         TypedQuery<Discount> query = entityManager.createQuery(criteriaQuery);
-//        return new PageImpl<>(query.getResultList(), pageable, query.getResultList().size());
         return query.getResultList();
     }
 }

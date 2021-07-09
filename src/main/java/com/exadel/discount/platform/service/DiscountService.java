@@ -1,9 +1,13 @@
 package com.exadel.discount.platform.service;
 
 import com.exadel.discount.platform.domain.Discount;
+import com.exadel.discount.platform.exception.DeletedException;
+import com.exadel.discount.platform.exception.DiscrepancyException;
 import com.exadel.discount.platform.exception.NotFoundException;
 import com.exadel.discount.platform.exception.UnacceptableDiscountDtoException;
 import com.exadel.discount.platform.mapper.DiscountMapper;
+import com.exadel.discount.platform.model.SubCategory;
+import com.exadel.discount.platform.model.VendorLocation;
 import com.exadel.discount.platform.model.dto.DiscountDto;
 import com.exadel.discount.platform.model.dto.DiscountDtoResponse;
 import com.exadel.discount.platform.repository.DiscountRepository;
@@ -45,12 +49,21 @@ public class DiscountService {
             if (discountDto.getLocations() == null || discountDto.getLocations().isEmpty()){
                 throw new UnacceptableDiscountDtoException("Discount hasn't full data!");
             }
-            discount.setVendorLocations(vendorLocationRepository.findAllById(discountDto.getLocations()));
+            List<VendorLocation> vendorLocations = vendorLocationRepository.findAllById(discountDto.getLocations());
+            for (int i = 0; i < vendorLocations.size(); i++) {
+                if (!vendorLocations.get(i).getVendor().getId().equals(discountDto.getVendorId())) throw new DiscrepancyException("Vendor location doesn't belong to vendor.");
+                if (vendorLocations.get(i).isDeleted()) throw new DeletedException("Vendor location is deleted.");
+            }
         }
         if (discountDto.getSubCategories() == null || discountDto.getSubCategories().isEmpty()){
             throw new UnacceptableDiscountDtoException("Discount hasn't full data!");
         }
-        discount.setSubCategories(subCategoryRepository.findAllById(discountDto.getSubCategories()));
+        List<SubCategory> subCategories = subCategoryRepository.findAllById(discountDto.getSubCategories());
+        for (int i = 0; i < subCategories.size(); i++) {
+            if (!subCategories.get(i).getCategory().getId().equals(discountDto.getCategoryId())) throw new DiscrepancyException("Sub category doesn't belong to category.");
+            if (subCategories.get(i).isDeleted()) throw new DeletedException("Sub category is deleted.");
+        }
+        discount.setSubCategories(subCategories);
         discountRepository.save(discount);
     }
 
@@ -59,13 +72,9 @@ public class DiscountService {
         return discountMapper.entityToDto(discount.orElseThrow(()-> new NotFoundException("Discount wasn't found.")));
     }
 
-
-    public List<DiscountDtoResponse> findAllByFilters(int page, int size, UUID categoryId, List<UUID> subCategoriesIds,
+    public Page<DiscountDtoResponse> findAllByFilters(int page, int size, UUID categoryId, List<UUID> subCategoriesIds,
                                                       List<UUID> vendorIds, String country, String city, String searchWord) {
-        if (searchWord != null) {
-            searchWord = "%" + searchWord + "%";
-        }
         return discountMapper.map(discountRepositoryCustom.findAllByFilters(vendorIds, categoryId, subCategoriesIds,
-                country, city, searchWord, PageRequest.of(page, size)));
+                country, city, searchWord), PageRequest.of(page, size));
     }
 }
