@@ -77,4 +77,11 @@ public class DiscountService {
         return discountMapper.map(discountRepositoryCustom.findAllByFilters(vendorIds, categoryId, subCategoriesIds,
                 country, city, searchWord), PageRequest.of(page, size));
     }
+
+    public void toArchive(UUID id) {
+        if (discountRepository.existsById(id)){
+            discountRepository.deleteById(id);
+        }
+        throw new NotFoundException("Discount with such id doesn't exist.");
+    }
 }

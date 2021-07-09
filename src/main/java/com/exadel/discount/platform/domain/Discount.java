@@ -7,6 +7,7 @@ import com.exadel.discount.platform.model.VendorLocation;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
@@ -20,6 +21,7 @@ import java.util.UUID;
 @Entity
 @Data
 @Table(name = "discount")
+@SQLDelete(sql = "UPDATE discount SET d_is_deleted=true WHERE d_id=?")
 public class Discount {
 
     @Id

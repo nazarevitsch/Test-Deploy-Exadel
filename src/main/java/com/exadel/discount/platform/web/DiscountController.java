@@ -8,6 +8,7 @@ import com.exadel.discount.platform.service.DiscountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -49,5 +50,12 @@ public class DiscountController {
     public ResponseEntity<?> create(@RequestBody DiscountDto discountDto){
         discountService.save(discountDto);
         return new ResponseEntity<>(new Message("Discount was created!"), HttpStatus.OK);
+    }
+
+    @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('ADMINISTRATOR')")
+    public ResponseEntity<?> delete(@PathVariable UUID id) {
+        discountService.toArchive(id);
+        return new ResponseEntity<>(new Message("Discount was deleted."), HttpStatus.OK);
     }
 }

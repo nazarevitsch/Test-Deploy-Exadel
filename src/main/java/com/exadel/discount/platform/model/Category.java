@@ -30,9 +30,7 @@ public class Category {
     @Column(name = "c_name")
     private String name;
 
-//    @JsonIgnore
     @OneToMany(mappedBy = "category")
-//    @JoinColumn(name = "category_id")
     private List<SubCategory> subCategories;
 
     @Column(name = "c_deleted")
