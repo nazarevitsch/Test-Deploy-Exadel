@@ -65,8 +65,9 @@ public class DiscountRepositoryCustom {
             criteriaQuery.where(predicatesFinal);
         }
         TypedQuery<Discount> query = entityManager.createQuery(criteriaQuery);
+        int size = query.getResultList().size();
         query.setFirstResult(pageable.getPageNumber() * pageable.getPageSize());
         query.setMaxResults(pageable.getPageSize());
-        return new PageImpl<>(query.getResultList(), pageable, query.getResultList().size());
+        return new PageImpl<>(query.getResultList(), pageable, size);
     }
 }

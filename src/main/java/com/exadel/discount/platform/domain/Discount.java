@@ -11,9 +11,7 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -59,6 +57,7 @@ public class Discount {
     @JoinColumn(name = "d_category_id", referencedColumnName = "c_id", insertable = false, updatable = false)
     private Category category;
 
+    @NotNull
     @Column(name = "d_category_id")
     private UUID categoryId;
 
@@ -66,6 +65,7 @@ public class Discount {
     @JoinColumn(name = "d_vendor_id", referencedColumnName = "v_id", insertable = false, updatable = false)
     private Vendor vendor;
 
+    @NotNull
     @Column(name = "d_vendor_id")
     private UUID vendorId;
 
@@ -76,7 +76,7 @@ public class Discount {
     @Column(name = "d_is_online")
     private boolean isOnline;
 
-    @Size(min = 2, max = 200)
+    @Size(min = 10, max = 150)
     @Column(name = "d_image_Link")
     private String imageLink;
 
@@ -89,6 +89,8 @@ public class Discount {
     @Column(name = "d_is_deleted")
     private boolean isDeleted;
 
+    @Min(1)
+    @Max(99)
     @Column(name = "d_percentage")
     private int percentage;
 }

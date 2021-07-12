@@ -55,14 +55,13 @@ public class DiscountController {
     @PutMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('ADMINISTRATOR')")
     public ResponseEntity<?> update(@PathVariable UUID id, @RequestBody DiscountUpdateDto discountUpdateDto){
-        discountService.updateDiscount(id, discountUpdateDto);
-        return new ResponseEntity<>(new Message("Discount was updated!"), HttpStatus.OK);
+        return new ResponseEntity<>(discountService.updateDiscount(id, discountUpdateDto), HttpStatus.OK);
     }
 
     @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('ADMINISTRATOR')")
-    public ResponseEntity<?> delete(@PathVariable UUID id) {
+    public ResponseEntity delete(@PathVariable UUID id) {
         discountService.toArchive(id);
-        return new ResponseEntity<>(new Message("Discount was deleted."), HttpStatus.OK);
+        return new ResponseEntity(HttpStatus.OK);
     }
 }

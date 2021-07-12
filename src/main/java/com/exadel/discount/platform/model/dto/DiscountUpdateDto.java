@@ -1,41 +1,17 @@
 package com.exadel.discount.platform.model.dto;
 
-import com.exadel.discount.platform.domain.Discount;
 import lombok.Data;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-import java.time.ZonedDateTime;
+import javax.validation.constraints.*;
 import java.util.List;
 import java.util.UUID;
 
 @Data
-public class DiscountUpdateDto {
-
-    @NotBlank
-    @Size(min = 2, max = 50)
-    private String name;
+public class DiscountUpdateDto extends DiscountBaseDto {
 
     @NotNull
     private List<UUID> locationIds;
 
     @NotNull
-    private UUID categoryId;
-
-    @NotNull
     private List<UUID> subCategoryIds;
-
-    @Size(min = 50, max = 2000)
-    private String fullDescription;
-
-    private int percentage;
-
-    private boolean isOnline;
-
-    private String imageLink;
-
-    private ZonedDateTime startDate;
-
-    private ZonedDateTime endDate;
 }
