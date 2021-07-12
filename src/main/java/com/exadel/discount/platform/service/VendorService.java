@@ -7,7 +7,6 @@ import com.exadel.discount.platform.model.Vendor;
 import com.exadel.discount.platform.model.dto.VendorDto;
 import com.exadel.discount.platform.model.dto.VendorResponseDto;
 import com.exadel.discount.platform.repository.VendorRepository;
-import com.exadel.discount.platform.service.interfaces.VendorService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,23 +15,20 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class VendorServiceImpl implements VendorService {
+public class VendorService {
     private final VendorRepository vendorRepository;
     private final VendorMapper mapper;
 
 
-    @Override
     public List<VendorResponseDto> getAll(boolean isDeleted) {
         return mapper.mapList(vendorRepository.findAllByDeleted(isDeleted), VendorResponseDto.class);
     }
 
-    @Override
     public VendorResponseDto save(VendorDto vendorDto) {
         Vendor vendor = vendorRepository.save(mapper.dtoToEntity(vendorDto));
         return mapper.entityToResponseDto(vendor);
     }
 
-    @Override
     public VendorResponseDto getById(UUID id) {
         Vendor vendor = vendorRepository
                 .findById(id)
@@ -41,7 +37,6 @@ public class VendorServiceImpl implements VendorService {
         return mapper.entityToResponseDto(vendor);
     }
 
-    @Override
     public VendorResponseDto update(UUID id, VendorDto vendorDto) {
         Vendor vendor = vendorRepository
                 .findById(id)
@@ -57,7 +52,6 @@ public class VendorServiceImpl implements VendorService {
         return mapper.entityToResponseDto(vendor);
     }
 
-    @Override
     public void toArchive(UUID id) {
         boolean isExists = vendorRepository.existsById(id);
         if (isExists) {

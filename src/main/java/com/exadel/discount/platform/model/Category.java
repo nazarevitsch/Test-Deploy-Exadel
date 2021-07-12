@@ -1,7 +1,5 @@
 package com.exadel.discount.platform.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.SQLDelete;
@@ -9,6 +7,7 @@ import org.hibernate.annotations.SQLDelete;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -29,10 +28,8 @@ public class Category {
     @Size(min = 3, max = 50)
     @Column(name = "c_name")
     private String name;
-
     @OneToMany(mappedBy = "category")
-    private List<SubCategory> subCategories;
-
+    private List<SubCategory> subCategories = new ArrayList<>();
     @Column(name = "c_deleted")
     private boolean deleted;
 }

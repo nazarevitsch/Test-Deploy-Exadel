@@ -3,7 +3,7 @@ package com.exadel.discount.platform.web;
 import com.exadel.discount.platform.model.dto.VendorDto;
 import com.exadel.discount.platform.model.dto.VendorResponseDto;
 import com.exadel.discount.platform.service.RoleCheckService;
-import com.exadel.discount.platform.service.interfaces.VendorService;
+import com.exadel.discount.platform.service.VendorService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

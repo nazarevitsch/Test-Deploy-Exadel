@@ -2,8 +2,8 @@ package com.exadel.discount.platform.web;
 
 import com.exadel.discount.platform.model.dto.CategoryDto;
 import com.exadel.discount.platform.model.dto.CategoryResponseDto;
+import com.exadel.discount.platform.service.CategoryService;
 import com.exadel.discount.platform.service.RoleCheckService;
-import com.exadel.discount.platform.service.interfaces.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

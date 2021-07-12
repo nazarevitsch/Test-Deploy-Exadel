@@ -8,7 +8,6 @@ import com.exadel.discount.platform.model.dto.CategoryDto;
 import com.exadel.discount.platform.model.dto.CategoryResponseDto;
 import com.exadel.discount.platform.repository.CategoryRepository;
 import com.exadel.discount.platform.repository.SubCategoryRepository;
-import com.exadel.discount.platform.service.interfaces.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,23 +18,20 @@ import java.util.UUID;
 @Transactional
 @Service
 @RequiredArgsConstructor
-public class CategoryServiceImpl implements CategoryService {
+public class CategoryService {
     private final CategoryRepository categoryRepository;
     private final SubCategoryRepository subCategoryRepository;
     private final CategoryMapper mapper;
 
-    @Override
     public List<CategoryResponseDto> getAll(boolean isDeleted) {
-        return mapper.mapList(categoryRepository.findAllByDeleted(isDeleted), CategoryResponseDto.class);
+        return mapper.mapList(categoryRepository.findAllByDeleted(isDeleted));
     }
 
-    @Override
     public CategoryResponseDto save(CategoryDto categoryDto) {
         Category category = categoryRepository.save(mapper.dtoToEntity(categoryDto));
         return mapper.entityToResponseDto(category);
     }
 
-    @Override
     public CategoryResponseDto getById(UUID id) {
         Category category = categoryRepository
                 .findById(id)
@@ -44,7 +40,6 @@ public class CategoryServiceImpl implements CategoryService {
         return mapper.entityToResponseDto(category);
     }
 
-    @Override
     public CategoryResponseDto update(UUID id, CategoryDto categoryDto) {
         Category category = categoryRepository
                 .findById(id)
@@ -60,7 +55,6 @@ public class CategoryServiceImpl implements CategoryService {
         return mapper.entityToResponseDto(category);
     }
 
-    @Override
     public void toArchive(UUID id) {
             boolean exists = categoryRepository.existsById(id);
             if (exists){

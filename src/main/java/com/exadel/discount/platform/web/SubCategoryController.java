@@ -5,7 +5,7 @@ import com.exadel.discount.platform.model.dto.SubCategoryDto;
 import com.exadel.discount.platform.model.dto.SubCategoryResponseDto;
 import com.exadel.discount.platform.model.dto.update.SubCategoryBaseDto;
 import com.exadel.discount.platform.service.RoleCheckService;
-import com.exadel.discount.platform.service.interfaces.SubCategoryService;
+import com.exadel.discount.platform.service.SubCategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

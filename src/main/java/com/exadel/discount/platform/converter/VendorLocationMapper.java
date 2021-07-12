@@ -1,8 +1,6 @@
 package com.exadel.discount.platform.converter;
 
-import com.exadel.discount.platform.model.SubCategory;
 import com.exadel.discount.platform.model.VendorLocation;
-import com.exadel.discount.platform.model.dto.SubCategoryResponseDto;
 import com.exadel.discount.platform.model.dto.VendorLocationDto;
 import com.exadel.discount.platform.model.dto.VendorLocationResponseDto;
 import com.exadel.discount.platform.model.dto.update.VendorLocationBaseDto;
