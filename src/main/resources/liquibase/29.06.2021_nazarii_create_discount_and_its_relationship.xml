@@ -18,6 +18,8 @@
             <column name="d_image_link" type="VARCHAR(200)"/>
             <column name="d_start_date" type="timestamptz"/>
             <column name="d_end_date" type="timestamptz"/>
+            <column name="d_category_id" type="UUID"/>
+            <column name="d_percentage" type="int"/>
         </createTable>
     </changeSet>
 
@@ -26,8 +28,12 @@
             <column defaultValueComputed="uuid_generate_v4()" name="dsc_id" type="UUID">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_discount_sub_category"/>
             </column>
-            <column name="dsc_discount_id" type="UUID"/>
-            <column name="dsc_sub_category_id" type="UUID"/>
+            <column name="dsc_discount_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="dsc_sub_category_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
     </changeSet>
 
@@ -36,8 +42,12 @@
             <column defaultValueComputed="uuid_generate_v4()" name="dvl_id" type="UUID">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_discount_vendor_location"/>
             </column>
-            <column name="dvl_discount_id" type="UUID"/>
-            <column name="dvl_vendor_location_id" type="UUID"/>
+            <column name="dvl_discount_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="dvl_vendor_location_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
     </changeSet>
 </databaseChangeLog>

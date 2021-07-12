@@ -4,6 +4,7 @@ import com.exadel.discount.platform.domain.Discount;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -16,16 +17,19 @@ public class DiscountUpdateDto {
     @Size(min = 2, max = 50)
     private String name;
 
-    private List<UUID> locations;
+    @NotNull
+    private List<UUID> locationIds;
 
+    @NotNull
     private UUID categoryId;
 
-    private List<UUID> subCategories;
+    @NotNull
+    private List<UUID> subCategoryIds;
 
     @Size(min = 50, max = 2000)
     private String fullDescription;
 
-    private int percent;
+    private int percentage;
 
     private boolean isOnline;
 
@@ -34,19 +38,4 @@ public class DiscountUpdateDto {
     private ZonedDateTime startDate;
 
     private ZonedDateTime endDate;
-
-    public Discount getDiscount(){
-        Discount discount = new Discount();
-        discount.setName(this.name);
-        discount.setFullDescription(this.fullDescription);
-        discount.setOnline(this.isOnline);
-        discount.setEndDate(this.endDate);
-        discount.setStartDate(this.startDate);
-        discount.setImageLink(this.imageLink);
-        discount.setCategoryId(this.categoryId);
-        discount.setPercent(this.percent);
-
-        discount.setDeleted(false);
-        return discount;
-    }
 }

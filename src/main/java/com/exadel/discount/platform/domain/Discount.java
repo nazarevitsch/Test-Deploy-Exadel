@@ -89,6 +89,6 @@ public class Discount {
     @Column(name = "d_is_deleted")
     private boolean isDeleted;
 
-    @Column(name = "d_percent")
-    private int percent;
+    @Column(name = "d_percentage")
+    private int percentage;
 }

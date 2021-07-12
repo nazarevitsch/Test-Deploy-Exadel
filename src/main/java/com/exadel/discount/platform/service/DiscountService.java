@@ -2,9 +2,8 @@ package com.exadel.discount.platform.service;
 
 import com.exadel.discount.platform.domain.Discount;
 import com.exadel.discount.platform.exception.DeletedException;
-import com.exadel.discount.platform.exception.DiscrepancyException;
 import com.exadel.discount.platform.exception.NotFoundException;
-import com.exadel.discount.platform.exception.UnacceptableDiscountDtoException;
+import com.exadel.discount.platform.exception.BadRequestException;
 import com.exadel.discount.platform.mapper.DiscountMapper;
 import com.exadel.discount.platform.model.SubCategory;
 import com.exadel.discount.platform.model.VendorLocation;
@@ -46,8 +45,8 @@ public class DiscountService {
     private DiscountMapper discountMapper;
 
     public void save(DiscountDto discountDto){
-        Discount discount = discountDto.getDiscount();
-        validateVendorLocationsAndSubCategory(discount, discountDto.getLocations(), discountDto.getSubCategories());
+        Discount discount = discountMapper.dtoToEntity(discountDto);
+        validateVendorLocationsAndSubCategory(discount, discountDto.getLocationIds(), discountDto.getSubCategoryIds());
         discountRepository.save(discount);
     }
 
@@ -70,9 +69,9 @@ public class DiscountService {
         List<UUID> locationsIds = discount.getVendorLocations().stream().map(VendorLocation::getId).collect(Collectors.toList());
         discountRepository.removeSubCategoryRelationship(subIds, id);
         discountRepository.removeVendorLocationsRelationship(locationsIds, id);
-        Discount newDiscount = discountUpdateDto.getDiscount();
+        Discount newDiscount = discountMapper.updateDtoToEntity(discountUpdateDto);
         newDiscount.setVendorId(discount.getVendorId());
-        validateVendorLocationsAndSubCategory(newDiscount, discountUpdateDto.getLocations(), discountUpdateDto.getSubCategories());
+        validateVendorLocationsAndSubCategory(newDiscount, discountUpdateDto.getLocationIds(), discountUpdateDto.getSubCategoryIds());
         newDiscount.setId(id);
         discountRepository.save(newDiscount);
     }
@@ -87,21 +86,21 @@ public class DiscountService {
     private void validateVendorLocationsAndSubCategory(Discount discount, List<UUID> locationsIds, List<UUID> subCategoriesIds){
         if (!discount.isOnline()) {
             if (locationsIds == null || locationsIds.isEmpty()){
-                throw new UnacceptableDiscountDtoException("Discount hasn't full data!");
+                throw new BadRequestException("Discount hasn't full data!");
             }
             List<VendorLocation> vendorLocations = vendorLocationRepository.findAllById(locationsIds);
             for (int i = 0; i < vendorLocations.size(); i++) {
-                if (!vendorLocations.get(i).getVendor().getId().equals(discount.getVendorId())) throw new DiscrepancyException("Vendor location doesn't belong to vendor.");
+                if (!vendorLocations.get(i).getVendor().getId().equals(discount.getVendorId())) throw new BadRequestException("Vendor location doesn't belong to vendor.");
                 if (vendorLocations.get(i).isDeleted()) throw new DeletedException("Vendor location is deleted.");
             }
             discount.setVendorLocations(vendorLocations);
         }
         if (subCategoriesIds == null || subCategoriesIds.isEmpty()){
-            throw new UnacceptableDiscountDtoException("Discount hasn't full data!");
+            throw new BadRequestException("Discount hasn't full data!");
         }
         List<SubCategory> subCategories = subCategoryRepository.findAllById(subCategoriesIds);
         for (int i = 0; i < subCategories.size(); i++) {
-            if (!subCategories.get(i).getCategory().getId().equals(discount.getCategoryId())) throw new DiscrepancyException("Sub category doesn't belong to category.");
+            if (!subCategories.get(i).getCategory().getId().equals(discount.getCategoryId())) throw new BadRequestException("Sub category doesn't belong to category.");
             if (subCategories.get(i).isDeleted()) throw new DeletedException("Sub category is deleted.");
         }
         discount.setSubCategories(subCategories);

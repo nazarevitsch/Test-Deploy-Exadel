@@ -26,9 +26,6 @@ public class UserController {
     @Autowired
     private JWTUtil jwtUtil;
 
-    @Autowired
-    private EmailNotificationService emailNotificationService;
-
     @PostMapping("/login")
     public ResponseEntity<?> loginUser(@RequestBody UserLoginDTO userLogin) {
         try {

@@ -1,17 +1,14 @@
 package com.exadel.discount.platform.mapper;
 
 import com.exadel.discount.platform.domain.Discount;
+import com.exadel.discount.platform.model.dto.DiscountDto;
 import com.exadel.discount.platform.model.dto.DiscountDtoResponse;
+import com.exadel.discount.platform.model.dto.DiscountUpdateDto;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 public class DiscountMapper {
@@ -28,5 +25,13 @@ public class DiscountMapper {
 
     public Page<DiscountDtoResponse> map(Page<Discount> discount) {
        return discount.map(this::entityToDto);
+    }
+
+    public Discount dtoToEntity(DiscountDto discountDto){
+        return modelMapper.map(discountDto, Discount.class);
+    }
+
+    public Discount updateDtoToEntity(DiscountUpdateDto discountUpdateDto){
+        return modelMapper.map(discountUpdateDto, Discount.class);
     }
 }
