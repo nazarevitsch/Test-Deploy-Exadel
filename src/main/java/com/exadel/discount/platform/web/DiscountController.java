@@ -1,9 +1,9 @@
 package com.exadel.discount.platform.web;
 
-import com.exadel.discount.platform.domain.Discount;
 import com.exadel.discount.platform.domain.Message;
 import com.exadel.discount.platform.model.dto.DiscountDto;
 import com.exadel.discount.platform.model.dto.DiscountDtoResponse;
+import com.exadel.discount.platform.model.dto.DiscountUpdateDto;
 import com.exadel.discount.platform.service.DiscountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -50,6 +50,13 @@ public class DiscountController {
     public ResponseEntity<?> create(@RequestBody DiscountDto discountDto){
         discountService.save(discountDto);
         return new ResponseEntity<>(new Message("Discount was created!"), HttpStatus.OK);
+    }
+
+    @PutMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('ADMINISTRATOR')")
+    public ResponseEntity<?> update(@PathVariable UUID id, @RequestBody DiscountUpdateDto discountUpdateDto){
+        discountService.updateDiscount(id, discountUpdateDto);
+        return new ResponseEntity<>(new Message("Discount was updated!"), HttpStatus.OK);
     }
 
     @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
