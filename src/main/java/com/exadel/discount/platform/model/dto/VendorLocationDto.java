@@ -13,8 +13,6 @@ import java.util.UUID;
 @Data
 public class VendorLocationDto extends VendorLocationBaseDto {
 
-    @NotNull
-    private UUID vendorId;
     @ToString.Exclude
     private List<DiscountDto> discounts;
     /*private int latitude;

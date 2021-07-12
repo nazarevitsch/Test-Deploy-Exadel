@@ -10,7 +10,6 @@ import com.exadel.discount.platform.model.dto.VendorLocationResponseDto;
 import com.exadel.discount.platform.model.dto.update.VendorLocationBaseDto;
 import com.exadel.discount.platform.repository.VendorLocationRepository;
 import com.exadel.discount.platform.repository.VendorRepository;
-import com.exadel.discount.platform.service.interfaces.VendorLocationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,19 +18,17 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class VendorLocationServiceImpl implements VendorLocationService {
+public class VendorLocationService {
     private final VendorLocationRepository locationRepository;
     private final VendorRepository vendorRepository;
     private final VendorLocationMapper mapper;
 
-    @Override
-    public List<VendorLocationResponseDto> getAll(boolean isDeleted) {
-        return mapper.mapList(locationRepository.findAllByDeleted(isDeleted));
+    public List<VendorLocationResponseDto> getAllByVendorId(UUID vendorId, boolean isDeleted) {
+        return mapper.mapList(locationRepository.findAllByVendorIdAndDeleted(vendorId, isDeleted));
     }
 
-    @Override
-    public VendorLocationResponseDto save(VendorLocationDto vendorLocationDto) {
-        Vendor vendor = vendorRepository.getById(vendorLocationDto.getVendorId());
+    public VendorLocationResponseDto save(UUID vendorId, VendorLocationDto vendorLocationDto) {
+        Vendor vendor = vendorRepository.getById(vendorId);
         if (vendor.isDeleted()) {
             throw new DeletedException("Cannot create Vendor Location with deleted Vendor");
         }
@@ -41,35 +38,29 @@ public class VendorLocationServiceImpl implements VendorLocationService {
         return mapper.entityToResponseDto(location);
     }
 
-    @Override
-    public VendorLocationResponseDto getById(UUID id) {
-        VendorLocation location = locationRepository
-                .findById(id)
+    public VendorLocationResponseDto getById(UUID vendorId, UUID id) {
+        VendorLocation location = locationRepository.findByVendorIdAndId(vendorId, id)
                 .orElseThrow(() -> new NotFoundException("Vendor location with id " + id +
-                        " was not found"));
-        return mapper.entityToResponseDto(location);
+                " was not found"));
+            return mapper.entityToResponseDto(location);
     }
 
-    @Override
-    public VendorLocationResponseDto update(UUID id, VendorLocationBaseDto vendorLocationDto) {
+    public VendorLocationResponseDto update(UUID vendorId, UUID id, VendorLocationBaseDto vendorLocationDto) {
         VendorLocation location = locationRepository
-                .findById(id)
-                .orElseThrow(() -> new NotFoundException("Vendor location with id " + id +
-                        " was not found"));
+                .findByVendorIdAndId(vendorId, id).orElseThrow(() -> new NotFoundException("Vendor location with id " + id +
+                " was not found"));
+            if (location.isDeleted()) {
+                throw new DeletedException("Cannot update deleted Vendor Location with id" + id
+                );
+            }
 
-        if (location.isDeleted()) {
-            throw new DeletedException("Cannot update deleted Vendor Location with id" + id
-            );
-        }
-
-        mapper.update(vendorLocationDto, location);
-        location = locationRepository.save(location);
-        return mapper.entityToResponseDto(location);
+            mapper.update(vendorLocationDto, location);
+            location = locationRepository.save(location);
+            return mapper.entityToResponseDto(location);
     }
 
-    @Override
-    public void toArchive(UUID id) {
-        boolean isExists = locationRepository.existsById(id);
+    public void toArchive(UUID vendorId, UUID id) {
+        boolean isExists = locationRepository.existsByVendorIdAndId(vendorId, id);
         if (isExists) {
             locationRepository.deleteById(id);
         } else {

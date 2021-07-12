@@ -27,7 +27,7 @@ public class CategoryMapper {
 
     public CategoryResponseDto entityToResponseDto(Category category) {
         CategoryResponseDto categoryResponseDto = modelMapper.map(category, CategoryResponseDto.class);
-        List<UUID> subCategoryIds  = category.getSubCategories().stream().map(SubCategory::getId).collect(Collectors.toList());
+        List<UUID> subCategoryIds = category.getSubCategories().stream().map(SubCategory::getId).collect(Collectors.toList());
         categoryResponseDto.setSubCategoryIds(subCategoryIds);
         return categoryResponseDto;
     }
@@ -40,10 +40,7 @@ public class CategoryMapper {
         return modelMapper.map(categoryDto, Category.class);
     }
 
-    public <S, T> List<T> mapList(List<S> source, Class<T> targetClass) {
-        return source
-                .stream()
-                .map(element -> modelMapper.map(element, targetClass))
-                .collect(Collectors.toList());
+    public List<CategoryResponseDto> mapList(List<Category> categories) {
+        return categories.stream().map(this::entityToResponseDto).collect(Collectors.toList());
     }
 }
