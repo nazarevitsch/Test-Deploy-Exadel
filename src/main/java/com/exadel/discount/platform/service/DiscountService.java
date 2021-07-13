@@ -43,7 +43,6 @@ public class DiscountService {
 
 
     public void save(DiscountDto discountDto){
-        System.out.println(discountDto);
         Discount discount = discountMapper.dtoToEntity(discountDto);
         validateDiscount(discount, discountDto.getLocationIds(), discountDto.getSubCategoryIds());
         discountRepository.save(discount);
@@ -51,7 +50,7 @@ public class DiscountService {
 
     public DiscountDtoResponse findById(UUID id){
         Optional<Discount> discount = Optional.of(discountRepository.getById(id));
-        return discountMapper.entityToDto(discount.orElseThrow(()-> new NotFoundException("Discount wasn't found.")));
+        return discountMapper.entityToDto(discount.orElseThrow(()-> new NotFoundException("Discount with id " + id + " wasn't found.")));
     }
 
     public Page<DiscountDtoResponse> findAllByFilters(int page, int size, UUID categoryId, List<UUID> subCategoriesIds,
@@ -62,7 +61,7 @@ public class DiscountService {
 
     public DiscountDtoResponse updateDiscount(UUID id, DiscountUpdateDto discountUpdateDto) {
         Discount discount = Optional.of(discountRepository.getById(id))
-                .orElseThrow(() -> new NotFoundException("Discount doesn't exist."));
+                .orElseThrow(() -> new NotFoundException("Discount with id " + id + " doesn't exist."));
 
         Discount newDiscount = discountMapper.updateDtoToEntity(discountUpdateDto);
         newDiscount.setId(id);
@@ -83,21 +82,21 @@ public class DiscountService {
             discountRepository.deleteById(id);
             return;
         }
-        throw new NotFoundException("Discount with such id doesn't exist.");
+        throw new NotFoundException("Discount with id " + id  + " doesn't exist.");
     }
 
     private void validateDiscount(Discount discount, List<UUID> locationsIds, List<UUID> subCategoriesIds) {
         if (!discount.getStartDate().isBefore(discount.getEndDate())) {
-            throw new BadRequestException("Duration of discount is unacceptable.");
+            throw new BadRequestException("End time of discount can't be before start time.");
         }
         if (!discount.getStartDate().toLocalDate().equals(LocalDate.now(discount.getStartDate().getZone()))) {
             if (discount.getStartDate().isBefore(ZonedDateTime.now())) {
-                throw new BadRequestException("Duration of discount is unacceptable.");
+                throw new BadRequestException("Start time of discount should be at last today or later.");
             }
         }
         if (!discount.isOnline()) {
             if (locationsIds == null || CollectionUtils.isEmpty(locationsIds)) {
-                throw new BadRequestException("Discount hasn't full data!");
+                throw new BadRequestException("If location/s of discount isn't online, it should has locations.");
             }
             List<VendorLocation> vendorLocations = vendorLocationRepository.findAllById(locationsIds);
             for (VendorLocation vl : vendorLocations) {
@@ -108,7 +107,7 @@ public class DiscountService {
             discount.setVendorLocations(vendorLocations);
         }
         if (subCategoriesIds == null || CollectionUtils.isEmpty(subCategoriesIds)) {
-            throw new BadRequestException("Discount hasn't full data!");
+            throw new BadRequestException("Each discount should have sub categories.");
         }
         List<SubCategory> subCategories = subCategoryRepository.findAllById(subCategoriesIds);
         for (SubCategory sc : subCategories) {
