@@ -96,7 +96,7 @@ public class DiscountService {
         }
         if (!discount.isOnline()) {
             if (locationsIds == null || CollectionUtils.isEmpty(locationsIds)) {
-                throw new BadRequestException("If location/s of discount isn't online, it should has locations.");
+                throw new BadRequestException("If location/s of discount isn't online, it should have locations.");
             }
             List<VendorLocation> vendorLocations = vendorLocationRepository.findAllById(locationsIds);
             for (VendorLocation vl : vendorLocations) {
