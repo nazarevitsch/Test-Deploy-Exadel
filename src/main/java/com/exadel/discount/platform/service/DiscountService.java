@@ -102,8 +102,8 @@ public class DiscountService {
             List<VendorLocation> vendorLocations = vendorLocationRepository.findAllById(locationsIds);
             for (VendorLocation vl : vendorLocations) {
                 if (!vl.getVendor().getId().equals(discount.getVendorId()))
-                    throw new BadRequestException("Vendor location doesn't belong to vendor.");
-                if (vl.isDeleted()) throw new DeletedException("Vendor location is deleted.");
+                    throw new NotFoundException("Vendor location with id " + vl.getId() + " wasn't found.");
+                if (vl.isDeleted()) throw new DeletedException("Vendor location with id " + vl.getId() + " is deleted.");
             }
             discount.setVendorLocations(vendorLocations);
         }
@@ -113,8 +113,8 @@ public class DiscountService {
         List<SubCategory> subCategories = subCategoryRepository.findAllById(subCategoriesIds);
         for (SubCategory sc : subCategories) {
             if (!sc.getCategory().getId().equals(discount.getCategoryId()))
-                throw new BadRequestException("Sub category doesn't belong to category.");
-            if (sc.isDeleted()) throw new DeletedException("Sub category is deleted.");
+                throw new NotFoundException("Sub category with id " + sc.getId() + " wasn't found.");
+            if (sc.isDeleted()) throw new DeletedException("Sub category with id " + sc.getId() + " is deleted.");
         }
         discount.setSubCategories(subCategories);
     }
