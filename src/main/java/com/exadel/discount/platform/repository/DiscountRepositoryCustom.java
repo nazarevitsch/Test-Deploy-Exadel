@@ -47,12 +47,14 @@ public class DiscountRepositoryCustom {
             Predicate predicateSubCategories = subCategories.in(subCategoriesIds);
             predicates.add(predicateSubCategories);
         }
-        if (city != null && country != null) {
+        if (country != null) {
             Join<Discount, VendorLocation> join2 = discountRoot.join("vendorLocations");
-            Predicate predicateCity = criteriaBuilder.equal(join2.get("city"), city);
             Predicate predicateCountry = criteriaBuilder.equal(join2.get("country"), country);
-            predicates.add(predicateCity);
             predicates.add(predicateCountry);
+            if (city != null) {
+                Predicate predicateCity = criteriaBuilder.equal(join2.get("city"), city);
+                predicates.add(predicateCity);
+            }
         }
         if (searchWordRegularExpression != null) {
             Predicate predicateLikeSearchWord = criteriaBuilder.like(criteriaBuilder.upper(discountRoot.get("name")),
