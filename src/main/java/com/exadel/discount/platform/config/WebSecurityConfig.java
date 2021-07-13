@@ -42,6 +42,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements W
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .antMatchers("/user/login", "/",
                         "/user/validate_token",
+                        "/user/refresh_token",
 
                         "/v2/api-docs",
                         "/configuration/ui",

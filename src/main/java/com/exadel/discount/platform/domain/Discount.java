@@ -4,7 +4,6 @@ import com.exadel.discount.platform.model.Category;
 import com.exadel.discount.platform.model.SubCategory;
 import com.exadel.discount.platform.model.Vendor;
 import com.exadel.discount.platform.model.VendorLocation;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.SQLDelete;

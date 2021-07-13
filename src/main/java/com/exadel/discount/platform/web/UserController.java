@@ -2,7 +2,6 @@ package com.exadel.discount.platform.web;
 
 import com.exadel.discount.platform.config.JWTUtil;
 import com.exadel.discount.platform.domain.Message;
-import com.exadel.discount.platform.service.EmailNotificationService;
 import com.exadel.discount.platform.service.UserService;
 import com.exadel.discount.platform.model.dto.UserLoginDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +15,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
+
 @RestController
 @RequestMapping("/user")
 public class UserController {
@@ -27,13 +29,23 @@ public class UserController {
     private JWTUtil jwtUtil;
 
     @PostMapping("/login")
-    public ResponseEntity<?> loginUser(@RequestBody UserLoginDTO userLogin) {
+    public ResponseEntity<?> loginUser(@RequestBody UserLoginDTO userLogin, HttpServletResponse response) {
         try {
             userService.authenticate(userLogin);
         } catch (BadCredentialsException e) {
-            return new ResponseEntity<Message>(new Message("There isn't user with such password or email!"), HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(new Message("There isn't user with such password or email!"), HttpStatus.UNAUTHORIZED);
         }
+        Cookie cookie = new Cookie("refreshToken", userService.loginGenerateRefreshToken(userLogin));
+        cookie.setHttpOnly(true);
+        cookie.setPath("/");
+        response.addCookie(cookie);
        return new ResponseEntity<>(userService.login(userLogin), HttpStatus.OK);
+    }
+
+    @PostMapping("/refresh_token")
+    public ResponseEntity<?> refreshToken(
+            @CookieValue(name = "refreshToken") String token) {
+        return new ResponseEntity<>(userService.generateAccessToken(token), HttpStatus.OK);
     }
 
     @GetMapping("/validate_token")

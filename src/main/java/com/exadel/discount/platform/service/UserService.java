@@ -32,6 +32,16 @@ public class UserService implements UserDetailsService {
         return new JWTResponse("Bearer " + jwtUtil.generateTOKEN(userDetails));
     }
 
+    public String loginGenerateRefreshToken(UserLoginDTO userLogin){
+        UserDetails userDetails = loadUserByUsername(userLogin.getEmail());
+        return jwtUtil.generateRefreshToken(userDetails);
+    }
+
+    public JWTResponse generateAccessToken(String token) {
+        UserDetails userDetails = loadUserByUsername(jwtUtil.extractUsernameRefreshToken(token));
+        return new JWTResponse("Bearer " + jwtUtil.generateTOKEN(userDetails));
+    }
+
     public void authenticate(UserLoginDTO userLogin) throws BadCredentialsException{
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userLogin.getEmail(), userLogin.getPassword()));
     }

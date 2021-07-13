@@ -16,7 +16,6 @@ import com.exadel.discount.platform.repository.SubCategoryRepository;
 import com.exadel.discount.platform.repository.VendorLocationRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -25,7 +24,6 @@ import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
-import java.time.temporal.TemporalField;
 import java.util.*;
 import java.util.stream.Collectors;
 
