@@ -2,8 +2,9 @@ package com.exadel.discount.platform.web;
 
 import com.exadel.discount.platform.config.JWTUtil;
 import com.exadel.discount.platform.domain.Message;
+import com.exadel.discount.platform.service.EmailNotificationService;
 import com.exadel.discount.platform.service.UserService;
-import com.exadel.discount.platform.service.dto.UserLoginDTO;
+import com.exadel.discount.platform.model.dto.UserLoginDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,7 +33,7 @@ public class UserController {
         } catch (BadCredentialsException e) {
             return new ResponseEntity<Message>(new Message("There isn't user with such password or email!"), HttpStatus.UNAUTHORIZED);
         }
-        return new ResponseEntity<>(userService.login(userLogin), HttpStatus.OK);
+       return new ResponseEntity<>(userService.login(userLogin), HttpStatus.OK);
     }
 
     @GetMapping("/validate_token")

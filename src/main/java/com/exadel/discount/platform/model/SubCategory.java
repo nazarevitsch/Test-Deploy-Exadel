@@ -1,5 +1,6 @@
 package com.exadel.discount.platform.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.SQLDelete;
@@ -11,6 +12,7 @@ import java.util.UUID;
 
 @Entity
 @Data
+@Table(name = "sub_category")
 @SQLDelete(sql = "UPDATE sub_category SET sc_deleted=true WHERE sc_id=?")
 public class SubCategory {
 

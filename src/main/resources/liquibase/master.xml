@@ -7,10 +7,13 @@
     <include file="0001_initial_schema.xml" relativeToChangelogFile="true"/>
     <include file="0002_add_some_users.xml" relativeToChangelogFile="true"/>
     <include file="18.06.2021_nazarii_insert_user_details.xml" relativeToChangelogFile="true"/>
+    <include file="18.06.2021_andrii_create_tag_table.xml" relativeToChangelogFile="true"/>
     <include file="21.06.21_oleg_create_vendor.xml" relativeToChangelogFile="true"/>
     <include file="21.06.21_oleg_create_vendor_location.xml" relativeToChangelogFile="true"/>
-    <include file="18.06.2021_andrii_create_tag_table.xml" relativeToChangelogFile="true"/>
+    <include file="23.06.2021_nazarii_alter_user_location_table.xml" relativeToChangelogFile="true"/>
     <include file="25.06.2021_andrii_rename_tag_to_sub_category_add_column.xml" relativeToChangelogFile="true"/>
+    <include file="25.06.2021_nazarii_insert_user_locations.xml" relativeToChangelogFile="true"/>
     <include file="29.06.2021_andrii_add_unique_constraint_for_column_sc_name_in_sub_category_table.xml" relativeToChangelogFile="true"/>
+    <include file="29.06.2021_nazarii_create_discount_and_its_relationship.xml" relativeToChangelogFile="true"/>
     <include file="29.06.2021_oleg_category_relationship_with_subCategory.xml" relativeToChangelogFile="true"/>
 </databaseChangeLog>

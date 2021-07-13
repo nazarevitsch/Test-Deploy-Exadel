@@ -1,7 +1,7 @@
 package com.exadel.discount.platform.config;
 
 import com.exadel.discount.platform.domain.UserRole;
-import com.exadel.discount.platform.service.dto.MyUserDetails;
+import com.exadel.discount.platform.domain.MyUserDetails;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

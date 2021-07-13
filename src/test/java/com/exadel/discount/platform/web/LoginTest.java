@@ -1,6 +1,6 @@
 package com.exadel.discount.platform.web;
 
-import com.exadel.discount.platform.service.dto.UserLoginDTO;
+import com.exadel.discount.platform.model.dto.UserLoginDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.*;
 import org.junit.runner.RunWith;

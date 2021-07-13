@@ -1,7 +1,5 @@
 package com.exadel.discount.platform.service;
 
-
-
 import com.exadel.discount.platform.exception.DeletedException;
 import com.exadel.discount.platform.exception.NotFoundException;
 import com.exadel.discount.platform.mapper.SubCategoryMapper;
@@ -19,7 +17,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
-
 
 @Service
 @RequiredArgsConstructor

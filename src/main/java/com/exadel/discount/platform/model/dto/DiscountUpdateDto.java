@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Data
-public class DiscountDto extends DiscountBaseDto {
+public class DiscountUpdateDto extends DiscountBaseDto {
 
     @NotNull
     private List<UUID> locationIds;
