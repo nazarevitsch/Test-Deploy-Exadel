@@ -1,7 +1,6 @@
 package com.exadel.discount.platform.mapper;
 
 import com.exadel.discount.platform.model.SubCategory;
-import com.exadel.discount.platform.model.dto.SubCategoryDto;
 import com.exadel.discount.platform.model.dto.SubCategoryResponseDto;
 import com.exadel.discount.platform.model.dto.update.SubCategoryBaseDto;
 import org.modelmapper.ModelMapper;
@@ -9,7 +8,6 @@ import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Component
@@ -22,8 +20,8 @@ public class SubCategoryMapper {
 
     }
 
-    public SubCategoryDto entityToDto(SubCategory subCategory) {
-        return modelMapper.map(subCategory, SubCategoryDto.class);
+    public SubCategoryBaseDto entityToDto(SubCategory subCategory) {
+        return modelMapper.map(subCategory, SubCategoryBaseDto.class);
     }
 
     public SubCategoryResponseDto entityToResponseDto(SubCategory subCategory) {
@@ -32,15 +30,15 @@ public class SubCategoryMapper {
         return responseDto;
     }
 
-    public SubCategory dtoToEntity(SubCategoryDto subCategoryDto) {
-        return modelMapper.map(subCategoryDto, SubCategory.class);
+    public SubCategory dtoToEntity(SubCategoryBaseDto subCategoryBaseDto) {
+        return modelMapper.map(subCategoryBaseDto, SubCategory.class);
     }
 
-    public void update(SubCategoryBaseDto subCategoryDto, SubCategory subCategory) {
-        modelMapper.map(subCategoryDto, subCategory);
+    public void update(SubCategoryBaseDto subCategoryBaseDto, SubCategory subCategory) {
+        modelMapper.map(subCategoryBaseDto, subCategory);
     }
 
-    public List<SubCategoryResponseDto> mapList(List<SubCategory> categories){
+    public List<SubCategoryResponseDto> mapList(List<SubCategory> categories) {
         return categories.stream().map(this::entityToResponseDto).collect(Collectors.toList());
     }
 }

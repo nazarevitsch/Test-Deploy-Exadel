@@ -6,18 +6,22 @@ import com.exadel.discount.platform.exception.NotFoundException;
 import com.exadel.discount.platform.model.Vendor;
 import com.exadel.discount.platform.model.dto.VendorDto;
 import com.exadel.discount.platform.model.dto.VendorResponseDto;
+import com.exadel.discount.platform.repository.DiscountRepository;
 import com.exadel.discount.platform.repository.VendorRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
 
+@Transactional
 @Service
 @RequiredArgsConstructor
 public class VendorService {
     private final VendorRepository vendorRepository;
     private final VendorMapper mapper;
+    private final DiscountRepository discountRepository;
 
 
     public List<VendorResponseDto> getAll(boolean isDeleted) {
@@ -56,6 +60,7 @@ public class VendorService {
         boolean isExists = vendorRepository.existsById(id);
         if (isExists) {
             vendorRepository.deleteById(id);
+            discountRepository.deleteAllByVendorId(id);
         } else {
             throw new NotFoundException("Vendor with id " + id +
                     " was not found");

@@ -15,4 +15,6 @@ public class VendorLocationBaseDto {
     private String city;
     @Size(min = 2, max = 50)
     private String addressLine;
+    /*private int latitude;
+    private int longitude;*/
 }

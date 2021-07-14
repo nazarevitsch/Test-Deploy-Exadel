@@ -1,9 +1,6 @@
 package com.exadel.discount.platform.service;
 
-import com.exadel.discount.platform.domain.Discount;
-import com.exadel.discount.platform.domain.MyUserDetails;
-import com.exadel.discount.platform.domain.UsedDiscount;
-import com.exadel.discount.platform.domain.UserDetails;
+import com.exadel.discount.platform.domain.*;
 import com.exadel.discount.platform.exception.DeletedException;
 import com.exadel.discount.platform.exception.NotFoundException;
 import com.exadel.discount.platform.exception.BadRequestException;
@@ -61,22 +58,13 @@ public class DiscountService {
 
         UserDetails userDetails = userDetailsService.findUserDetailsByUserId(details.getUserId());
 
-        MustacheFactory mf = new DefaultMustacheFactory();
-        Mustache m = mf.compile("templates/email_to_vendor");
-
         HashMap<String, String> dataEmailTemplate = new HashMap<>();
         dataEmailTemplate.put("discountTitle", discount.getName());
         dataEmailTemplate.put("username", userDetails.getName());
         dataEmailTemplate.put("userEmail", details.getUsername());
         dataEmailTemplate.put("uniqueCode", usedDiscountSaved.getId().toString());
 
-        try {
-            StringWriter writer = new StringWriter();
-            m.execute(writer, dataEmailTemplate).flush();
-            String html = writer.toString();
-            emailNotificationService.sendHtmlMessage(discount.getVendor().getEmail(),
-                    "Your discount was used", html);
-        } catch (Exception e) {}
+        emailNotificationService.sendEmail(EmailType.TO_VENDOR_USING_DISCOUNT, discount.getVendor().getEmail(), dataEmailTemplate);
     }
 
     public void save(DiscountDto discountDto){
