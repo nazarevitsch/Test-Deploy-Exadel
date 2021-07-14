@@ -26,7 +26,7 @@ public class DiscountController {
     @PostMapping("/use_discount/{id}")
     public ResponseEntity<?> useDiscount(@PathVariable UUID id) {
         discountService.useDiscount(id);
-        return new ResponseEntity<>(new Message("OK"), HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping("/get_discounts")

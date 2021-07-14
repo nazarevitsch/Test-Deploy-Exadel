@@ -14,6 +14,9 @@ import com.exadel.discount.platform.model.dto.DiscountDto;
 import com.exadel.discount.platform.model.dto.DiscountDtoResponse;
 import com.exadel.discount.platform.model.dto.DiscountUpdateDto;
 import com.exadel.discount.platform.repository.*;
+import com.github.mustachejava.DefaultMustacheFactory;
+import com.github.mustachejava.Mustache;
+import com.github.mustachejava.MustacheFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -22,6 +25,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+
+import java.io.StringWriter;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.*;
@@ -56,23 +61,22 @@ public class DiscountService {
 
         UserDetails userDetails = userDetailsService.findUserDetailsByUserId(details.getUserId());
 
-        StringBuilder builder = new StringBuilder();
-        builder.append("Your discount was used.\n\n");
-        builder.append("Discount's title: ");
-        builder.append(discount.getName());
-        builder.append("\n");
-        builder.append("Customer's name: ");
-        builder.append(userDetails.getName());
-        builder.append("\n");
-        builder.append("Customer's email: ");
-        builder.append(details.getUsername());
-        builder.append("\n");
-        builder.append("Unique code: ");
-        builder.append(usedDiscountSaved.getId());
-        builder.append("\n");
+        MustacheFactory mf = new DefaultMustacheFactory();
+        Mustache m = mf.compile("templates/email_to_vendor");
 
-        emailNotificationService.sendSimpleTextMessageMessage(discount.getVendor().getEmail(),
-                "Your discount was used", builder.toString());
+        HashMap<String, String> dataEmailTemplate = new HashMap<>();
+        dataEmailTemplate.put("discountTitle", discount.getName());
+        dataEmailTemplate.put("username", userDetails.getName());
+        dataEmailTemplate.put("userEmail", details.getUsername());
+        dataEmailTemplate.put("uniqueCode", usedDiscountSaved.getId().toString());
+
+        try {
+            StringWriter writer = new StringWriter();
+            m.execute(writer, dataEmailTemplate).flush();
+            String html = writer.toString();
+            emailNotificationService.sendHtmlMessage(discount.getVendor().getEmail(),
+                    "Your discount was used", html);
+        } catch (Exception e) {}
     }
 
     public void save(DiscountDto discountDto){

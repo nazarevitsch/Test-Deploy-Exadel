@@ -1,0 +1,4 @@
+<h2>{{discountTitle}}</h2>
+<small>Created on {{username}}</small>
+<p>{{userEmail}}</p>
+<h2>{{uniqueCode}}</h2>
