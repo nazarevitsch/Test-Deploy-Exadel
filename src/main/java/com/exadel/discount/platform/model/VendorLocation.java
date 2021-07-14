@@ -35,10 +35,12 @@ public class VendorLocation {
     @Size(min = 2, max = 50)
     @Column(name = "vl_address_line")
     private String addressLine;
+    @NotNull
+    @Column(name = "vendor_id")
+    private UUID vendorId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "vendor_id")
-    @NotNull
+    @JoinColumn(name = "vendor_id", insertable = false, updatable = false)
     private Vendor vendor;
 
     @Column(name = "vl_deleted")

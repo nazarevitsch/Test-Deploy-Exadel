@@ -1,11 +1,11 @@
 package com.exadel.discount.platform.converter;
 
 import com.exadel.discount.platform.model.VendorLocation;
-import com.exadel.discount.platform.model.dto.VendorLocationDto;
 import com.exadel.discount.platform.model.dto.VendorLocationResponseDto;
 import com.exadel.discount.platform.model.dto.update.VendorLocationBaseDto;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -20,10 +20,6 @@ public class VendorLocationMapper {
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
     }
 
-    public VendorLocationDto entityToDto(VendorLocation vendorLocation) {
-        return modelMapper.map(vendorLocation, VendorLocationDto.class);
-    }
-
     public VendorLocationResponseDto entityToResponseDto(VendorLocation vendorLocation) {
         VendorLocationResponseDto responseDto = modelMapper.map(vendorLocation, VendorLocationResponseDto.class);
         responseDto.setVendorId(vendorLocation.getVendor().getId());
@@ -34,11 +30,15 @@ public class VendorLocationMapper {
         modelMapper.map(vendorLocationDto, vendorLocation);
     }
 
-    public VendorLocation dtoToEntity(VendorLocationDto locationDto) {
+    public VendorLocation dtoToEntity(VendorLocationBaseDto locationDto) {
         return modelMapper.map(locationDto, VendorLocation.class);
     }
 
     public List<VendorLocationResponseDto> mapList(List<VendorLocation> locations){
         return locations.stream().map(this::entityToResponseDto).collect(Collectors.toList());
+    }
+
+    public Page<VendorLocationResponseDto> pageToResponse(Page<VendorLocation> vendorLocations) {
+        return vendorLocations.map(this::entityToResponseDto);
     }
 }

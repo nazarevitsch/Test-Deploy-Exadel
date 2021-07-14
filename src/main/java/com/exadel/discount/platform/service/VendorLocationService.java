@@ -5,12 +5,14 @@ import com.exadel.discount.platform.exception.DeletedException;
 import com.exadel.discount.platform.exception.NotFoundException;
 import com.exadel.discount.platform.model.Vendor;
 import com.exadel.discount.platform.model.VendorLocation;
-import com.exadel.discount.platform.model.dto.VendorLocationDto;
 import com.exadel.discount.platform.model.dto.VendorLocationResponseDto;
 import com.exadel.discount.platform.model.dto.update.VendorLocationBaseDto;
 import com.exadel.discount.platform.repository.VendorLocationRepository;
+import com.exadel.discount.platform.repository.VendorLocationRepositoryCustom;
 import com.exadel.discount.platform.repository.VendorRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,19 +23,27 @@ import java.util.UUID;
 public class VendorLocationService {
     private final VendorLocationRepository locationRepository;
     private final VendorRepository vendorRepository;
+    private final VendorLocationRepositoryCustom custom;
     private final VendorLocationMapper mapper;
 
-    public List<VendorLocationResponseDto> getAllByVendorId(UUID vendorId, boolean isDeleted) {
-        return mapper.mapList(locationRepository.findAllByVendorIdAndDeleted(vendorId, isDeleted));
+    public List<VendorLocationResponseDto> getAll(boolean isDeleted) {
+        return mapper.mapList(locationRepository.findAllByDeleted(isDeleted));
     }
 
-    public VendorLocationResponseDto save(UUID vendorId, VendorLocationDto vendorLocationDto) {
+    public Page<VendorLocationResponseDto> getAllByVendorId(
+            int page, int size, UUID vendorId, boolean isDeleted, String country, String city) {
+        return mapper.pageToResponse(
+                custom.findAllByFilters(vendorId, isDeleted, country, city, PageRequest.of(page, size)));
+    }
+
+    public VendorLocationResponseDto save(UUID vendorId, VendorLocationBaseDto vendorLocationDto) {
         Vendor vendor = vendorRepository.getById(vendorId);
         if (vendor.isDeleted()) {
             throw new DeletedException("Cannot create Vendor Location with deleted Vendor");
         }
         VendorLocation location = mapper.dtoToEntity(vendorLocationDto);
         location.setVendor(vendor);
+        location.setVendorId(vendorId);
         location = locationRepository.save(location);
         return mapper.entityToResponseDto(location);
     }

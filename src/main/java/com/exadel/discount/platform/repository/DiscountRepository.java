@@ -24,4 +24,5 @@ public interface DiscountRepository extends JpaRepository<Discount, UUID>{
             nativeQuery = true)
     @Modifying
     void removeVendorLocationsRelationship(@Param("vendor_location_ids") List<UUID> ids, @Param("discount_id") UUID id);
+    void deleteAllByVendorId(UUID vendorId);
 }
