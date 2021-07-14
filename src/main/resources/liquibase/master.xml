@@ -16,4 +16,5 @@
     <include file="29.06.2021_andrii_add_unique_constraint_for_column_sc_name_in_sub_category_table.xml" relativeToChangelogFile="true"/>
     <include file="29.06.2021_nazarii_create_discount_and_its_relationship.xml" relativeToChangelogFile="true"/>
     <include file="29.06.2021_oleg_category_relationship_with_subCategory.xml" relativeToChangelogFile="true"/>
+    <include file="14.07.2021_nazarii_create_used_discount_table.xml" relativeToChangelogFile="true"/>
 </databaseChangeLog>

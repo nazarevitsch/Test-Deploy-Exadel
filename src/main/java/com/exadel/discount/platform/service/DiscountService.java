@@ -1,6 +1,9 @@
 package com.exadel.discount.platform.service;
 
 import com.exadel.discount.platform.domain.Discount;
+import com.exadel.discount.platform.domain.MyUserDetails;
+import com.exadel.discount.platform.domain.UsedDiscount;
+import com.exadel.discount.platform.domain.UserDetails;
 import com.exadel.discount.platform.exception.DeletedException;
 import com.exadel.discount.platform.exception.NotFoundException;
 import com.exadel.discount.platform.exception.BadRequestException;
@@ -10,18 +13,15 @@ import com.exadel.discount.platform.model.VendorLocation;
 import com.exadel.discount.platform.model.dto.DiscountDto;
 import com.exadel.discount.platform.model.dto.DiscountDtoResponse;
 import com.exadel.discount.platform.model.dto.DiscountUpdateDto;
-import com.exadel.discount.platform.repository.DiscountRepository;
-import com.exadel.discount.platform.repository.DiscountRepositoryCustom;
-import com.exadel.discount.platform.repository.SubCategoryRepository;
-import com.exadel.discount.platform.repository.VendorLocationRepository;
+import com.exadel.discount.platform.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
-
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.*;
@@ -38,7 +38,42 @@ public class DiscountService {
     private final VendorLocationRepository vendorLocationRepository;
     private final DiscountRepositoryCustom discountRepositoryCustom;
     private final DiscountMapper discountMapper;
+    private final UsedDiscountRepository usedDiscountRepository;
+    private final EmailNotificationService emailNotificationService;
+    private final UserDetailsService userDetailsService;
 
+    public void useDiscount(UUID discountId) {
+        Discount discount = Optional.of(discountRepository.findDiscountByIdAndIsDeletedAndEndDateAfter(discountId, false, ZonedDateTime.now()))
+                .orElseThrow(() -> new NotFoundException("Discount with id " + discountId + " doesn't exist or was finished."));
+
+        MyUserDetails details = ((MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+
+        UsedDiscount usedDiscount = new UsedDiscount();
+        usedDiscount.setDiscountId(discountId);
+        usedDiscount.setUserId(details.getUserId());
+
+        UsedDiscount usedDiscountSaved = usedDiscountRepository.save(usedDiscount);
+
+        UserDetails userDetails = userDetailsService.findUserDetailsByUserId(details.getUserId());
+
+        StringBuilder builder = new StringBuilder();
+        builder.append("Your discount was used.\n\n");
+        builder.append("Discount's title: ");
+        builder.append(discount.getName());
+        builder.append("\n");
+        builder.append("Customer's name: ");
+        builder.append(userDetails.getName());
+        builder.append("\n");
+        builder.append("Customer's email: ");
+        builder.append(details.getUsername());
+        builder.append("\n");
+        builder.append("Unique code: ");
+        builder.append(usedDiscountSaved.getId());
+        builder.append("\n");
+
+        emailNotificationService.sendSimpleTextMessageMessage(discount.getVendor().getEmail(),
+                "Your discount was used", builder.toString());
+    }
 
     public void save(DiscountDto discountDto){
         Discount discount = discountMapper.dtoToEntity(discountDto);

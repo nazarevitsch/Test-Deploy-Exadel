@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -24,4 +25,6 @@ public interface DiscountRepository extends JpaRepository<Discount, UUID>{
             nativeQuery = true)
     @Modifying
     void removeVendorLocationsRelationship(@Param("vendor_location_ids") List<UUID> ids, @Param("discount_id") UUID id);
+
+    Discount findDiscountByIdAndIsDeletedAndEndDateAfter(UUID uuid, boolean deleted, ZonedDateTime zonedDateTime);
 }

@@ -23,6 +23,12 @@ public class DiscountController {
     @Autowired
     private DiscountService discountService;
 
+    @PostMapping("/use_discount/{id}")
+    public ResponseEntity<?> useDiscount(@PathVariable UUID id) {
+        discountService.useDiscount(id);
+        return new ResponseEntity<>(new Message("OK"), HttpStatus.OK);
+    }
+
     @GetMapping("/get_discounts")
     @PreAuthorize("hasAnyAuthority('ADMINISTRATOR', 'USER')")
     public ResponseEntity<Page<DiscountDtoResponse>> getAll(
