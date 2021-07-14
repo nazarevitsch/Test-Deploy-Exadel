@@ -63,6 +63,7 @@ public class DiscountService {
         dataEmailTemplate.put("username", userDetails.getName());
         dataEmailTemplate.put("userEmail", details.getUsername());
         dataEmailTemplate.put("uniqueCode", usedDiscountSaved.getId().toString());
+        dataEmailTemplate.put("vendorTitle", discount.getVendor().getName());
 
         emailNotificationService.sendEmail(EmailType.TO_VENDOR_USING_DISCOUNT, discount.getVendor().getEmail(), dataEmailTemplate);
     }

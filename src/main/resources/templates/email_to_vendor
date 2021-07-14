@@ -1,4 +1,6 @@
-<h2>{{discountTitle}}</h2>
-<small>Created on {{username}}</small>
-<p>{{userEmail}}</p>
-<h2>{{uniqueCode}}</h2>
+<h4>Dear {{vendorTitle}}, one of our employee wants to use your discount.<h4>
+<p>Discounts's title: {{discountTitle}}</p>
+<p>Employee's name: {{username}}</p>
+<p>Employee's email: {{userEmail}}</p>
+<p>Unique code: {{uniqueCode}}</>
+<h4>Best regards,<br>Your Exadel Team</h4>
