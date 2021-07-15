@@ -28,5 +28,6 @@ public interface DiscountRepository extends JpaRepository<Discount, UUID>{
 
     void deleteAllByVendorId(UUID vendorId);
 
-    Discount findDiscountByIdAndIsDeletedAndEndDateAfter(UUID uuid, boolean deleted, ZonedDateTime zonedDateTime);
+    Discount findDiscountByIdAndIsDeletedAndEndDateAfterAndStartDateBefore(UUID uuid, boolean deleted,
+                                                                           ZonedDateTime zonedDateTime1, ZonedDateTime zonedDateTime2);
 }

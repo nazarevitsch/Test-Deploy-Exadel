@@ -6,6 +6,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.time.ZonedDateTime;
 import java.util.UUID;
 
@@ -24,13 +25,15 @@ public class UsedDiscount {
     )
     private UUID id;
 
+    @NotNull
     @Column(name = "ud_user_id")
     private UUID userId;
 
+    @NotNull
     @Column(name = "ud_discount_id")
     private UUID discountId;
 
     @CreationTimestamp
-    @Column(name = "ud_using_date")
-    private ZonedDateTime usingDate;
+    @Column(name = "ud_usage_date")
+    private ZonedDateTime usageDate;
 }

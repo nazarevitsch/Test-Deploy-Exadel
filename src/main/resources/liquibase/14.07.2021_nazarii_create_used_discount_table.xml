@@ -16,7 +16,14 @@
             <column name="ud_user_id" type="UUID">
                 <constraints nullable="false" />
             </column>
-            <column name="ud_using_date" type="timestamptz"/>
+            <column name="ud_usage_date" type="timestamptz"/>
         </createTable>
+    </changeSet>
+
+    <changeSet author="nazar" id="set-used_discount-foreign-key-1">
+        <addForeignKeyConstraint baseColumnNames="ud_discount_id" baseTableName="used_discount" constraintName="fk_used_discount_ud_discount_id" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="d_id" referencedTableName="discount" validate="true"/>
+    </changeSet>
+    <changeSet author="nazar" id="set-used_discount-foreign-key-2">
+        <addForeignKeyConstraint baseColumnNames="ud_user_id" baseTableName="used_discount" constraintName="fk_used_discount_ud_user_id" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="u_id" referencedTableName="users" validate="true"/>
     </changeSet>
 </databaseChangeLog>

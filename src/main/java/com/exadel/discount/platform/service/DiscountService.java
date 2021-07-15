@@ -45,8 +45,9 @@ public class DiscountService {
     private final UserDetailsService userDetailsService;
 
     public void useDiscount(UUID discountId) {
-        Discount discount = Optional.of(discountRepository.findDiscountByIdAndIsDeletedAndEndDateAfter(discountId, false, ZonedDateTime.now()))
-                .orElseThrow(() -> new NotFoundException("Discount with id " + discountId + " doesn't exist or was finished."));
+        ZonedDateTime now = ZonedDateTime.now();
+        Discount discount = Optional.of(discountRepository.findDiscountByIdAndIsDeletedAndEndDateAfterAndStartDateBefore(discountId, false, now, now))
+                .orElseThrow(() -> new NotFoundException("Discount with id " + discountId + " doesn't exist or not active."));
 
         MyUserDetails details = ((MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
 
@@ -65,7 +66,7 @@ public class DiscountService {
         dataEmailTemplate.put("uniqueCode", usedDiscountSaved.getId().toString());
         dataEmailTemplate.put("vendorTitle", discount.getVendor().getName());
 
-        emailNotificationService.sendEmail(EmailType.TO_VENDOR_USING_DISCOUNT, discount.getVendor().getEmail(), dataEmailTemplate);
+        emailNotificationService.sendEmail(EmailType.DISCOUNT_USED_NOTIFY_VENDOR, discount.getVendor().getEmail(), dataEmailTemplate);
     }
 
     public void save(DiscountDto discountDto){

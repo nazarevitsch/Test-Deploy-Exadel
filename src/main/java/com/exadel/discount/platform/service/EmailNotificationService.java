@@ -26,8 +26,8 @@ public class EmailNotificationService {
         Mustache m = null;
 
         switch (emailType) {
-            case TO_VENDOR_USING_DISCOUNT:
-                m = mf.compile("templates/email_to_vendor");
+            case DISCOUNT_USED_NOTIFY_VENDOR:
+                m = mf.compile("templates/discount_used_notify_vendor.html");
                 break;
         }
         try {
