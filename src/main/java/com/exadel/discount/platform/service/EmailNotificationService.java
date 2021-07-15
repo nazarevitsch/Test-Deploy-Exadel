@@ -1,6 +1,6 @@
 package com.exadel.discount.platform.service;
 
-import com.exadel.discount.platform.domain.EmailType;
+import com.exadel.discount.platform.domain.*;
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
@@ -12,7 +12,9 @@ import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import java.io.IOException;
 import java.io.StringWriter;
+import java.util.HashMap;
 import java.util.Map;
 
 @Service
@@ -22,19 +24,17 @@ public class EmailNotificationService {
     private JavaMailSender mailSender;
     private MustacheFactory mf = new DefaultMustacheFactory();
 
-    public void sendEmail(EmailType emailType, String to, Map<String, String> templateData) {
-        Mustache m = null;
+    public void notifyVendorAboutUsageOfDiscount(EmailType emailType, String to, Discount discount, MyUserDetails details,
+                                                 UsedDiscount usedDiscount, UserDetails userDetails) {
+        HashMap<String, String> dataEmailTemplate = new HashMap<>();
+        dataEmailTemplate.put("discountTitle", discount.getName());
+        dataEmailTemplate.put("username", userDetails.getName());
+        dataEmailTemplate.put("userEmail", details.getUsername());
+        dataEmailTemplate.put("uniqueCode", usedDiscount.getId().toString());
+        dataEmailTemplate.put("vendorTitle", discount.getVendor().getName());
 
-        switch (emailType) {
-            case DISCOUNT_USED_NOTIFY_VENDOR:
-                m = mf.compile("templates/discount_used_notify_vendor.html");
-                break;
-        }
         try {
-            StringWriter writer = new StringWriter();
-            m.execute(writer, templateData).flush();
-            String html = writer.toString();
-            sendHtmlMessage(to, "Your discount was used", html);
+            sendHtmlMessage(emailType, to, "Your discount was used", dataEmailTemplate);
         } catch (Exception e) {}
     }
 
@@ -48,12 +48,25 @@ public class EmailNotificationService {
         mailSender.send(message);
     }
 
-    private void sendHtmlMessage(String to, String subject, String textHtml) throws MessagingException {
+    private void sendHtmlMessage(EmailType emailType, String to, String subject, Map<String, String> templateData) throws MessagingException, IOException {
         MimeMessage mail = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(mail, true);
+
+        Mustache m = null;
+
+        switch (emailType) {
+            case DISCOUNT_USED_NOTIFY_VENDOR:
+                m = mf.compile("templates/discount_used_notify_vendor.html");
+                break;
+        }
+
+        StringWriter writer = new StringWriter();
+        m.execute(writer, templateData).flush();
+        String html = writer.toString();
+
         helper.setTo(to);
         helper.setSubject(subject);
-        helper.setText(textHtml, true);
+        helper.setText(html, true);
 
         mailSender.send(mail);
     }

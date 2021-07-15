@@ -59,14 +59,8 @@ public class DiscountService {
 
         UserDetails userDetails = userDetailsService.findUserDetailsByUserId(details.getUserId());
 
-        HashMap<String, String> dataEmailTemplate = new HashMap<>();
-        dataEmailTemplate.put("discountTitle", discount.getName());
-        dataEmailTemplate.put("username", userDetails.getName());
-        dataEmailTemplate.put("userEmail", details.getUsername());
-        dataEmailTemplate.put("uniqueCode", usedDiscountSaved.getId().toString());
-        dataEmailTemplate.put("vendorTitle", discount.getVendor().getName());
-
-        emailNotificationService.sendEmail(EmailType.DISCOUNT_USED_NOTIFY_VENDOR, discount.getVendor().getEmail(), dataEmailTemplate);
+        emailNotificationService.notifyVendorAboutUsageOfDiscount(EmailType.DISCOUNT_USED_NOTIFY_VENDOR, discount.getVendor().getEmail(),
+                discount, details, usedDiscountSaved, userDetails);
     }
 
     public void save(DiscountDto discountDto){
