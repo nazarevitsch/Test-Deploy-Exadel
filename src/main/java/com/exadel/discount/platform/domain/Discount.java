@@ -92,4 +92,7 @@ public class Discount {
     @Max(99)
     @Column(name = "d_percentage")
     private int percentage;
+
+    @Column(name = "d_usage_count")
+    private int usageCount;
 }

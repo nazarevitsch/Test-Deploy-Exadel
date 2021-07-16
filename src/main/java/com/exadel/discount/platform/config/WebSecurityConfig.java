@@ -82,5 +82,4 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements W
                 .allowedOrigins("http://localhost:3000/")
                 .allowedMethods("OPTIONS", "GET", "POST", "PUT", "DELETE");
     }
-
 }

@@ -1,6 +1,7 @@
 package com.exadel.discount.platform.repository;
 
 import com.exadel.discount.platform.domain.Discount;
+import com.exadel.discount.platform.domain.enums.SortingType;
 import com.exadel.discount.platform.model.SubCategory;
 import com.exadel.discount.platform.model.VendorLocation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,8 @@ public class DiscountRepositoryCustom {
     private EntityManager entityManager;
 
     public Page<Discount> findAllByFilters(List<UUID> vendorIds, UUID categoryId, List<UUID> subCategoriesIds,
-                                           String country, String city, String searchWordRegularExpression, Pageable pageable) {
+                                           String country, String city, String searchWordRegularExpression,
+                                           SortingType sortingType, Pageable pageable) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Discount> criteriaQuery = criteriaBuilder.createQuery(Discount.class);
         Root<Discount> discountRoot = criteriaQuery.from(Discount.class);
@@ -59,11 +61,34 @@ public class DiscountRepositoryCustom {
                     "%" + searchWordRegularExpression.toUpperCase() + "%");
             predicates.add(predicateLikeSearchWord);
         }
+
+        Predicate deletedPredicate = criteriaBuilder.equal(discountRoot.get("isDeleted"), false);
+        predicates.add(deletedPredicate);
+
         if (predicates.size() != 0) {
             Predicate[] predicatesFinal = new Predicate[predicates.size()];
             predicates.toArray(predicatesFinal);
             criteriaQuery.where(predicatesFinal);
         }
+
+
+        if (sortingType == SortingType.THE_BIGEST_DISCOUNT) {
+            criteriaQuery.orderBy(criteriaBuilder.desc(discountRoot.get("percentage")));
+        }
+
+        if (sortingType == SortingType.NEW) {
+            criteriaQuery.orderBy(criteriaBuilder.asc(discountRoot.get("startDate")));
+        }
+
+        if (sortingType == SortingType.ENDING_SOON) {
+            criteriaQuery.orderBy(criteriaBuilder.asc(discountRoot.get("endDate")));
+        }
+
+        if (sortingType == SortingType.POPULAR) {
+            criteriaQuery.orderBy(criteriaBuilder.desc(discountRoot.get("usageCount")));
+        }
+
+
         TypedQuery<Discount> query = entityManager.createQuery(criteriaQuery);
         int size = query.getResultList().size();
         query.setFirstResult(pageable.getPageNumber() * pageable.getPageSize());

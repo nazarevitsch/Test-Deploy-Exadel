@@ -1,4 +1,4 @@
-package com.exadel.discount.platform.domain;
+package com.exadel.discount.platform.domain.enums;
 
 import org.hibernate.HibernateException;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;

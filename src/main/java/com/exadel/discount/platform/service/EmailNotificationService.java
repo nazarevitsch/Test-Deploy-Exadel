@@ -1,6 +1,7 @@
 package com.exadel.discount.platform.service;
 
 import com.exadel.discount.platform.domain.*;
+import com.exadel.discount.platform.domain.enums.EmailType;
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
@@ -24,7 +25,7 @@ public class EmailNotificationService {
     private JavaMailSender mailSender;
     private MustacheFactory mf = new DefaultMustacheFactory();
 
-    public void notifyVendorAboutUsageOfDiscount(EmailType emailType, String to, Discount discount, MyUserDetails details,
+    public void notifyVendorAboutUsageOfDiscount(String to, Discount discount, MyUserDetails details,
                                                  UsedDiscount usedDiscount, UserDetails userDetails) {
         HashMap<String, String> dataEmailTemplate = new HashMap<>();
         dataEmailTemplate.put("discountTitle", discount.getName());
@@ -34,7 +35,7 @@ public class EmailNotificationService {
         dataEmailTemplate.put("vendorTitle", discount.getVendor().getName());
 
         try {
-            sendHtmlMessage(emailType, to, "Your discount was used", dataEmailTemplate);
+            sendHtmlMessage(EmailType.DISCOUNT_USED_NOTIFY_VENDOR, to, "Your discount was used", dataEmailTemplate);
         } catch (Exception e) {}
     }
 
@@ -51,13 +52,14 @@ public class EmailNotificationService {
     private void sendHtmlMessage(EmailType emailType, String to, String subject, Map<String, String> templateData) throws MessagingException, IOException {
         MimeMessage mail = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(mail, true);
-
         Mustache m = null;
 
         switch (emailType) {
             case DISCOUNT_USED_NOTIFY_VENDOR:
                 m = mf.compile("templates/discount_used_notify_vendor.html");
                 break;
+            default:
+                throw new IllegalArgumentException("Incorrect email's type.");
         }
 
         StringWriter writer = new StringWriter();

@@ -1,6 +1,8 @@
 package com.exadel.discount.platform.service;
 
 import com.exadel.discount.platform.domain.*;
+import com.exadel.discount.platform.domain.enums.EmailType;
+import com.exadel.discount.platform.domain.enums.SortingType;
 import com.exadel.discount.platform.exception.DeletedException;
 import com.exadel.discount.platform.exception.NotFoundException;
 import com.exadel.discount.platform.exception.BadRequestException;
@@ -11,9 +13,6 @@ import com.exadel.discount.platform.model.dto.DiscountDto;
 import com.exadel.discount.platform.model.dto.DiscountDtoResponse;
 import com.exadel.discount.platform.model.dto.DiscountUpdateDto;
 import com.exadel.discount.platform.repository.*;
-import com.github.mustachejava.DefaultMustacheFactory;
-import com.github.mustachejava.Mustache;
-import com.github.mustachejava.MustacheFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -23,7 +22,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
-import java.io.StringWriter;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.*;
@@ -56,10 +54,11 @@ public class DiscountService {
         usedDiscount.setUserId(details.getUserId());
 
         UsedDiscount usedDiscountSaved = usedDiscountRepository.save(usedDiscount);
+        discountRepository.useDiscount(discountId);
 
         UserDetails userDetails = userDetailsService.findUserDetailsByUserId(details.getUserId());
 
-        emailNotificationService.notifyVendorAboutUsageOfDiscount(EmailType.DISCOUNT_USED_NOTIFY_VENDOR, discount.getVendor().getEmail(),
+        emailNotificationService.notifyVendorAboutUsageOfDiscount(discount.getVendor().getEmail(),
                 discount, details, usedDiscountSaved, userDetails);
     }
 
@@ -75,9 +74,10 @@ public class DiscountService {
     }
 
     public Page<DiscountDtoResponse> findAllByFilters(int page, int size, UUID categoryId, List<UUID> subCategoriesIds,
-                                                      List<UUID> vendorIds, String country, String city, String searchWord) {
+                                                      List<UUID> vendorIds, String country, String city, String searchWord,
+                                                      SortingType sortingType) {
         return discountMapper.map(discountRepositoryCustom.findAllByFilters(vendorIds, categoryId, subCategoriesIds,
-                country, city, searchWord, PageRequest.of(page, size)));
+                country, city, searchWord, sortingType, PageRequest.of(page, size)));
     }
 
     public DiscountDtoResponse updateDiscount(UUID id, DiscountUpdateDto discountUpdateDto) {
@@ -86,6 +86,7 @@ public class DiscountService {
 
         Discount newDiscount = discountMapper.updateDtoToEntity(discountUpdateDto);
         newDiscount.setId(id);
+        newDiscount.setUsageCount(discount.getUsageCount());
         newDiscount.setVendorId(discount.getVendorId());
 
         validateDiscount(newDiscount, discountUpdateDto.getLocationIds(), discountUpdateDto.getSubCategoryIds());
