@@ -5,7 +5,7 @@
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd"
 >
-    <changeSet id="alter_table_discount" author="nazarii">
+    <changeSet id="add_d_usage_count_column_to_discount" author="nazarii">
         <addColumn  tableName="discount">
             <column  name="d_usage_count" type="int"/>
         </addColumn>

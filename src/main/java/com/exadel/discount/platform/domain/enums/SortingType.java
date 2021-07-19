@@ -4,5 +4,6 @@ public enum SortingType {
     POPULAR,
     NEW,
     ENDING_SOON,
-    THE_BIGEST_DISCOUNT
+    THE_BIGEST_DISCOUNT,
+    COMING_SOON
 }

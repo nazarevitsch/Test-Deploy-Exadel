@@ -32,7 +32,6 @@ public interface DiscountRepository extends JpaRepository<Discount, UUID>{
                                                                            ZonedDateTime zonedDateTime1, ZonedDateTime zonedDateTime2);
 
     @Modifying
-    @Query(value = "update discount set d_usage_count = (select d_usage_count from discount where d_id = :id) + 1 where d_id = :id",
-    nativeQuery = true)
-    int useDiscount(@Param("id") UUID id);
+    @Query(value = "update discount set d_usage_count = d_usage_count + 1 where d_id = :id", nativeQuery = true)
+    void useDiscount(@Param("id") UUID id);
 }

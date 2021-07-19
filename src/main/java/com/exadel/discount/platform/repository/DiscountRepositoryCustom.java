@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -65,29 +66,33 @@ public class DiscountRepositoryCustom {
         Predicate deletedPredicate = criteriaBuilder.equal(discountRoot.get("isDeleted"), false);
         predicates.add(deletedPredicate);
 
+        if (sortingType == SortingType.THE_BIGEST_DISCOUNT) {
+            criteriaQuery.orderBy(criteriaBuilder.desc(discountRoot.get("percentage")));
+        }
+        if (sortingType == SortingType.NEW) {
+            criteriaQuery.orderBy(criteriaBuilder.asc(discountRoot.get("startDate")));
+            Predicate predicate = criteriaBuilder.greaterThanOrEqualTo(discountRoot.get("startDate"), ZonedDateTime.now());
+            predicates.add(predicate);
+        }
+        if (sortingType == SortingType.ENDING_SOON) {
+            criteriaQuery.orderBy(criteriaBuilder.asc(discountRoot.get("endDate")));
+            Predicate predicate = criteriaBuilder.greaterThanOrEqualTo(discountRoot.get("startDate"), ZonedDateTime.now());
+            predicates.add(predicate);
+        }
+        if (sortingType == SortingType.POPULAR) {
+            criteriaQuery.orderBy(criteriaBuilder.desc(discountRoot.get("usageCount")));
+        }
+        if (sortingType == SortingType.COMING_SOON) {
+            criteriaQuery.orderBy(criteriaBuilder.asc(discountRoot.get("startDate")));
+            Predicate predicate = criteriaBuilder.greaterThanOrEqualTo(discountRoot.get("startDate"), ZonedDateTime.now());
+            predicates.add(predicate);
+        }
+
         if (predicates.size() != 0) {
             Predicate[] predicatesFinal = new Predicate[predicates.size()];
             predicates.toArray(predicatesFinal);
             criteriaQuery.where(predicatesFinal);
         }
-
-
-        if (sortingType == SortingType.THE_BIGEST_DISCOUNT) {
-            criteriaQuery.orderBy(criteriaBuilder.desc(discountRoot.get("percentage")));
-        }
-
-        if (sortingType == SortingType.NEW) {
-            criteriaQuery.orderBy(criteriaBuilder.asc(discountRoot.get("startDate")));
-        }
-
-        if (sortingType == SortingType.ENDING_SOON) {
-            criteriaQuery.orderBy(criteriaBuilder.asc(discountRoot.get("endDate")));
-        }
-
-        if (sortingType == SortingType.POPULAR) {
-            criteriaQuery.orderBy(criteriaBuilder.desc(discountRoot.get("usageCount")));
-        }
-
 
         TypedQuery<Discount> query = entityManager.createQuery(criteriaQuery);
         int size = query.getResultList().size();
