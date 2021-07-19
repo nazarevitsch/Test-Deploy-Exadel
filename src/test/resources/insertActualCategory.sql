@@ -1,0 +1,3 @@
+INSERT INTO category(c_id, c_name, c_deleted) VALUES ('a55b8b0c-cd2b-4896-a074-bafb558266a9', 'education', 'false');
+INSERT INTO sub_category(sc_id, sc_name, sc_deleted, category_id) VALUES ('35f97267-404e-4d95-98f6-9a399bc3a9de', 'english', 'false', 'a55b8b0c-cd2b-4896-a074-bafb558266a9');
+INSERT INTO category(c_id, c_name, c_deleted) VALUES ('9647f7ce-7bef-4814-916a-606e2dda6940', 'the culture', 'false');
