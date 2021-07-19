@@ -45,4 +45,9 @@ public class VendorLocation {
 
     @Column(name = "vl_deleted")
     private boolean deleted;
+
+    @Column(name = "vl_latitude")
+    private double latitude;
+    @Column(name = "vl_longitude")
+    private double longitude;
 }
