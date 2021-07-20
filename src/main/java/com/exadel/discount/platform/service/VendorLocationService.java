@@ -51,22 +51,21 @@ public class VendorLocationService {
     public VendorLocationResponseDto getById(UUID vendorId, UUID id) {
         VendorLocation location = locationRepository.findByVendorIdAndId(vendorId, id)
                 .orElseThrow(() -> new NotFoundException("Vendor location with id " + id +
-                " was not found"));
-            return mapper.entityToResponseDto(location);
+                        " does not exist.", id, VendorLocation.class));
+        return mapper.entityToResponseDto(location);
     }
 
     public VendorLocationResponseDto update(UUID vendorId, UUID id, VendorLocationBaseDto vendorLocationDto) {
         VendorLocation location = locationRepository
                 .findByVendorIdAndId(vendorId, id).orElseThrow(() -> new NotFoundException("Vendor location with id " + id +
-                " was not found"));
-            if (location.isDeleted()) {
-                throw new DeletedException("Cannot update deleted Vendor Location with id" + id
-                );
-            }
-
-            mapper.update(vendorLocationDto, location);
-            location = locationRepository.save(location);
-            return mapper.entityToResponseDto(location);
+                        " does not exist.", id, VendorLocation.class));
+        if (location.isDeleted()) {
+            throw new DeletedException("Cannot update deleted Vendor Location with id" + id
+            );
+        }
+        mapper.update(vendorLocationDto, location);
+        location = locationRepository.save(location);
+        return mapper.entityToResponseDto(location);
     }
 
     public void toArchive(UUID vendorId, UUID id) {
@@ -75,7 +74,7 @@ public class VendorLocationService {
             locationRepository.deleteById(id);
         } else {
             throw new NotFoundException("Vendor location with id " + id +
-                    " was not found");
+                    " does not exist.", id, VendorLocation.class);
         }
     }
 }

@@ -23,7 +23,6 @@ public class VendorService {
     private final VendorMapper mapper;
     private final DiscountRepository discountRepository;
 
-
     public List<VendorResponseDto> getAll(boolean isDeleted) {
         return mapper.mapList(vendorRepository.findAllByDeleted(isDeleted), VendorResponseDto.class);
     }
@@ -37,7 +36,7 @@ public class VendorService {
         Vendor vendor = vendorRepository
                 .findById(id)
                 .orElseThrow(() -> new NotFoundException("Vendor with id " + id +
-                        " was not found"));
+                        " does not exist.", id, Vendor.class));
         return mapper.entityToResponseDto(vendor);
     }
 
@@ -45,8 +44,7 @@ public class VendorService {
         Vendor vendor = vendorRepository
                 .findById(id)
                 .orElseThrow(() -> new NotFoundException("Vendor with id " + id +
-                        " was not found"));
-
+                        " does not exist.", id, Vendor.class));
         if (vendor.isDeleted()) {
             throw new DeletedException("Cannot update deleted Vendor with id" + id
             );
@@ -63,7 +61,7 @@ public class VendorService {
             discountRepository.deleteAllByVendorId(id);
         } else {
             throw new NotFoundException("Vendor with id " + id +
-                    " was not found");
+                    " does not exist.", id, Vendor.class);
         }
     }
 }
