@@ -1,5 +1,7 @@
 package com.exadel.discount.platform.domain;
 
+import com.exadel.discount.platform.domain.enums.PostgreSQLEnumType;
+import com.exadel.discount.platform.domain.enums.UserRole;
 import lombok.Data;
 import lombok.ToString;
 import org.hibernate.annotations.Type;

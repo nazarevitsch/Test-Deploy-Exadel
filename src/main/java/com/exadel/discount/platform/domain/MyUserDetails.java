@@ -1,7 +1,6 @@
 package com.exadel.discount.platform.domain;
 
-import com.exadel.discount.platform.domain.User;
-import com.exadel.discount.platform.domain.UserRole;
+import com.exadel.discount.platform.domain.enums.UserRole;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

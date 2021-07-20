@@ -1,6 +1,8 @@
 package com.exadel.discount.platform.service;
 
-import com.exadel.discount.platform.domain.Discount;
+import com.exadel.discount.platform.domain.*;
+import com.exadel.discount.platform.domain.enums.EmailType;
+import com.exadel.discount.platform.domain.enums.SortingType;
 import com.exadel.discount.platform.exception.DeletedException;
 import com.exadel.discount.platform.exception.NotFoundException;
 import com.exadel.discount.platform.exception.BadRequestException;
@@ -10,14 +12,12 @@ import com.exadel.discount.platform.model.VendorLocation;
 import com.exadel.discount.platform.model.dto.DiscountDto;
 import com.exadel.discount.platform.model.dto.DiscountDtoResponse;
 import com.exadel.discount.platform.model.dto.DiscountUpdateDto;
-import com.exadel.discount.platform.repository.DiscountRepository;
-import com.exadel.discount.platform.repository.DiscountRepositoryCustom;
-import com.exadel.discount.platform.repository.SubCategoryRepository;
-import com.exadel.discount.platform.repository.VendorLocationRepository;
+import com.exadel.discount.platform.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -38,7 +38,29 @@ public class DiscountService {
     private final VendorLocationRepository vendorLocationRepository;
     private final DiscountRepositoryCustom discountRepositoryCustom;
     private final DiscountMapper discountMapper;
+    private final UsedDiscountRepository usedDiscountRepository;
+    private final EmailNotificationService emailNotificationService;
+    private final UserDetailsService userDetailsService;
 
+    public void useDiscount(UUID discountId) {
+        ZonedDateTime now = ZonedDateTime.now();
+        Discount discount = Optional.of(discountRepository.findDiscountByIdAndIsDeletedAndEndDateAfterAndStartDateBefore(discountId, false, now, now))
+                .orElseThrow(() -> new NotFoundException("Discount with id " + discountId + " doesn't exist or not active."));
+
+        MyUserDetails details = ((MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+
+        UsedDiscount usedDiscount = new UsedDiscount();
+        usedDiscount.setDiscountId(discountId);
+        usedDiscount.setUserId(details.getUserId());
+
+        UsedDiscount usedDiscountSaved = usedDiscountRepository.save(usedDiscount);
+        discountRepository.useDiscount(discountId);
+
+        UserDetails userDetails = userDetailsService.findUserDetailsByUserId(details.getUserId());
+
+        emailNotificationService.notifyVendorAboutUsageOfDiscount(discount.getVendor().getEmail(),
+                discount, details, usedDiscountSaved, userDetails);
+    }
 
     public void save(DiscountDto discountDto){
         Discount discount = discountMapper.dtoToEntity(discountDto);
@@ -52,9 +74,10 @@ public class DiscountService {
     }
 
     public Page<DiscountDtoResponse> findAllByFilters(int page, int size, UUID categoryId, List<UUID> subCategoriesIds,
-                                                      List<UUID> vendorIds, String country, String city, String searchWord) {
+                                                      List<UUID> vendorIds, String country, String city, String searchWord,
+                                                      SortingType sortingType) {
         return discountMapper.map(discountRepositoryCustom.findAllByFilters(vendorIds, categoryId, subCategoriesIds,
-                country, city, searchWord, PageRequest.of(page, size)));
+                country, city, searchWord, sortingType, PageRequest.of(page, size)));
     }
 
     public DiscountDtoResponse updateDiscount(UUID id, DiscountUpdateDto discountUpdateDto) {
@@ -63,6 +86,7 @@ public class DiscountService {
 
         Discount newDiscount = discountMapper.updateDtoToEntity(discountUpdateDto);
         newDiscount.setId(id);
+        newDiscount.setUsageCount(discount.getUsageCount());
         newDiscount.setVendorId(discount.getVendorId());
 
         validateDiscount(newDiscount, discountUpdateDto.getLocationIds(), discountUpdateDto.getSubCategoryIds());

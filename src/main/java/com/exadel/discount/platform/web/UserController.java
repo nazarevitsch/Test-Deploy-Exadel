@@ -36,15 +36,13 @@ public class UserController {
             return new ResponseEntity<>(new Message("There isn't user with such password or email!"), HttpStatus.UNAUTHORIZED);
         }
         Cookie cookie = new Cookie("refreshToken", userService.loginGenerateRefreshToken(userLogin));
-        cookie.setHttpOnly(true);
         cookie.setPath("/");
         response.addCookie(cookie);
        return new ResponseEntity<>(userService.login(userLogin), HttpStatus.OK);
     }
 
     @PostMapping("/refresh_token")
-    public ResponseEntity<?> refreshToken(
-            @CookieValue(name = "refreshToken") String token) {
+    public ResponseEntity<?> refreshToken(@CookieValue(name = "refreshToken") String token) {
         return new ResponseEntity<>(userService.generateAccessToken(token), HttpStatus.OK);
     }
 
