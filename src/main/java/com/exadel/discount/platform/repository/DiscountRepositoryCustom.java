@@ -66,7 +66,7 @@ public class DiscountRepositoryCustom {
         Predicate deletedPredicate = criteriaBuilder.equal(discountRoot.get("isDeleted"), false);
         predicates.add(deletedPredicate);
 
-        if (sortingType == SortingType.THE_BIGEST_DISCOUNT) {
+        if (sortingType == SortingType.HOT_SALES) {
             criteriaQuery.orderBy(criteriaBuilder.desc(discountRoot.get("percentage")));
         }
         if (sortingType == SortingType.NEW) {
