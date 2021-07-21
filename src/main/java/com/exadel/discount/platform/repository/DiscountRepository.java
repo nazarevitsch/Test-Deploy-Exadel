@@ -34,4 +34,9 @@ public interface DiscountRepository extends JpaRepository<Discount, UUID>{
     @Modifying
     @Query(value = "update discount set d_usage_count = d_usage_count + 1 where d_id = :id", nativeQuery = true)
     void useDiscount(@Param("id") UUID id);
+
+
+
+//    @Query(value = "", nativeQuery = true)
+//    Discount findDisco
 }

@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -43,9 +42,6 @@ public class UserController {
                 .secure(true)
                 .httpOnly(true)
                 .build();
-//        Cookie cookie = new Cookie("refreshToken", userService.loginGenerateRefreshToken(userLogin));
-//        cookie.si
-//        response.addCookie(cookie);
         response.addHeader(HttpHeaders.SET_COOKIE, responseCookie.toString());
        return new ResponseEntity<>(userService.login(userLogin), HttpStatus.OK);
     }

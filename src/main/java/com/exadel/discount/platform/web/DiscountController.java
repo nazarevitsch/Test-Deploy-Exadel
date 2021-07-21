@@ -25,6 +25,7 @@ public class DiscountController {
     private DiscountService discountService;
 
     @PostMapping("/use_discount/{id}")
+    @PreAuthorize("hasAnyAuthority('ADMINISTRATOR', 'USER')")
     public ResponseEntity<?> useDiscount(@PathVariable UUID id) {
         discountService.useDiscount(id);
         return new ResponseEntity<>(HttpStatus.OK);

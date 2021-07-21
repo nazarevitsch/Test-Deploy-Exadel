@@ -5,6 +5,7 @@ import com.exadel.discount.platform.domain.enums.EmailType;
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -19,6 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
+@Slf4j
 public class EmailNotificationService {
 
     @Autowired
@@ -36,7 +38,10 @@ public class EmailNotificationService {
 
         try {
             sendHtmlMessage(EmailType.DISCOUNT_USED_NOTIFY_VENDOR, to, "Your discount was used", dataEmailTemplate);
-        } catch (Exception e) {}
+        } catch (Exception e) {
+            log.info("Email wasn't sent :(");
+            e.printStackTrace();
+        }
     }
 
     private void sendSimpleTextMessage(String to, String subject, String text) {
