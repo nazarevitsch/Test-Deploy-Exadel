@@ -69,7 +69,7 @@ public class DiscountRepositoryCustom {
         if (sortingType == SortingType.HOT_SALES) {
             criteriaQuery.orderBy(criteriaBuilder.desc(discountRoot.get("percentage")));
         }
-        if (sortingType == SortingType.NEW) {
+        if (sortingType == SortingType.NEW_DISCOUNTS) {
             criteriaQuery.orderBy(criteriaBuilder.asc(discountRoot.get("startDate")));
             Predicate predicate = criteriaBuilder.greaterThanOrEqualTo(discountRoot.get("startDate"), ZonedDateTime.now());
             predicates.add(predicate);
