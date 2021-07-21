@@ -41,6 +41,7 @@ public class UserController {
         ResponseCookie responseCookie = ResponseCookie.from("refreshToken", userService.loginGenerateRefreshToken(userLogin))
                 .sameSite("None")
                 .secure(true)
+                .httpOnly(true)
                 .build();
 //        Cookie cookie = new Cookie("refreshToken", userService.loginGenerateRefreshToken(userLogin));
 //        cookie.si
