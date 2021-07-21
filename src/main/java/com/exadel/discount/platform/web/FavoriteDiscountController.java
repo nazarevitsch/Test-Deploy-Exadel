@@ -1,6 +1,5 @@
 package com.exadel.discount.platform.web;
 
-import com.exadel.discount.platform.model.dto.FavoriteDiscountResponseDto;
 import com.exadel.discount.platform.service.FavoriteDiscountService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -22,8 +21,9 @@ public class FavoriteDiscountController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     @PreAuthorize("hasAuthority('USER')")
-    public ResponseEntity<FavoriteDiscountResponseDto> like(@PathVariable UUID id) {
-        return new ResponseEntity<>(favoriteDiscountService.like(id), HttpStatus.OK);
+    public ResponseEntity<?> like(@PathVariable UUID id) {
+        favoriteDiscountService.like(id);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping()
