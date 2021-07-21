@@ -25,8 +25,9 @@ public interface DiscountRepository extends JpaRepository<Discount, UUID>{
             nativeQuery = true)
     @Modifying
     void removeVendorLocationsRelationship(@Param("vendor_location_ids") List<UUID> ids, @Param("discount_id") UUID id);
-
     void deleteAllByVendorId(UUID vendorId);
+
+    Discount findDiscountByIdAndIsDeleted(UUID id, boolean isDeleted);
 
     Discount findDiscountByIdAndIsDeletedAndEndDateAfterAndStartDateBefore(UUID uuid, boolean deleted,
                                                                            ZonedDateTime zonedDateTime1, ZonedDateTime zonedDateTime2);

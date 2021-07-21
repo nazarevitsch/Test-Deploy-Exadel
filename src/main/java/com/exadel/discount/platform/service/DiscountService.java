@@ -45,7 +45,8 @@ public class DiscountService {
     public void useDiscount(UUID discountId) {
         ZonedDateTime now = ZonedDateTime.now();
         Discount discount = Optional.of(discountRepository.findDiscountByIdAndIsDeletedAndEndDateAfterAndStartDateBefore(discountId, false, now, now))
-                .orElseThrow(() -> new NotFoundException("Discount with id " + discountId + " doesn't exist or not active."));
+                .orElseThrow(() -> new NotFoundException("Discount with id "
+                        + discountId + " doesn't exist or not active.", discountId, Discount.class));
 
         MyUserDetails details = ((MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
 
