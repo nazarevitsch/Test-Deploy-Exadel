@@ -7,6 +7,7 @@ import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -22,6 +23,11 @@ import java.util.Map;
 @Service
 @Slf4j
 public class EmailNotificationService {
+
+    @Value("${spring.mail.username}")
+    private String email;
+    @Value("${spring.mail.password}")
+    private String password;
 
     @Autowired
     private JavaMailSender mailSender;
@@ -39,6 +45,8 @@ public class EmailNotificationService {
         try {
             sendHtmlMessage(EmailType.DISCOUNT_USED_NOTIFY_VENDOR, to, "Your discount was used", dataEmailTemplate);
         } catch (Exception e) {
+            System.out.println(email);
+            System.out.println(password);
             log.info("Email wasn't sent :(");
             e.printStackTrace();
         }
