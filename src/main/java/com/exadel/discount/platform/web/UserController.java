@@ -5,7 +5,9 @@ import com.exadel.discount.platform.domain.Message;
 import com.exadel.discount.platform.service.UserService;
 import com.exadel.discount.platform.model.dto.UserLoginDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @RestController
@@ -35,14 +38,21 @@ public class UserController {
         } catch (BadCredentialsException e) {
             return new ResponseEntity<>(new Message("There isn't user with such password or email!"), HttpStatus.UNAUTHORIZED);
         }
-        Cookie cookie = new Cookie("refreshToken", userService.loginGenerateRefreshToken(userLogin));
-        cookie.setPath("/");
-        response.addCookie(cookie);
+        ResponseCookie responseCookie = ResponseCookie.from("refreshToken", userService.loginGenerateRefreshToken(userLogin))
+                .sameSite("None")
+                .build();
+//        Cookie cookie = new Cookie("refreshToken", userService.loginGenerateRefreshToken(userLogin));
+//        cookie.si
+//        response.addCookie(cookie);
+        response.addHeader(HttpHeaders.SET_COOKIE, responseCookie.toString());
        return new ResponseEntity<>(userService.login(userLogin), HttpStatus.OK);
     }
 
     @PostMapping("/refresh_token")
-    public ResponseEntity<?> refreshToken(@CookieValue(name = "refreshToken") String token) {
+    public ResponseEntity<?> refreshToken(@CookieValue(name = "refreshToken") String token, HttpServletRequest request) {
+        System.out.println(request.getCookies().length);
+        System.out.println(request.getCookies()[0].getName());
+        System.out.println(request.getCookies()[0].getValue());
         return new ResponseEntity<>(userService.generateAccessToken(token), HttpStatus.OK);
     }
 

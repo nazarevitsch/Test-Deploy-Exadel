@@ -24,6 +24,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
+import java.time.temporal.TemporalField;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -76,6 +77,10 @@ public class DiscountService {
     public Page<DiscountDtoResponse> findAllByFilters(int page, int size, UUID categoryId, List<UUID> subCategoriesIds,
                                                       List<UUID> vendorIds, String country, String city, String searchWord,
                                                       SortingType sortingType) {
+
+
+        Page<DiscountDtoResponse> d = discountMapper.map(discountRepositoryCustom.findAllByFilters(vendorIds, categoryId, subCategoriesIds,
+                country, city, searchWord, sortingType, PageRequest.of(page, size)));
         return discountMapper.map(discountRepositoryCustom.findAllByFilters(vendorIds, categoryId, subCategoriesIds,
                 country, city, searchWord, sortingType, PageRequest.of(page, size)));
     }
