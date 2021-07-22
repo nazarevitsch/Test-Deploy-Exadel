@@ -24,11 +24,6 @@ import java.util.Map;
 @Slf4j
 public class EmailNotificationService {
 
-    @Value("${spring.mail.username}")
-    private String email;
-    @Value("${spring.mail.password}")
-    private String password;
-
     @Autowired
     private JavaMailSender mailSender;
     private MustacheFactory mf = new DefaultMustacheFactory();
@@ -45,8 +40,6 @@ public class EmailNotificationService {
         try {
             sendHtmlMessage(EmailType.DISCOUNT_USED_NOTIFY_VENDOR, to, "Your discount was used", dataEmailTemplate);
         } catch (Exception e) {
-            System.out.println(email);
-            System.out.println(password);
             log.info("Email wasn't sent :(");
             e.printStackTrace();
         }
