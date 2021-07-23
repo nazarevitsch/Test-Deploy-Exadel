@@ -12,4 +12,5 @@ public class ControllerErrorResponse {
     private String message;
     private UUID id;
     private String entityType;
+    private String invalidFieldName;
 }

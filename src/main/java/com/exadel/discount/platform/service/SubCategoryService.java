@@ -30,7 +30,8 @@ public class SubCategoryService {
     public SubCategoryResponseDto save(UUID categoryId, SubCategoryBaseDto subCategoryBaseDto) {
         Category category = categoryRepository.getById(categoryId);
         if (category.isDeleted()) {
-            throw new DeletedException("Cannot create SubCategory with deleted Category");
+            throw new DeletedException("Cannot create SubCategory with deleted Category with id " +
+                    categoryId, categoryId, Category.class);
         }
         SubCategory savedSubCategory = mapper.dtoToEntity(subCategoryBaseDto);
         savedSubCategory.setCategory(category);
@@ -50,7 +51,7 @@ public class SubCategoryService {
                 .findByCategoryIdAndId(categoryId, id)
                 .orElseThrow(() -> new NotFoundException("SubCategory with id " + id + " does not exist.", id, SubCategory.class));
         if (subCategory.isDeleted()) {
-            throw new DeletedException("Cannot update deleted SubCategory with id" + id);
+            throw new DeletedException("Cannot update deleted SubCategory with id " + id, id, SubCategory.class);
         }
         mapper.update(subCategoryBaseDto, subCategory);
         subCategory = subCategoryRepository.save(subCategory);

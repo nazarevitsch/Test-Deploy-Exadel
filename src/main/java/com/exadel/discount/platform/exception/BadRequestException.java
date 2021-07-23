@@ -1,8 +1,23 @@
 package com.exadel.discount.platform.exception;
 
-public class BadRequestException extends RuntimeException {
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
-    public BadRequestException(String message) {
-        super(message);
+import java.util.UUID;
+
+@Getter
+@RequiredArgsConstructor
+public class BadRequestException extends RuntimeException {
+    private final String message;
+    private final UUID id;
+    private final Class<?> type;
+    private final String invalidFieldName;
+
+    public String getErrorCode() {
+        return type.getSimpleName() + "_bad_request";
+    }
+
+    public String getEntityType() {
+        return type.getSimpleName();
     }
 }

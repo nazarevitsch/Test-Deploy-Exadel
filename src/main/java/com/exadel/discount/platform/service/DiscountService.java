@@ -1,7 +1,6 @@
 package com.exadel.discount.platform.service;
 
 import com.exadel.discount.platform.domain.*;
-import com.exadel.discount.platform.domain.enums.EmailType;
 import com.exadel.discount.platform.domain.enums.SortingType;
 import com.exadel.discount.platform.exception.DeletedException;
 import com.exadel.discount.platform.exception.NotFoundException;
@@ -46,7 +45,7 @@ public class DiscountService {
         ZonedDateTime now = ZonedDateTime.now();
         Discount discount = Optional.of(discountRepository.findDiscountByIdAndIsDeletedAndEndDateAfterAndStartDateBefore(discountId, false, now, now))
                 .orElseThrow(() -> new NotFoundException("Discount with id "
-                        + discountId + " doesn't exist or not active.", discountId, Discount.class));
+                        + discountId + " does not exist or not active.", discountId, Discount.class));
 
         MyUserDetails details = ((MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
 
@@ -63,7 +62,7 @@ public class DiscountService {
                 discount, details, usedDiscountSaved, userDetails);
     }
 
-    public void save(DiscountDto discountDto){
+    public void save(DiscountDto discountDto) {
         Discount discount = discountMapper.dtoToEntity(discountDto);
         validateDiscount(discount, discountDto.getLocationIds(), discountDto.getSubCategoryIds());
         discountRepository.save(discount);
@@ -106,21 +105,24 @@ public class DiscountService {
             discountRepository.deleteById(id);
             return;
         }
-        throw new NotFoundException("Discount with id " + id + " does not .", id, Discount.class);
+        throw new NotFoundException("Discount with id " + id + " does not exist.", id, Discount.class);
     }
 
     private void validateDiscount(Discount discount, List<UUID> locationsIds, List<UUID> subCategoriesIds) {
         if (!discount.getStartDate().isBefore(discount.getEndDate())) {
-            throw new BadRequestException("End time of discount can't be before start time.");
+            throw new BadRequestException("End time of discount can't be before start time.", discount.getId(), Discount.class,
+                    "endDate");
         }
         if (!discount.getStartDate().toLocalDate().equals(LocalDate.now(discount.getStartDate().getZone()))) {
             if (discount.getStartDate().isBefore(ZonedDateTime.now())) {
-                throw new BadRequestException("Start time of discount should be at last today or later.");
+                throw new BadRequestException("Start time of discount should be at last today or later.",
+                        discount.getId(), Discount.class, "startDate");
             }
         }
         if (!discount.isOnline()) {
             if (locationsIds == null || CollectionUtils.isEmpty(locationsIds)) {
-                throw new BadRequestException("If location/s of discount isn't online, it should have locations.");
+                throw new BadRequestException("If location/s of discount isn't online, it should have locations.",
+                        discount.getId(), Discount.class, "vendorLocations");
             }
             List<VendorLocation> vendorLocations = vendorLocationRepository.findAllById(locationsIds);
             for (VendorLocation vl : vendorLocations) {
@@ -128,19 +130,22 @@ public class DiscountService {
                     throw new NotFoundException("Vendor location with id " + vl.getId() +
                             " does not exist.", vl.getId(), VendorLocation.class);
                 if (vl.isDeleted())
-                    throw new DeletedException("Vendor location with id " + vl.getId() + " is deleted.");
+                    throw new DeletedException("Vendor location with id " + vl.getId() +
+                            " is deleted.", vl.getId(), VendorLocation.class);
             }
             discount.setVendorLocations(vendorLocations);
         }
         if (subCategoriesIds == null || CollectionUtils.isEmpty(subCategoriesIds)) {
-            throw new BadRequestException("Each discount should have sub categories.");
+            throw new BadRequestException("Each discount should have sub categories.", discount.getId(), Discount.class,
+                    "subCategories");
         }
         List<SubCategory> subCategories = subCategoryRepository.findAllById(subCategoriesIds);
         for (SubCategory sc : subCategories) {
             if (!sc.getCategory().getId().equals(discount.getCategoryId()))
                 throw new NotFoundException("SubCategory with id " + sc.getId() +
                         " does not exist.", sc.getId(), SubCategory.class);
-            if (sc.isDeleted()) throw new DeletedException("Sub category with id " + sc.getId() + " is deleted.");
+            if (sc.isDeleted()) throw new DeletedException("Sub category with id " + sc.getId() +
+                    " is deleted.", sc.getId(), SubCategory.class);
         }
         discount.setSubCategories(subCategories);
     }
