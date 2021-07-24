@@ -50,6 +50,8 @@ public class DiscountRepositoryCustom {
         }
         if (country != null) {
             Join<Discount, VendorLocation> join2 = discountRoot.join("vendorLocations");
+            Predicate predicateLocationIsNotDeleted = criteriaBuilder.equal(join2.get("deleted"), false);
+            predicates.add(predicateLocationIsNotDeleted);
             Predicate predicateCountry = criteriaBuilder.equal(join2.get("country"), country);
             predicates.add(predicateCountry);
             if (city != null) {
