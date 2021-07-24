@@ -12,18 +12,18 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.List;
 
-@EnableWebMvc
-@Configuration
-@ComponentScan({"com.exadel.discount.platform"})
-public class WebConfig implements WebMvcConfigurer{
+//@EnableWebMvc
+//@Configuration
+//@ComponentScan({"com.exadel.discount.platform"})
+public class WebConfig{
 
-    @Override
-    public void configureMessageConverters(List<HttpMessageConverter<?>> messageConverters) {
-
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.registerModule(new JavaTimeModule());
-        mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-
-        messageConverters.add(new MappingJackson2HttpMessageConverter(mapper));
-    }
+//    @Override
+//    public void configureMessageConverters(List<HttpMessageConverter<?>> messageConverters) {
+//
+//        ObjectMapper mapper = new ObjectMapper();
+//        mapper.registerModule(new JavaTimeModule());
+//        mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+//
+//        messageConverters.add(new MappingJackson2HttpMessageConverter(mapper));
+//    }
 }

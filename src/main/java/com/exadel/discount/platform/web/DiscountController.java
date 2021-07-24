@@ -5,7 +5,6 @@ import com.exadel.discount.platform.domain.enums.SortingType;
 import com.exadel.discount.platform.model.dto.DiscountDto;
 import com.exadel.discount.platform.model.dto.DiscountDtoResponse;
 import com.exadel.discount.platform.model.dto.DiscountUpdateDto;
-import com.exadel.discount.platform.model.dto.UserLoginDTO;
 import com.exadel.discount.platform.service.DiscountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -38,7 +37,7 @@ public class DiscountController {
             @RequestParam("page") int page,
             @RequestParam("size") int size,
             @RequestParam(value = "categoryId", required = false) UUID categoryId,
-            @RequestParam(value = "subCategoriesIds", required = false) List<UUID> subCategoriesIds,
+            @RequestParam(value = "subCategoryIds", required = false) List<UUID> subCategoriesIds,
             @RequestParam(value = "vendorIds", required = false) List<UUID> vendorIds,
             @RequestParam(value = "country", required = false) String country,
             @RequestParam(value = "city", required = false) String city,

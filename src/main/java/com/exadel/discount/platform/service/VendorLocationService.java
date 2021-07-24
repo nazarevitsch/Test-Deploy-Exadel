@@ -39,7 +39,8 @@ public class VendorLocationService {
     public VendorLocationResponseDto save(UUID vendorId, VendorLocationBaseDto vendorLocationDto) {
         Vendor vendor = vendorRepository.getById(vendorId);
         if (vendor.isDeleted()) {
-            throw new DeletedException("Cannot create Vendor Location with deleted Vendor");
+            throw new DeletedException("Cannot create Vendor Location with deleted Vendor with id " +
+                    vendorId, vendorId, Vendor.class);
         }
         VendorLocation location = mapper.dtoToEntity(vendorLocationDto);
         location.setVendor(vendor);
@@ -60,8 +61,7 @@ public class VendorLocationService {
                 .findByVendorIdAndId(vendorId, id).orElseThrow(() -> new NotFoundException("Vendor location with id " + id +
                         " does not exist.", id, VendorLocation.class));
         if (location.isDeleted()) {
-            throw new DeletedException("Cannot update deleted Vendor Location with id" + id
-            );
+            throw new DeletedException("Cannot update deleted Vendor Location with id " + id, id, VendorLocation.class);
         }
         mapper.update(vendorLocationDto, location);
         location = locationRepository.save(location);

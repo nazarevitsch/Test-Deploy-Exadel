@@ -46,8 +46,8 @@ public class CategoryService {
                 .orElseThrow(() -> new NotFoundException("Category with id " + id +
                         " does not exist.", id, Category.class));
         if (category.isDeleted()) {
-            throw new DeletedException("Cannot update deleted Category with id" + id
-            );
+            throw new DeletedException("Cannot update Category with id " + id, id,
+                    Category.class);
         }
         mapper.update(categoryDto, category);
         category = categoryRepository.save(category);

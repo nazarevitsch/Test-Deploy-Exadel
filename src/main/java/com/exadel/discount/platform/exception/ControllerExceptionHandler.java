@@ -20,4 +20,29 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
                 .build();
         return new ResponseEntity<>(controllerResponse, HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler({DeletedException.class})
+    protected ResponseEntity<ControllerErrorResponse> handleDeletedException(
+            DeletedException ex) {
+        ControllerErrorResponse controllerResponse = ControllerErrorResponse.builder()
+                .entityType(ex.getEntityType())
+                .message(ex.getMessage())
+                .id(ex.getId())
+                .errorCode(ex.getErrorCode())
+                .build();
+        return new ResponseEntity<>(controllerResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler({BadRequestException.class})
+    protected ResponseEntity<ControllerErrorResponse> handleBadRequestException(
+            BadRequestException ex) {
+        ControllerErrorResponse controllerResponse = ControllerErrorResponse.builder()
+                .entityType(ex.getEntityType())
+                .message(ex.getMessage())
+                .id(ex.getId())
+                .errorCode(ex.getErrorCode())
+                .invalidFieldName(ex.getInvalidFieldName())
+                .build();
+        return new ResponseEntity<>(controllerResponse, HttpStatus.BAD_REQUEST);
+    }
 }

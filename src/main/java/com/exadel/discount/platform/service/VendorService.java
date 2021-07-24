@@ -46,8 +46,7 @@ public class VendorService {
                 .orElseThrow(() -> new NotFoundException("Vendor with id " + id +
                         " does not exist.", id, Vendor.class));
         if (vendor.isDeleted()) {
-            throw new DeletedException("Cannot update deleted Vendor with id" + id
-            );
+            throw new DeletedException("Cannot update deleted Vendor with id " + id, id, Vendor.class);
         }
         mapper.updateVendor(vendorDto, vendor);
         vendor = vendorRepository.save(vendor);
