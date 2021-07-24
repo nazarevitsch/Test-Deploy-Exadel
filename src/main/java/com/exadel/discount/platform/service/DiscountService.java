@@ -46,7 +46,7 @@ public class DiscountService {
     public void useDiscount(UUID discountId) {
         ZonedDateTime now = ZonedDateTime.now();
         Discount discount = Optional.of(discountRepository.findDiscountByIdAndIsDeletedAndEndDateAfterAndStartDateBefore(discountId, false, now, now))
-                .orElseThrow(() -> new NotFoundException("Discount with id " + discountId + " doesn't exist or not active."));
+                .orElseThrow(() -> new NotFoundException("Discount with id " + discountId + " doesn't exist or not active.", discountId, Discount.class));
 
         MyUserDetails details = ((MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
 
@@ -71,7 +71,7 @@ public class DiscountService {
 
     public DiscountDtoResponse findById(UUID id){
         Optional<Discount> discount = Optional.of(discountRepository.getById(id));
-        return discountMapper.entityToDto(discount.orElseThrow(()-> new NotFoundException("Discount with id " + id + " wasn't found.")));
+        return discountMapper.entityToDto(discount.orElseThrow(()-> new NotFoundException("Discount with id " + id + " wasn't found.", id, Discount.class)));
     }
 
     public Page<DiscountDtoResponse> findAllByFilters(int page, int size, UUID categoryId, List<UUID> subCategoriesIds,
@@ -87,7 +87,7 @@ public class DiscountService {
 
     public DiscountDtoResponse updateDiscount(UUID id, DiscountUpdateDto discountUpdateDto) {
         Discount discount = Optional.of(discountRepository.getById(id))
-                .orElseThrow(() -> new NotFoundException("Discount with id " + id + " doesn't exist."));
+                .orElseThrow(() -> new NotFoundException("Discount with id " + id + " doesn't exist.", id, Discount.class));
 
         Discount newDiscount = discountMapper.updateDtoToEntity(discountUpdateDto);
         newDiscount.setId(id);
@@ -109,7 +109,7 @@ public class DiscountService {
             discountRepository.deleteById(id);
             return;
         }
-        throw new NotFoundException("Discount with id " + id  + " doesn't exist.");
+        throw new NotFoundException("Discount with id " + id  + " doesn't exist.", id, Discount.class);
     }
 
     private void validateDiscount(Discount discount, List<UUID> locationsIds, List<UUID> subCategoriesIds) {
@@ -128,7 +128,7 @@ public class DiscountService {
             List<VendorLocation> vendorLocations = vendorLocationRepository.findAllById(locationsIds);
             for (VendorLocation vl : vendorLocations) {
                 if (!vl.getVendor().getId().equals(discount.getVendorId()))
-                    throw new NotFoundException("Vendor location with id " + vl.getId() + " wasn't found.");
+                    throw new NotFoundException("Vendor location with id " + vl.getId() + " wasn't found.", vl.getId(), VendorLocation.class);
                 if (vl.isDeleted()) throw new DeletedException("Vendor location with id " + vl.getId() + " is deleted.");
             }
             discount.setVendorLocations(vendorLocations);
@@ -139,7 +139,7 @@ public class DiscountService {
         List<SubCategory> subCategories = subCategoryRepository.findAllById(subCategoriesIds);
         for (SubCategory sc : subCategories) {
             if (!sc.getCategory().getId().equals(discount.getCategoryId()))
-                throw new NotFoundException("Sub category with id " + sc.getId() + " wasn't found.");
+                throw new NotFoundException("Sub category with id " + sc.getId() + " wasn't found.", sc.getId(), SubCategory.class);
             if (sc.isDeleted()) throw new DeletedException("Sub category with id " + sc.getId() + " is deleted.");
         }
         discount.setSubCategories(subCategories);

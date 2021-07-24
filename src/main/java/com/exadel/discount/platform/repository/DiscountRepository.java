@@ -36,7 +36,8 @@ public interface DiscountRepository extends JpaRepository<Discount, UUID>{
     void useDiscount(@Param("id") UUID id);
 
 
-
     @Query(value = "select * from discount where d_usage_count = (select max(d_usage_count) from discount)", nativeQuery = true)
     Discount findMaxUsedDiscount();
+
+    Discount findDiscountByIdAndIsDeleted(UUID id, boolean idDeleted);
 }

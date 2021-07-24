@@ -1,8 +1,27 @@
 package com.exadel.discount.platform.exception;
 
-public class NotFoundException extends RuntimeException {
+import lombok.Getter;
 
-    public NotFoundException(String message) {
-        super(message);
+import java.util.UUID;
+
+@Getter
+public class NotFoundException extends RuntimeException {
+    private final String message;
+    private final UUID id;
+    private final Class<?> type;
+
+    public NotFoundException(String message, UUID id, Class<?> type) {
+        super();
+        this.message = message;
+        this.id = id;
+        this.type = type;
+    }
+
+    public String getErrorCode() {
+        return type.getSimpleName() + "_not_found";
+    }
+
+    public String getEntityType() {
+        return type.getSimpleName();
     }
 }

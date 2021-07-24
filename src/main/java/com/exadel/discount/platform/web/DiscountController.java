@@ -5,6 +5,7 @@ import com.exadel.discount.platform.domain.enums.SortingType;
 import com.exadel.discount.platform.model.dto.DiscountDto;
 import com.exadel.discount.platform.model.dto.DiscountDtoResponse;
 import com.exadel.discount.platform.model.dto.DiscountUpdateDto;
+import com.exadel.discount.platform.model.dto.UserLoginDTO;
 import com.exadel.discount.platform.service.DiscountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

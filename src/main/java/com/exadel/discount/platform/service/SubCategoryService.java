@@ -19,7 +19,6 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class SubCategoryService {
-
     private final SubCategoryRepository subCategoryRepository;
     private final SubCategoryMapper mapper;
     private final CategoryRepository categoryRepository;
@@ -33,7 +32,6 @@ public class SubCategoryService {
         if (category.isDeleted()) {
             throw new DeletedException("Cannot create SubCategory with deleted Category");
         }
-
         SubCategory savedSubCategory = mapper.dtoToEntity(subCategoryBaseDto);
         savedSubCategory.setCategory(category);
         savedSubCategory = subCategoryRepository.save(savedSubCategory);
@@ -43,19 +41,16 @@ public class SubCategoryService {
     public SubCategoryResponseDto getByCategoryIdAndId(UUID categoryId, UUID id) {
         SubCategory subCategory = subCategoryRepository
                 .findByCategoryIdAndId(categoryId, id)
-                .orElseThrow(() -> new NotFoundException("SubCategory with id " + id + " in Category with id " + categoryId +
-                        " was not found"));
+                .orElseThrow(() -> new NotFoundException("SubCategory with id " + id + " does not exist.", id, SubCategory.class));
         return mapper.entityToResponseDto(subCategory);
     }
 
     public SubCategoryResponseDto update(UUID categoryId, UUID id, SubCategoryBaseDto subCategoryBaseDto) {
         SubCategory subCategory = subCategoryRepository
                 .findByCategoryIdAndId(categoryId, id)
-                .orElseThrow(() -> new NotFoundException("SubCategory with id " + id + " in Category with id " + categoryId +
-                        " was not found"));
+                .orElseThrow(() -> new NotFoundException("SubCategory with id " + id + " does not exist.", id, SubCategory.class));
         if (subCategory.isDeleted()) {
-            throw new DeletedException("Cannot update deleted SubCategory with id" + id
-            );
+            throw new DeletedException("Cannot update deleted SubCategory with id" + id);
         }
         mapper.update(subCategoryBaseDto, subCategory);
         subCategory = subCategoryRepository.save(subCategory);
@@ -67,8 +62,7 @@ public class SubCategoryService {
         if (exists) {
             subCategoryRepository.deleteById(id);
         } else {
-            throw new NotFoundException("SubCategory with id" + id + " in Category with id " + categoryId +
-                    " was not found");
+            throw new NotFoundException("SubCategory with id " + id + " does not exist.", id, SubCategory.class);
         }
     }
 }

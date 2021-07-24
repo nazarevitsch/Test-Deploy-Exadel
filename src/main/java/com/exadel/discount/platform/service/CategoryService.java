@@ -36,7 +36,7 @@ public class CategoryService {
         Category category = categoryRepository
                 .findById(id)
                 .orElseThrow(() -> new NotFoundException("Category with id " + id +
-                        " was not found"));
+                        " does not exist.", id, Category.class));
         return mapper.entityToResponseDto(category);
     }
 
@@ -44,8 +44,7 @@ public class CategoryService {
         Category category = categoryRepository
                 .findById(id)
                 .orElseThrow(() -> new NotFoundException("Category with id " + id +
-                        " was not found"));
-
+                        " does not exist.", id, Category.class));
         if (category.isDeleted()) {
             throw new DeletedException("Cannot update deleted Category with id" + id
             );
@@ -56,12 +55,12 @@ public class CategoryService {
     }
 
     public void toArchive(UUID id) {
-            boolean exists = categoryRepository.existsById(id);
-            if (exists){
-                categoryRepository.deleteById(id);
-                subCategoryRepository.deleteAllByCategoryId(id);
-                return;
-            }
-            throw new NotFoundException("Category with id" + id + " was not found");
+        boolean exists = categoryRepository.existsById(id);
+        if (exists) {
+            categoryRepository.deleteById(id);
+            subCategoryRepository.deleteAllByCategoryId(id);
+            return;
         }
+        throw new NotFoundException("Category with id " + id + " does not exist.", id, Category.class);
+    }
 }
