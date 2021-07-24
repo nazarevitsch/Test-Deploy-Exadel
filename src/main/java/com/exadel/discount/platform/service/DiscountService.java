@@ -91,6 +91,7 @@ public class DiscountService {
         newDiscount.setUsageCount(discount.getUsageCount());
         newDiscount.setVendorId(discount.getVendorId());
         if (!discount.getStartDate().isBefore(ZonedDateTime.now())) {
+            System.out.println("TRUUUUUUUE");
             newDiscount.setStartDate(discount.getStartDate());
         }
 
