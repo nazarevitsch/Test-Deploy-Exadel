@@ -90,6 +90,9 @@ public class DiscountService {
         newDiscount.setId(id);
         newDiscount.setUsageCount(discount.getUsageCount());
         newDiscount.setVendorId(discount.getVendorId());
+        if (!discount.getStartDate().isBefore(ZonedDateTime.now())) {
+            newDiscount.setStartDate(discount.getStartDate());
+        }
 
         validateDiscount(newDiscount, discountUpdateDto.getLocationIds(), discountUpdateDto.getSubCategoryIds());
 
