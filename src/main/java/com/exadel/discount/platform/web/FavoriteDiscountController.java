@@ -20,14 +20,14 @@ public class FavoriteDiscountController {
     @PostMapping(
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    @PreAuthorize("hasAuthority('USER')")
+    @PreAuthorize("hasAnyAuthority('ADMINISTRATOR', 'USER')")
     public ResponseEntity<?> like(@PathVariable UUID id) {
         favoriteDiscountService.like(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping()
-    @PreAuthorize("hasAuthority('USER')")
+    @PreAuthorize("hasAnyAuthority('ADMINISTRATOR', 'USER')")
     public ResponseEntity<?> unLike(@PathVariable UUID id) {
         favoriteDiscountService.unLike(id);
         return new ResponseEntity<>(HttpStatus.OK);
