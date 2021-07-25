@@ -64,7 +64,6 @@ public class Discount {
     @JoinColumn(name = "d_vendor_id", referencedColumnName = "v_id", insertable = false, updatable = false)
     private Vendor vendor;
 
-
     @ManyToMany
     @JoinTable(
             name = "favorite_discount",
@@ -72,7 +71,6 @@ public class Discount {
             inverseJoinColumns = @JoinColumn(name = "fd_user_id")
     )
     private List<User> likedByUsers;
-
 
     @NotNull
     @Column(name = "d_vendor_id")

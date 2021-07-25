@@ -118,7 +118,6 @@ public class DiscountService {
     }
 
     private void validateDiscount(Discount discount, List<UUID> locationsIds, List<UUID> subCategoriesIds, ValidationType validationType) {
-        System.out.println(discount);
         if (!discount.getStartDate().isBefore(discount.getEndDate())) {
             throw new BadRequestException("End time of discount can't be before start time.", discount.getId(), Discount.class,
                     "endDate");

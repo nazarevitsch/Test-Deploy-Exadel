@@ -6,9 +6,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController("/statistic")
+@RestController
+@RequestMapping("/statistic")
 @RequiredArgsConstructor
 public class StatisticController {
 
@@ -23,7 +26,10 @@ public class StatisticController {
 
     @GetMapping("/history")
     @PreAuthorize("hasAnyAuthority('ADMINISTRATOR', 'USER')")
-    public ResponseEntity<?> getUserHistory() {
-        return new ResponseEntity<>(null, HttpStatus.OK);
+    public ResponseEntity<?> getUserHistory(
+            @RequestParam("page") int page,
+            @RequestParam("size") int size
+    ) {
+        return new ResponseEntity<>(statisticService.getUserHistory(page, size), HttpStatus.OK);
     }
 }
