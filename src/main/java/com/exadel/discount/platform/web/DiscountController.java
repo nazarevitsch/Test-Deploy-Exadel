@@ -42,10 +42,11 @@ public class DiscountController {
             @RequestParam(value = "country", required = false) String country,
             @RequestParam(value = "city", required = false) String city,
             @RequestParam(value = "searchWord", required = false) String searchWord,
+            @RequestParam(value = "favourite", required = false) boolean isFavourite,
             @RequestParam(value = "sortingType", required = false) SortingType sortingType
     ) {
         return new ResponseEntity<>(discountService.findAllByFilters(page, size, categoryId, subCategoriesIds, vendorIds,
-                country, city, searchWord, sortingType), HttpStatus.OK);
+                country, city, isFavourite, searchWord, sortingType), HttpStatus.OK);
     }
 
     @GetMapping(value = "/{id}")

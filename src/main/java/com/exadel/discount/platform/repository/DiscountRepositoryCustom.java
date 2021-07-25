@@ -1,6 +1,7 @@
 package com.exadel.discount.platform.repository;
 
 import com.exadel.discount.platform.domain.Discount;
+import com.exadel.discount.platform.domain.MyUserDetails;
 import com.exadel.discount.platform.domain.enums.SortingType;
 import com.exadel.discount.platform.model.SubCategory;
 import com.exadel.discount.platform.model.VendorLocation;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -26,7 +28,7 @@ public class DiscountRepositoryCustom {
 
     public Page<Discount> findAllByFilters(List<UUID> vendorIds, UUID categoryId, List<UUID> subCategoriesIds,
                                            String country, String city, String searchWordRegularExpression,
-                                           SortingType sortingType, Pageable pageable) {
+                                           boolean isFavourite, SortingType sortingType, Pageable pageable) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Discount> criteriaQuery = criteriaBuilder.createQuery(Discount.class);
         Root<Discount> discountRoot = criteriaQuery.from(Discount.class);
@@ -63,6 +65,15 @@ public class DiscountRepositoryCustom {
             Predicate predicateLikeSearchWord = criteriaBuilder.like(criteriaBuilder.upper(discountRoot.get("name")),
                     "%" + searchWordRegularExpression.toUpperCase() + "%");
             predicates.add(predicateLikeSearchWord);
+        }
+
+
+
+        if (isFavourite) {
+            Join<Discount, SubCategory> join3 = discountRoot.join("likedByUsers");
+            Predicate predicateFavourite = criteriaBuilder.equal(join3.get("id"),
+                    ((MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId());
+            predicates.add(predicateFavourite);
         }
 
         Predicate deletedPredicate = criteriaBuilder.equal(discountRoot.get("isDeleted"), false);

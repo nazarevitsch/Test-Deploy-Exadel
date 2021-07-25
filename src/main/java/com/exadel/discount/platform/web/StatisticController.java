@@ -20,4 +20,10 @@ public class StatisticController {
         statisticService.getMainStatistic();
         return new ResponseEntity<>(null, HttpStatus.OK);
     }
+
+    @GetMapping("/history")
+    @PreAuthorize("hasAnyAuthority('ADMINISTRATOR', 'USER')")
+    public ResponseEntity<?> getUserHistory() {
+        return new ResponseEntity<>(null, HttpStatus.OK);
+    }
 }

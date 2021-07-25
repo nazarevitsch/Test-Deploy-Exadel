@@ -17,9 +17,7 @@ public class FavoriteDiscountController {
 
     private final FavoriteDiscountService favoriteDiscountService;
 
-    @PostMapping(
-            produces = MediaType.APPLICATION_JSON_VALUE
-    )
+    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyAuthority('ADMINISTRATOR', 'USER')")
     public ResponseEntity<?> like(@PathVariable UUID id) {
         favoriteDiscountService.like(id);

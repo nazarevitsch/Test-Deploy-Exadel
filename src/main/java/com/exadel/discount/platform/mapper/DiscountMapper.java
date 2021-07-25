@@ -1,12 +1,15 @@
 package com.exadel.discount.platform.mapper;
 
 import com.exadel.discount.platform.domain.Discount;
+import com.exadel.discount.platform.domain.MyUserDetails;
+import com.exadel.discount.platform.domain.User;
 import com.exadel.discount.platform.model.dto.DiscountDto;
 import com.exadel.discount.platform.model.dto.DiscountDtoResponse;
 import com.exadel.discount.platform.model.dto.DiscountUpdateDto;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.data.domain.Page;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 
@@ -20,7 +23,13 @@ public class DiscountMapper {
     }
 
     public DiscountDtoResponse entityToDto(Discount discount) {
-        return modelMapper.map(discount, DiscountDtoResponse.class);
+        DiscountDtoResponse discountDtoResponse = modelMapper.map(discount, DiscountDtoResponse.class);
+        for (User user: discount.getLikedByUsers()) {
+            if (user.getId().equals(((MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId())) {
+                discountDtoResponse.setLiked(true);
+            }
+        }
+        return discountDtoResponse;
     }
 
     public Page<DiscountDtoResponse> map(Page<Discount> discount) {

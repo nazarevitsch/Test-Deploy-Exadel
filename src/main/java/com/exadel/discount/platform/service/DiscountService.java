@@ -81,10 +81,10 @@ public class DiscountService {
     }
 
     public Page<DiscountDtoResponse> findAllByFilters(int page, int size, UUID categoryId, List<UUID> subCategoriesIds,
-                                                      List<UUID> vendorIds, String country, String city, String searchWord,
-                                                      SortingType sortingType) {
+                                                      List<UUID> vendorIds, String country, String city, boolean isFavourite,
+                                                      String searchWord, SortingType sortingType) {
         return discountMapper.map(discountRepositoryCustom.findAllByFilters(vendorIds, categoryId, subCategoriesIds,
-                country, city, searchWord, sortingType, PageRequest.of(page, size)));
+                country, city, searchWord, isFavourite, sortingType, PageRequest.of(page, size)));
     }
 
     public DiscountDtoResponse updateDiscount(UUID id, DiscountUpdateDto discountUpdateDto) {
