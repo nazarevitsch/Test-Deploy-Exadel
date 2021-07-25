@@ -66,15 +66,15 @@ public class DiscountRepositoryCustom {
                     "%" + searchWordRegularExpression.toUpperCase() + "%");
             predicates.add(predicateLikeSearchWord);
         }
-
-
-
         if (isFavourite) {
             Join<Discount, SubCategory> join3 = discountRoot.join("likedByUsers");
             Predicate predicateFavourite = criteriaBuilder.equal(join3.get("id"),
                     ((MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId());
             predicates.add(predicateFavourite);
         }
+
+        Predicate discountNotFinishedPredicate = criteriaBuilder.equal(discountRoot.get("endDate"), ZonedDateTime.now());
+        predicates.add(discountNotFinishedPredicate);
 
         Predicate deletedPredicate = criteriaBuilder.equal(discountRoot.get("isDeleted"), false);
         predicates.add(deletedPredicate);
