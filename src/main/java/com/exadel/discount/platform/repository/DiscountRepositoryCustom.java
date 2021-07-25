@@ -73,7 +73,7 @@ public class DiscountRepositoryCustom {
             predicates.add(predicateFavourite);
         }
 
-        Predicate discountNotFinishedPredicate = criteriaBuilder.equal(discountRoot.get("endDate"), ZonedDateTime.now());
+        Predicate discountNotFinishedPredicate = criteriaBuilder.greaterThanOrEqualTo(discountRoot.get("endDate"), ZonedDateTime.now());
         predicates.add(discountNotFinishedPredicate);
 
         Predicate deletedPredicate = criteriaBuilder.equal(discountRoot.get("isDeleted"), false);
