@@ -3,11 +3,14 @@ package com.exadel.discount.platform.service;
 import com.exadel.discount.platform.domain.*;
 import com.exadel.discount.platform.domain.enums.EmailType;
 import com.exadel.discount.platform.domain.enums.SortingType;
+import com.exadel.discount.platform.domain.enums.ValidationType;
 import com.exadel.discount.platform.exception.DeletedException;
 import com.exadel.discount.platform.exception.NotFoundException;
 import com.exadel.discount.platform.exception.BadRequestException;
 import com.exadel.discount.platform.mapper.DiscountMapper;
+import com.exadel.discount.platform.model.Category;
 import com.exadel.discount.platform.model.SubCategory;
+import com.exadel.discount.platform.model.Vendor;
 import com.exadel.discount.platform.model.VendorLocation;
 import com.exadel.discount.platform.model.dto.DiscountDto;
 import com.exadel.discount.platform.model.dto.DiscountDtoResponse;
@@ -41,6 +44,8 @@ public class DiscountService {
     private final UsedDiscountRepository usedDiscountRepository;
     private final EmailNotificationService emailNotificationService;
     private final UserDetailsService userDetailsService;
+    private final VendorRepository vendorRepository;
+    private final CategoryRepository categoryRepository;
 
     public void useDiscount(UUID discountId) {
         ZonedDateTime now = ZonedDateTime.now();
@@ -65,7 +70,7 @@ public class DiscountService {
 
     public void save(DiscountDto discountDto){
         Discount discount = discountMapper.dtoToEntity(discountDto);
-        validateDiscount(discount, discountDto.getLocationIds(), discountDto.getSubCategoryIds());
+        validateDiscount(discount, discountDto.getLocationIds(), discountDto.getSubCategoryIds(), ValidationType.CREATE);
         discountRepository.save(discount);
     }
 
@@ -90,13 +95,11 @@ public class DiscountService {
         newDiscount.setId(id);
         newDiscount.setUsageCount(discount.getUsageCount());
         newDiscount.setVendorId(discount.getVendorId());
-        System.out.println(discount.getStartDate());
         if (discount.getStartDate().isBefore(ZonedDateTime.now())) {
-            System.out.println("TRUUUUUUUE");
             newDiscount.setStartDate(discount.getStartDate());
         }
 
-        validateDiscount(newDiscount, discountUpdateDto.getLocationIds(), discountUpdateDto.getSubCategoryIds());
+        validateDiscount(newDiscount, discountUpdateDto.getLocationIds(), discountUpdateDto.getSubCategoryIds(), ValidationType.UPDATE);
 
         List<UUID> subIds = discount.getSubCategories().stream().map(SubCategory::getId).collect(Collectors.toList());
         List<UUID> locationsIds = discount.getVendorLocations().stream().map(VendorLocation::getId).collect(Collectors.toList());
@@ -114,26 +117,44 @@ public class DiscountService {
         throw new NotFoundException("Discount with id " + id + " does not .", id, Discount.class);
     }
 
-    private void validateDiscount(Discount discount, List<UUID> locationsIds, List<UUID> subCategoriesIds) {
+    private void validateDiscount(Discount discount, List<UUID> locationsIds, List<UUID> subCategoriesIds, ValidationType validationType) {
         System.out.println(discount);
         if (!discount.getStartDate().isBefore(discount.getEndDate())) {
             throw new BadRequestException("End time of discount can't be before start time.", discount.getId(), Discount.class,
                     "endDate");
         }
-        if (!discount.getStartDate().toLocalDate().equals(LocalDate.now(discount.getStartDate().getZone()))) {
-            if (discount.getStartDate().isBefore(ZonedDateTime.now())) {
-                throw new BadRequestException("Start time of discount should be at last today or later.",
-                        discount.getId(), Discount.class, "startDate");
-            }
+        switch (validationType) {
+            case CREATE:
+                if (!discount.getStartDate().toLocalDate().equals(LocalDate.now(discount.getStartDate().getZone()))) {
+                    if (discount.getStartDate().isBefore(ZonedDateTime.now())) {
+                        throw new BadRequestException("Start time of discount should be at last today or later.",
+                                discount.getId(), Discount.class, "startDate");
+                    }
+                }
+                break;
+            case UPDATE:
+                if (discount.getEndDate().isBefore(ZonedDateTime.now())){
+                    throw new BadRequestException("End time of discount should be later.",
+                            discount.getId(), Discount.class, "endDate");
+                }
+            default:
+                throw new IllegalArgumentException("Incorrect validation's type.");
         }
+        Vendor vendor = Optional.of(vendorRepository.getById(discount.getVendorId()))
+                .orElseThrow(() -> new NotFoundException("Vendor with id" + discount.getVendorId() + " wasn't found.",
+                        discount.getVendorId(), Vendor.class));
         if (!discount.isOnline()) {
             if (locationsIds == null || CollectionUtils.isEmpty(locationsIds)) {
                 throw new BadRequestException("If location/s of discount isn't online, it should have locations.",
                         discount.getId(), Discount.class, "vendorLocations");
             }
             List<VendorLocation> vendorLocations = vendorLocationRepository.findAllById(locationsIds);
+            if (vendorLocations.size() != locationsIds.size()) {
+                throw new BadRequestException("Id/s of location/s is/are incorrect.",
+                        discount.getId(), Discount.class, "vendorLocations");
+            }
             for (VendorLocation vl : vendorLocations) {
-                if (!vl.getVendor().getId().equals(discount.getVendorId()))
+                if (!vl.getVendor().getId().equals(vendor.getId()))
                     throw new NotFoundException("Vendor location with id " + vl.getId() +
                             " does not exist.", vl.getId(), VendorLocation.class);
                 if (vl.isDeleted())
@@ -142,13 +163,20 @@ public class DiscountService {
             }
             discount.setVendorLocations(vendorLocations);
         }
+        Category category = Optional.of(categoryRepository.getById(discount.getCategoryId()))
+                .orElseThrow(() -> new NotFoundException("Category with id" + discount.getCategoryId() + " wasn't found.",
+                discount.getCategoryId(), Category.class));
         if (subCategoriesIds == null || CollectionUtils.isEmpty(subCategoriesIds)) {
             throw new BadRequestException("Each discount should have sub categories.", discount.getId(), Discount.class,
                     "subCategories");
         }
         List<SubCategory> subCategories = subCategoryRepository.findAllById(subCategoriesIds);
+        if (subCategories.size() != subCategoriesIds.size()) {
+            throw new BadRequestException("Id/s of sub category/ies is/are incorrect.",
+                    discount.getId(), Discount.class, "subCategoryLocations");
+        }
         for (SubCategory sc : subCategories) {
-            if (!sc.getCategory().getId().equals(discount.getCategoryId()))
+            if (!sc.getCategory().getId().equals(category.getId()))
                 throw new NotFoundException("SubCategory with id " + sc.getId() +
                         " does not exist.", sc.getId(), SubCategory.class);
             if (sc.isDeleted()) throw new DeletedException("Sub category with id " + sc.getId() +
