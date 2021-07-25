@@ -40,4 +40,10 @@ public interface DiscountRepository extends JpaRepository<Discount, UUID>{
     Discount findMaxUsedDiscount();
 
     Discount findDiscountByIdAndIsDeleted(UUID id, boolean idDeleted);
+
+    Discount findTopByOrderByEndDateDesc();
+
+    int countAllByStartDateBeforeAndEndDateAfter(ZonedDateTime zonedDateTime1, ZonedDateTime zonedDateTime2);
+
+    int countAllBy();
 }

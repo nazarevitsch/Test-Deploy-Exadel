@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.ZonedDateTime;
+
 @RestController
 @RequestMapping("/statistic")
 @RequiredArgsConstructor
@@ -20,16 +22,17 @@ public class StatisticController {
     @GetMapping("/main_statistic")
     @PreAuthorize("hasAuthority('ADMINISTRATOR')")
     public ResponseEntity<?> getMainStatistic() {
-        statisticService.getMainStatistic();
-        return new ResponseEntity<>(null, HttpStatus.OK);
+        return new ResponseEntity<>( statisticService.getMainStatistic(), HttpStatus.OK);
     }
 
     @GetMapping("/history")
     @PreAuthorize("hasAnyAuthority('ADMINISTRATOR', 'USER')")
     public ResponseEntity<?> getUserHistory(
             @RequestParam("page") int page,
-            @RequestParam("size") int size
-    ) {
-        return new ResponseEntity<>(statisticService.getUserHistory(page, size), HttpStatus.OK);
+            @RequestParam("size") int size,
+            @RequestParam(value = "startDate", required = false) ZonedDateTime startDate,
+            @RequestParam(value = "endDate", required = false) ZonedDateTime endDate
+             ) {
+        return new ResponseEntity<>(statisticService.getUserHistory(page, size, startDate, endDate), HttpStatus.OK);
     }
 }

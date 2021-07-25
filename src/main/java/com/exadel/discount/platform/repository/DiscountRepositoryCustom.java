@@ -2,6 +2,7 @@ package com.exadel.discount.platform.repository;
 
 import com.exadel.discount.platform.domain.Discount;
 import com.exadel.discount.platform.domain.MyUserDetails;
+import com.exadel.discount.platform.domain.User;
 import com.exadel.discount.platform.domain.enums.SortingType;
 import com.exadel.discount.platform.model.SubCategory;
 import com.exadel.discount.platform.model.VendorLocation;
@@ -67,7 +68,7 @@ public class DiscountRepositoryCustom {
             predicates.add(predicateLikeSearchWord);
         }
         if (isFavourite) {
-            Join<Discount, SubCategory> join3 = discountRoot.join("likedByUsers");
+            Join<Discount, User> join3 = discountRoot.join("likedByUsers");
             Predicate predicateFavourite = criteriaBuilder.equal(join3.get("id"),
                     ((MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId());
             predicates.add(predicateFavourite);

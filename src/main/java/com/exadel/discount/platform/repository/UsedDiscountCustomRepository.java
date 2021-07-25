@@ -1,5 +1,6 @@
 package com.exadel.discount.platform.repository;
 
+import com.exadel.discount.platform.domain.Discount;
 import com.exadel.discount.platform.domain.MyUserDetails;
 import com.exadel.discount.platform.domain.UsedDiscount;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,12 +23,24 @@ public class UsedDiscountCustomRepository {
     @Autowired
     private EntityManager entityManager;
 
-    public Page<UsedDiscount> findAllByFilters(Pageable pageable) {
+    public Page<UsedDiscount> findAllByFilters(ZonedDateTime startDate, ZonedDateTime endDate, Pageable pageable) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<UsedDiscount> criteriaQuery = criteriaBuilder.createQuery(UsedDiscount.class);
         Root<UsedDiscount> usedDiscountRoot = criteriaQuery.from(UsedDiscount.class);
 
         List<Predicate> predicates = new ArrayList<>();
+
+        if (startDate != null) {
+            Join<Discount, Discount> join1 = usedDiscountRoot.join("discount");
+            Predicate predicateStartDate = criteriaBuilder.greaterThanOrEqualTo(join1.get("startDate"), startDate);
+            predicates.add(predicateStartDate);
+        }
+
+        if (endDate != null) {
+            Join<Discount, Discount> join2 = usedDiscountRoot.join("discount");
+            Predicate predicateEndDate = criteriaBuilder.lessThanOrEqualTo(join2.get("endDate"), endDate);
+            predicates.add(predicateEndDate);
+        }
 
         Predicate predicateUserId = criteriaBuilder.equal(usedDiscountRoot.get("userId"),
                 ((MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId());

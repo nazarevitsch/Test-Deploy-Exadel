@@ -1,12 +1,27 @@
 package com.exadel.discount.platform.model.dto;
 
+import lombok.Data;
+
+@Data
 public class MainStatisticDtoResponse {
 
-    private String theMostPopularVendorTitle;
+    private int userSize;//
 
-    private String theMostPopularDiscountTitle;
+    private DiscountDtoResponse lastUsedDiscount;//
 
-    private String theMostPopularCategoryTitle;
+    private int vendorSize;//
 
-    private String theMostPopularSubCategoryTitle;
+    private int discountSize;//
+
+    private int activeDiscountsSize;//
+
+    private DiscountDtoResponse lastEndingDiscount;//
+
+    private DiscountDtoResponse theMostPopularDiscount;//
+
+    private VendorResponseDto theMostPopularVendor;//
+
+    private CategoryResponseDto theMostPopularCategory;//
+
+    private SubCategoryResponseDto theMostPopularSubCategory;
 }
