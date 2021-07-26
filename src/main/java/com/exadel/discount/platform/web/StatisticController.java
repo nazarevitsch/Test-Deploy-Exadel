@@ -3,8 +3,7 @@ package com.exadel.discount.platform.web;
 import com.exadel.discount.platform.service.StatisticService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.ZonedDateTime;
+import java.util.Date;
 import java.util.UUID;
 
 @RestController
@@ -54,5 +54,15 @@ public class StatisticController {
     ) {
         return new ResponseEntity<>(statisticService.getUsedDiscountHistory(
                 page, size, startDate, endDate, categoryId, subCategoryId, vendorId, userId, country, city), HttpStatus.OK);
+    }
+
+    @GetMapping("/used_discount/history/file")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR')")
+    public ResponseEntity<byte[]> demo() {
+        String demoContent = "This is dynamically generated content in demo file";
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_OCTET_STREAM_VALUE);
+        httpHeaders.set(HttpHeaders.CONTENT_DISPOSITION, ContentDisposition.attachment().filename("statistic_" + new Date().toString() + ".csv").build().toString());
+        return ResponseEntity.ok().headers(httpHeaders).body(demoContent.getBytes());
     }
 }
