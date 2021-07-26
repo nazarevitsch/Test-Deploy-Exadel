@@ -16,6 +16,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.UUID;
 
@@ -41,9 +42,9 @@ public class StatisticService {
 
         mainStatisticDtoResponse.setTheMostPopularDiscount(discountMapper.entityToDto(discountRepository.findMaxUsedDiscount()));
 
-        mainStatisticDtoResponse.setLastUsedDiscount(discountMapper.entityToDto(usedDiscountRepository.findTopByOrderByUsageDateDesc().getDiscount()));
+        mainStatisticDtoResponse.setLastUsedDiscountDate(usedDiscountRepository.findTopByOrderByUsageDateDesc().getUsageDate());
 
-        mainStatisticDtoResponse.setLastEndingDiscount(discountMapper.entityToDto(discountRepository.findTopByOrderByEndDateDesc()));
+        mainStatisticDtoResponse.setLastEndingDiscountDate(discountRepository.findTopByOrderByEndDateDesc().getEndDate());
 
         ZonedDateTime zonedDateTime = ZonedDateTime.now();
         mainStatisticDtoResponse.setActiveDiscountsSize(discountRepository.countAllByStartDateBeforeAndEndDateAfter(zonedDateTime, zonedDateTime));

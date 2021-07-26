@@ -1,7 +1,6 @@
 package com.exadel.discount.platform.repository;
 
 import com.exadel.discount.platform.domain.Discount;
-import com.exadel.discount.platform.domain.MyUserDetails;
 import com.exadel.discount.platform.domain.UsedDiscount;
 import com.exadel.discount.platform.model.SubCategory;
 import com.exadel.discount.platform.model.VendorLocation;
@@ -9,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -27,7 +25,7 @@ public class UsedDiscountCustomRepository {
     private EntityManager entityManager;
 
     public Page<UsedDiscount> findAllByFilters(ZonedDateTime startDate, ZonedDateTime endDate,
-                                               UUID userId,  UUID categoryId, UUID subCategoryId, UUID vendorId,
+                                               UUID userId, UUID categoryId, UUID subCategoryId, UUID vendorId,
                                                String country, String city, Pageable pageable) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<UsedDiscount> criteriaQuery = criteriaBuilder.createQuery(UsedDiscount.class);

@@ -2,6 +2,8 @@ package com.exadel.discount.platform.model.dto;
 
 import lombok.Data;
 
+import java.time.ZonedDateTime;
+
 @Data
 public class MainStatisticDtoResponse {
 
@@ -13,7 +15,7 @@ public class MainStatisticDtoResponse {
 
     private int amountOfUsedDiscount;
 
-    private DiscountDtoResponse lastUsedDiscount;
+    private ZonedDateTime lastUsedDiscountDate;
 
     private int vendorSize;
 
@@ -21,7 +23,7 @@ public class MainStatisticDtoResponse {
 
     private int activeDiscountsSize;
 
-    private DiscountDtoResponse lastEndingDiscount;
+    private ZonedDateTime lastEndingDiscountDate;
 
     private DiscountDtoResponse theMostPopularDiscount;
 
