@@ -32,8 +32,8 @@ public class StatisticController {
     public ResponseEntity<?> getUserHistory(
             @RequestParam("page") int page,
             @RequestParam("size") int size,
-            @RequestParam(value = "startDate", required = false) ZonedDateTime startDate,
-            @RequestParam(value = "endDate", required = false) ZonedDateTime endDate
+            @RequestParam(value = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) ZonedDateTime startDate,
+            @RequestParam(value = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) ZonedDateTime endDate
              ) {
         return new ResponseEntity<>(statisticService.getUserHistory(page, size, startDate, endDate), HttpStatus.OK);
     }
