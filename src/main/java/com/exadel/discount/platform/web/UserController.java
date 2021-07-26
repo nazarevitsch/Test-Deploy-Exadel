@@ -2,6 +2,7 @@ package com.exadel.discount.platform.web;
 
 import com.exadel.discount.platform.config.JWTUtil;
 import com.exadel.discount.platform.domain.Message;
+import com.exadel.discount.platform.model.dto.UserDtoResponse;
 import com.exadel.discount.platform.service.UserService;
 import com.exadel.discount.platform.model.dto.UserLoginDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 @RestController
 @RequestMapping("/user")
@@ -48,9 +51,6 @@ public class UserController {
 
     @PostMapping("/refresh_token")
     public ResponseEntity<?> refreshToken(@CookieValue(name = "refreshToken") String token, HttpServletRequest request) {
-        System.out.println(request.getCookies().length);
-        System.out.println(request.getCookies()[0].getName());
-        System.out.println(request.getCookies()[0].getValue());
         return new ResponseEntity<>(userService.generateAccessToken(token), HttpStatus.OK);
     }
 
@@ -66,5 +66,11 @@ public class UserController {
             return new ResponseEntity<>(new Message("Token is valid."), HttpStatus.OK);
         }
         return new ResponseEntity<>(new Message("Token is invalid."), HttpStatus.UNAUTHORIZED);
+    }
+
+    @GetMapping("/get_users")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR')")
+    public ResponseEntity<List<UserDtoResponse>> getUsers() {
+        return new ResponseEntity<>(userService.getUsers(), HttpStatus.OK);
     }
 }

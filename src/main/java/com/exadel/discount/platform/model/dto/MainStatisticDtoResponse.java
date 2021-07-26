@@ -9,25 +9,25 @@ public class MainStatisticDtoResponse {
 
     private String mostPopularCountry;
 
-    private int userSize;//
+    private int userSize;
 
-    private int amountOfUsedDiscount;//
+    private int amountOfUsedDiscount;
 
-    private DiscountDtoResponse lastUsedDiscount;//
+    private DiscountDtoResponse lastUsedDiscount;
 
-    private int vendorSize;//
+    private int vendorSize;
 
-    private int discountSize;//
+    private int discountSize;
 
-    private int activeDiscountsSize;//
+    private int activeDiscountsSize;
 
-    private DiscountDtoResponse lastEndingDiscount;//
+    private DiscountDtoResponse lastEndingDiscount;
 
-    private DiscountDtoResponse theMostPopularDiscount;//
+    private DiscountDtoResponse theMostPopularDiscount;
 
-    private VendorResponseDto theMostPopularVendor;//
+    private VendorResponseDto theMostPopularVendor;
 
-    private CategoryResponseDto theMostPopularCategory;//
+    private CategoryResponseDto theMostPopularCategory;
 
     private SubCategoryResponseDto theMostPopularSubCategory;
 }

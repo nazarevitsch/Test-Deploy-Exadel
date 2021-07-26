@@ -3,9 +3,12 @@ package com.exadel.discount.platform.service;
 import com.exadel.discount.platform.config.JWTUtil;
 import com.exadel.discount.platform.domain.JWTResponse;
 import com.exadel.discount.platform.domain.User;
+import com.exadel.discount.platform.mapper.UserMapper;
+import com.exadel.discount.platform.model.dto.UserDtoResponse;
 import com.exadel.discount.platform.repository.UserRepository;
 import com.exadel.discount.platform.domain.MyUserDetails;
 import com.exadel.discount.platform.model.dto.UserLoginDTO;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -15,17 +18,23 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class UserService implements UserDetailsService {
 
     @Autowired
     private UserRepository userRepository;
-
     @Autowired
     private JWTUtil jwtUtil;
-
     @Autowired
     private AuthenticationManager authenticationManager;
+    @Autowired
+    private UserMapper userMapper;
+
+    public List<UserDtoResponse> getUsers() {
+        return userMapper.map(userRepository.findAll());
+    }
 
     public JWTResponse login(UserLoginDTO userLogin){
         UserDetails userDetails = loadUserByUsername(userLogin.getEmail());

@@ -1,6 +1,7 @@
 package com.exadel.discount.platform.service;
 
 import com.exadel.discount.platform.converter.VendorMapper;
+import com.exadel.discount.platform.domain.MyUserDetails;
 import com.exadel.discount.platform.mapper.CategoryMapper;
 import com.exadel.discount.platform.mapper.DiscountMapper;
 import com.exadel.discount.platform.mapper.SubCategoryMapper;
@@ -11,9 +12,12 @@ import com.exadel.discount.platform.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.ZonedDateTime;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -67,6 +71,17 @@ public class StatisticService {
 
     public Page<DiscountDtoResponse> getUserHistory(int page, int size, ZonedDateTime startDate, ZonedDateTime endDate) {
         return discountMapper.usedDiscountToDiscountDtoResponse(usedDiscountCustomRepository.
-                findAllByFilters(startDate, endDate, PageRequest.of(page, size)));
+                findAllByFilters(startDate, endDate,
+                        ((MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId(),
+                        null, null, null, null, null,
+                        PageRequest.of(page, size)
+                ));
+    }
+
+    public Page<DiscountDtoResponse> getUsedDiscountHistory(int page, int size, ZonedDateTime startDate, ZonedDateTime endDate,
+                                                            UUID categoryId, UUID subCategoryId, UUID vendorId, UUID userId,
+                                                            String country, String city) {
+        return discountMapper.usedDiscountToDiscountDtoResponse(usedDiscountCustomRepository.findAllByFilters(
+                startDate, endDate, userId, categoryId, subCategoryId, vendorId, country, city, PageRequest.of(page, size)));
     }
 }
