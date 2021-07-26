@@ -43,8 +43,8 @@ public class StatisticController {
     public ResponseEntity<?> getUsedDiscountHistory(
             @RequestParam("page") int page,
             @RequestParam("size") int size,
-            @RequestParam(value = "startDate", required = false) ZonedDateTime startDate,
-            @RequestParam(value = "endDate", required = false) ZonedDateTime endDate,
+            @RequestParam(value = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) ZonedDateTime startDate,
+            @RequestParam(value = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) ZonedDateTime endDate,
             @RequestParam(value = "categoryId", required = false) UUID categoryId,
             @RequestParam(value = "subCategoryId", required = false) UUID subCategoryId,
             @RequestParam(value = "vendorId", required = false) UUID vendorId,
