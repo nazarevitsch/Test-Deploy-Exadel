@@ -27,9 +27,11 @@ public class DiscountMapper {
 
     public DiscountDtoResponse entityToDto(Discount discount) {
         DiscountDtoResponse discountDtoResponse = modelMapper.map(discount, DiscountDtoResponse.class);
-        for (User user: discount.getLikedByUsers()) {
-            if (user.getId().equals(((MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId())) {
-                discountDtoResponse.setLiked(true);
+        if (discount.getLikedByUsers() != null) {
+            for (User user : discount.getLikedByUsers()) {
+                if (user.getId().equals(((MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId())) {
+                    discountDtoResponse.setLiked(true);
+                }
             }
         }
         return discountDtoResponse;
