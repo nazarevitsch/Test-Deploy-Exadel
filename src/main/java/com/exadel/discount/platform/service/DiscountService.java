@@ -136,6 +136,7 @@ public class DiscountService {
                     throw new BadRequestException("End time of discount should be later.",
                             discount.getId(), Discount.class, "endDate");
                 }
+                break;
             default:
                 throw new IllegalArgumentException("Incorrect validation's type.");
         }

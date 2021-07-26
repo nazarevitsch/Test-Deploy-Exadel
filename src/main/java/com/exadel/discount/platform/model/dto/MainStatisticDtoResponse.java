@@ -5,7 +5,13 @@ import lombok.Data;
 @Data
 public class MainStatisticDtoResponse {
 
+    private String mostPopularCity;
+
+    private String mostPopularCountry;
+
     private int userSize;//
+
+    private int amountOfUsedDiscount;//
 
     private DiscountDtoResponse lastUsedDiscount;//
 

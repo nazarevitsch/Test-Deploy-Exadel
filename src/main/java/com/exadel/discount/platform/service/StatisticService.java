@@ -4,6 +4,7 @@ import com.exadel.discount.platform.converter.VendorMapper;
 import com.exadel.discount.platform.mapper.CategoryMapper;
 import com.exadel.discount.platform.mapper.DiscountMapper;
 import com.exadel.discount.platform.mapper.SubCategoryMapper;
+import com.exadel.discount.platform.model.VendorLocation;
 import com.exadel.discount.platform.model.dto.DiscountDtoResponse;
 import com.exadel.discount.platform.model.dto.MainStatisticDtoResponse;
 import com.exadel.discount.platform.repository.*;
@@ -29,13 +30,14 @@ public class StatisticService {
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
     private final SubCategoryRepository subCategoryRepository;
+    private final VendorLocationRepository vendorLocationRepository;
 
     public MainStatisticDtoResponse getMainStatistic() {
         MainStatisticDtoResponse mainStatisticDtoResponse = new MainStatisticDtoResponse();
 
         mainStatisticDtoResponse.setTheMostPopularDiscount(discountMapper.entityToDto(discountRepository.findMaxUsedDiscount()));
 
-        System.out.println(usedDiscountRepository.findTopByOrderByUsageDateDesc().getId());
+        mainStatisticDtoResponse.setLastUsedDiscount(discountMapper.entityToDto(usedDiscountRepository.findTopByOrderByUsageDateDesc().getDiscount()));
 
         mainStatisticDtoResponse.setLastEndingDiscount(discountMapper.entityToDto(discountRepository.findTopByOrderByEndDateDesc()));
 
@@ -53,6 +55,12 @@ public class StatisticService {
         mainStatisticDtoResponse.setTheMostPopularCategory(categoryMapper.entityToResponseDto(categoryRepository.getTheBestCategory()));
 
         mainStatisticDtoResponse.setTheMostPopularSubCategory(subCategoryMapper.entityToResponseDto(subCategoryRepository.getTheBestSubCategory()));
+
+        mainStatisticDtoResponse.setAmountOfUsedDiscount(usedDiscountRepository.findAmountOfUsedDiscount());
+
+        VendorLocation bestVendorLocation = vendorLocationRepository.getTheBestVendorLocation();
+        mainStatisticDtoResponse.setMostPopularCity(bestVendorLocation.getCity());
+        mainStatisticDtoResponse.setMostPopularCountry(bestVendorLocation.getCountry());
 
         return mainStatisticDtoResponse;
     }
