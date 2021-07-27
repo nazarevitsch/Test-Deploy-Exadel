@@ -7,6 +7,7 @@ import com.exadel.discount.platform.mapper.DiscountMapper;
 import com.exadel.discount.platform.mapper.SubCategoryMapper;
 import com.exadel.discount.platform.model.VendorLocation;
 import com.exadel.discount.platform.model.dto.MainStatisticDtoResponse;
+import com.exadel.discount.platform.model.dto.StatisticDiagramResponseDto;
 import com.exadel.discount.platform.model.dto.UsedDiscountDtoResponse;
 import com.exadel.discount.platform.repository.*;
 import lombok.RequiredArgsConstructor;
@@ -83,4 +84,14 @@ public class StatisticService {
         return discountMapper.usedDiscountToUsedDiscountDtoResponse(usedDiscountCustomRepository.findAllByFilters(
                 startDate, endDate, userId, categoryId, subCategoryId, vendorId, country, city, null));
     }
+
+    public StatisticDiagramResponseDto getBestEntities() {
+        StatisticDiagramResponseDto response = new StatisticDiagramResponseDto();
+
+        response.setBestDiscounts(discountMapper.map(discountRepository.findAmountMaxUsedDiscount(5)));
+
+        System.out.println(vendorRepository.getBestVendors(5).get(0).getUsageCount());
+
+        return response;
+    };
 }

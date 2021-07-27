@@ -91,6 +91,6 @@ public class UsedDiscountCustomRepository {
             query.setFirstResult(pageable.getPageNumber() * pageable.getPageSize());
             query.setMaxResults(pageable.getPageSize());
         }
-        return new PageImpl<>(query.getResultList(), pageable != null ? pageable : PageRequest.of(0, 0), size);
+        return new PageImpl<>(query.getResultList(), pageable != null ? pageable : PageRequest.of(0, 1), size);
     }
 }

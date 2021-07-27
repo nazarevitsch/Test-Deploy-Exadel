@@ -63,7 +63,7 @@ public class StatisticController {
 
     @GetMapping("/used_discount/history/file")
     @PreAuthorize("hasAuthority('ADMINISTRATOR')")
-    public void demo(HttpServletResponse response,
+    public void statisticFile(HttpServletResponse response,
                      @RequestParam(value = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) ZonedDateTime startDate,
                      @RequestParam(value = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) ZonedDateTime endDate,
                      @RequestParam(value = "categoryId", required = false) UUID categoryId,
@@ -71,8 +71,7 @@ public class StatisticController {
                      @RequestParam(value = "vendorId", required = false) UUID vendorId,
                      @RequestParam(value = "vendorId", required = false) UUID userId,
                      @RequestParam(value = "country", required = false) String country,
-                     @RequestParam(value = "city", required = false) String city
-    ) throws IOException {
+                     @RequestParam(value = "city", required = false) String city) throws IOException {
         response.setContentType("text/csv");
         response.setHeader("Content-Disposition", String.format("attachment; filename=\"%s\"", "statistic" + new Date().toString() + ".csv"));
 
@@ -88,5 +87,11 @@ public class StatisticController {
             csvWriter.write(usedDiscountDtoResponse, header);
         }
         csvWriter.close();
+    }
+
+    @GetMapping("/diagram_information")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR')")
+    public ResponseEntity<?> diagram() {
+        return new ResponseEntity<>(statisticService.getBestEntities(), HttpStatus.OK);
     }
 }

@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Component
@@ -41,6 +42,10 @@ public class DiscountMapper {
 
     public Page<DiscountDtoResponse> map(Page<Discount> discount) {
        return discount.map(this::entityToDto);
+    }
+
+    public List<DiscountDtoResponse> map(List<Discount> discount) {
+        return discount.stream().map(this::entityToDto).collect(Collectors.toList());
     }
 
     public Discount dtoToEntity(DiscountDto discountDto){
