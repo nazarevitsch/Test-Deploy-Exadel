@@ -19,4 +19,6 @@ public class DiscountDtoResponse extends DiscountBaseDto {
     private VendorResponseDto vendor;
 
     private boolean isLiked;
+
+    private int usageCount;
 }

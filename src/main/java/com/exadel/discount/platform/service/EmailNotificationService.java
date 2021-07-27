@@ -45,6 +45,23 @@ public class EmailNotificationService {
         }
     }
 
+
+    public void notifyUserAboutUsageOfDiscount(String to, Discount discount, UsedDiscount usedDiscount, UserDetails userDetails) {
+        HashMap<String, String> dataEmailTemplate = new HashMap<>();
+        dataEmailTemplate.put("discountTitle", discount.getName());
+        dataEmailTemplate.put("username", userDetails.getName());
+        dataEmailTemplate.put("vendorEmail", discount.getVendor().getEmail());
+        dataEmailTemplate.put("uniqueCode", usedDiscount.getId().toString());
+        dataEmailTemplate.put("vendorTitle", discount.getVendor().getName());
+
+        try {
+            sendHtmlMessage(EmailType.DISCOUNT_USED_NOTIFY_USER, to, "You have just used a discount", dataEmailTemplate);
+        } catch (Exception e) {
+            log.info("Email wasn't sent :(");
+            e.printStackTrace();
+        }
+    }
+
     private void sendSimpleTextMessage(String to, String subject, String text) {
         SimpleMailMessage message = new SimpleMailMessage();
 
@@ -63,6 +80,9 @@ public class EmailNotificationService {
         switch (emailType) {
             case DISCOUNT_USED_NOTIFY_VENDOR:
                 m = mf.compile("templates/discount_used_notify_vendor.html");
+                break;
+            case DISCOUNT_USED_NOTIFY_USER:
+                m = mf.compile("templates/discount_used_notify_user.html");
                 break;
             default:
                 throw new IllegalArgumentException("Incorrect email's type.");

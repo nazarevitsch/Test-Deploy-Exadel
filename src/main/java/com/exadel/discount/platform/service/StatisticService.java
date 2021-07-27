@@ -112,7 +112,6 @@ public class StatisticService {
     public StatisticDiagramResponseDto getBestEntities() {
         StatisticDiagramResponseDto response = new StatisticDiagramResponseDto();
 
-
         response.setBestDiscounts(discountMapper.map(discountRepository.findAmountMaxUsedDiscount(5)));
 
         List<VendorStatisticResponseDto> vendors = vendorMapper.map(vendorRepository.getBestVendors(5));

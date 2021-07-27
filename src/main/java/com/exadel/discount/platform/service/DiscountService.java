@@ -66,6 +66,9 @@ public class DiscountService {
 
         emailNotificationService.notifyVendorAboutUsageOfDiscount(discount.getVendor().getEmail(),
                 discount, details, usedDiscountSaved, userDetails);
+
+        emailNotificationService.notifyUserAboutUsageOfDiscount(discount.getVendor().getEmail(),
+                discount, usedDiscountSaved, userDetails);
     }
 
     public void save(DiscountDto discountDto){
