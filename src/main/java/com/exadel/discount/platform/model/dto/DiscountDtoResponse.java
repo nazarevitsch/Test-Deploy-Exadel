@@ -16,7 +16,7 @@ public class DiscountDtoResponse extends DiscountBaseDto {
 
     private CategoryResponseDto category;
 
-    private VendorResponseDto vendorResponseDto;
+    private VendorResponseDto vendor;
 
     private boolean isLiked;
 }
