@@ -4,6 +4,7 @@ import com.exadel.discount.platform.model.Category;
 import com.exadel.discount.platform.model.SubCategory;
 import com.exadel.discount.platform.model.dto.CategoryDto;
 import com.exadel.discount.platform.model.dto.CategoryResponseDto;
+import com.exadel.discount.platform.model.dto.CategoryStatisticResponseDto;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.stereotype.Component;
@@ -32,6 +33,10 @@ public class CategoryMapper {
         return categoryResponseDto;
     }
 
+    public CategoryStatisticResponseDto entityToResponseStatisticDto(Category category) {
+        return modelMapper.map(category, CategoryStatisticResponseDto.class);
+    }
+
     public void update(CategoryDto categoryDto, Category category) {
         modelMapper.map(categoryDto, category);
     }
@@ -42,5 +47,9 @@ public class CategoryMapper {
 
     public List<CategoryResponseDto> mapList(List<Category> categories) {
         return categories.stream().map(this::entityToResponseDto).collect(Collectors.toList());
+    }
+
+    public List<CategoryStatisticResponseDto> map(List<Category> categories) {
+        return categories.stream().map(this::entityToResponseStatisticDto).collect(Collectors.toList());
     }
 }

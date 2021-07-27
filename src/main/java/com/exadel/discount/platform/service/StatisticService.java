@@ -121,6 +121,12 @@ public class StatisticService {
         }
         response.setBestVendors(vendors);
 
+        List<CategoryStatisticResponseDto> categories = categoryMapper.map(categoryRepository.getBestCategories(5));
+        for (int i = 0; i < categories.size(); i++) {
+            categories.get(i).setUsageCount(categoryRepository.getSumOfDiscountUsageForCategoryById(categories.get(i).getId()));
+        }
+        response.setBestCategories(categories);
+
         return response;
     };
 }
