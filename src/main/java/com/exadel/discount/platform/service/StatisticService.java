@@ -92,10 +92,7 @@ public class StatisticService {
             StatisticResponseDto statisticResponseDto = new StatisticResponseDto();
             statisticResponseDto.setName(a.toList().get(i).getDiscount().getName());
             statisticResponseDto.setCategoryName(a.toList().get(i).getDiscount().getCategory().getName());
-            statisticResponseDto.setCity(a.toList().get(i).getDiscount().getVendorLocations().get(0).getCity());
             statisticResponseDto.setUserEmail(a.toList().get(i).getUser().getEmail());
-            statisticResponseDto.setVendorName(a.toList().get(i).getDiscount().getVendor().getName());
-            statisticResponseDto.setCountry(a.toList().get(i).getDiscount().getVendorLocations().get(0).getCountry());
             response.add(statisticResponseDto);
         }
 
