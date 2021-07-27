@@ -93,6 +93,8 @@ public class StatisticService {
             statisticResponseDto.setName(a.toList().get(i).getDiscount().getName());
             statisticResponseDto.setCategoryName(a.toList().get(i).getDiscount().getCategory().getName());
             statisticResponseDto.setUserEmail(a.toList().get(i).getUser().getEmail());
+            statisticResponseDto.setUsageDate(a.toList().get(i).getUsageDate().toString());
+            statisticResponseDto.setVendorName(a.toList().get(i).getDiscount().getVendor().getName());
             response.add(statisticResponseDto);
         }
 
