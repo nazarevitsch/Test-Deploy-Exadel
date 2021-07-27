@@ -2,7 +2,6 @@ package com.exadel.discount.platform.model;
 
 import lombok.Data;
 import lombok.ToString;
-import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.SQLDelete;
 
@@ -45,8 +44,4 @@ public class Vendor {
     private List<VendorLocation> vendorLocations;
     @Column(name = "v_deleted")
     private boolean deleted;
-
-    @Formula("(select distinct sum(d_usage_count) over (partition by v_id) as sum from vendor " +
-            "join discount on v_id = d_vendor_id where d_vendor_id = v_id)")
-    private int usageCount;
 }

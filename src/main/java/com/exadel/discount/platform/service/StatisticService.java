@@ -90,8 +90,6 @@ public class StatisticService {
 
         response.setBestDiscounts(discountMapper.map(discountRepository.findAmountMaxUsedDiscount(5)));
 
-        System.out.println(vendorRepository.getBestVendors(5).get(0).getUsageCount());
-
         return response;
     };
 }
