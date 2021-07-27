@@ -19,7 +19,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.ZonedDateTime;
 import java.util.Date;
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -49,8 +48,6 @@ public class StatisticController {
     @GetMapping("/used_discount/history")
     @PreAuthorize("hasAuthority('ADMINISTRATOR')")
     public ResponseEntity<?> getUsedDiscountHistory(
-            @RequestParam("page") int page,
-            @RequestParam("size") int size,
             @RequestParam(value = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) ZonedDateTime startDate,
             @RequestParam(value = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) ZonedDateTime endDate,
             @RequestParam(value = "categoryId", required = false) UUID categoryId,
@@ -61,7 +58,7 @@ public class StatisticController {
             @RequestParam(value = "city", required = false) String city
     ) {
         return new ResponseEntity<>(statisticService.getUsedDiscountHistory(
-                page, size, startDate, endDate, categoryId, subCategoryId, vendorId, userId, country, city), HttpStatus.OK);
+                startDate, endDate, categoryId, subCategoryId, vendorId, userId, country, city), HttpStatus.OK);
     }
 
     @GetMapping("/used_discount/history/file")
@@ -86,7 +83,7 @@ public class StatisticController {
         csvWriter.writeHeader(header);
 
         Page<UsedDiscountDtoResponse> a = statisticService.getUsedDiscountHistory(
-                0, 10, startDate, endDate, categoryId, subCategoryId, vendorId, userId, country, city);
+                startDate, endDate, categoryId, subCategoryId, vendorId, userId, country, city);
 
         for (UsedDiscountDtoResponse usedDiscountDtoResponse : a.toList()) {
             csvWriter.write(usedDiscountDtoResponse, header);

@@ -7,6 +7,7 @@ import com.exadel.discount.platform.model.VendorLocation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
@@ -88,8 +89,10 @@ public class UsedDiscountCustomRepository {
 
         TypedQuery<UsedDiscount> query = entityManager.createQuery(criteriaQuery);
         int size = query.getResultList().size();
-        query.setFirstResult(pageable.getPageNumber() * pageable.getPageSize());
-        query.setMaxResults(pageable.getPageSize());
-        return new PageImpl<>(query.getResultList(), pageable, size);
+        if (pageable != null) {
+            query.setFirstResult(pageable.getPageNumber() * pageable.getPageSize());
+            query.setMaxResults(pageable.getPageSize());
+        }
+        return new PageImpl<>(query.getResultList(), pageable != null ? pageable : PageRequest.of(0, 0), size);
     }
 }

@@ -77,10 +77,10 @@ public class StatisticService {
                 ));
     }
 
-    public Page<UsedDiscountDtoResponse> getUsedDiscountHistory(int page, int size, ZonedDateTime startDate, ZonedDateTime endDate,
+    public Page<UsedDiscountDtoResponse> getUsedDiscountHistory(ZonedDateTime startDate, ZonedDateTime endDate,
                                                             UUID categoryId, UUID subCategoryId, UUID vendorId, UUID userId,
                                                             String country, String city) {
         return discountMapper.usedDiscountToUsedDiscountDtoResponse(usedDiscountCustomRepository.findAllByFilters(
-                startDate, endDate, userId, categoryId, subCategoryId, vendorId, country, city, PageRequest.of(page, size)));
+                startDate, endDate, userId, categoryId, subCategoryId, vendorId, country, city, null));
     }
 }
