@@ -2,7 +2,9 @@ package com.exadel.discount.platform.converter;
 
 import com.exadel.discount.platform.model.Vendor;
 import com.exadel.discount.platform.model.dto.VendorDto;
+import com.exadel.discount.platform.model.dto.VendorLocationResponseDto;
 import com.exadel.discount.platform.model.dto.VendorResponseDto;
+import com.exadel.discount.platform.model.dto.VendorStatisticResponseDto;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
@@ -38,5 +40,13 @@ public class VendorMapper {
                 .stream()
                 .map(element -> modelMapper.map(element, targetClass))
                 .collect(Collectors.toList());
+    }
+
+    public VendorStatisticResponseDto entityToStatisticDto(Vendor vendor) {
+        return modelMapper.map(vendor, VendorStatisticResponseDto.class);
+    }
+
+    public List<VendorStatisticResponseDto> map(List<Vendor> vendors) {
+        return vendors.stream().map(el -> entityToStatisticDto(el)).collect(Collectors.toList());
     }
 }

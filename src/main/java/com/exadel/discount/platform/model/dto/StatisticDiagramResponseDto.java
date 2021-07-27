@@ -8,7 +8,7 @@ public class StatisticDiagramResponseDto {
 
     private List<DiscountDtoResponse> bestDiscounts;
 
-    private List<VendorResponseDto> bestVendors;
+    private List<VendorStatisticResponseDto> bestVendors;
 
     private List<CategoryResponseDto> bestCategories;
 }

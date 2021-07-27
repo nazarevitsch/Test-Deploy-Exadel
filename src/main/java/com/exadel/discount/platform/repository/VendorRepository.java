@@ -17,8 +17,11 @@ public interface VendorRepository extends JpaRepository<Vendor, UUID> {
             "join discount on v_id = d_vendor_id order by sum desc limit 1", nativeQuery = true)
     Vendor getTheBestVendor();
 
-    @Query(value = "select  *, sum(d_usage_count) over (partition by v_id) as sum from vendor " +
+    @Query(value = "select distinct *, sum(d_usage_count) over (partition by v_id) as sum from vendor " +
             "join discount on v_id = d_vendor_id order by sum desc limit :size", nativeQuery = true)
     List<Vendor> getBestVendors(@Param("size") int size);
 
+    @Query(value = "select distinct sum(d_usage_count) over (partition by v_id) as sum from vendor " +
+            "join discount on v_id = d_vendor_id where d_vendor_id = :vendor_id", nativeQuery = true)
+    int getSumOfDiscountUsageForVendorById(@Param("vendor_id") UUID id);
 }
