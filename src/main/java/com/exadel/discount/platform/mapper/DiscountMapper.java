@@ -10,6 +10,7 @@ import com.exadel.discount.platform.model.dto.DiscountUpdateDto;
 import com.exadel.discount.platform.model.dto.UsedDiscountDtoResponse;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -22,6 +23,9 @@ import java.util.stream.Collectors;
 @Component
 public class DiscountMapper {
     final private ModelMapper modelMapper;
+
+    @Autowired
+    private UserMapper userMapper;
 
     public DiscountMapper() {
         modelMapper = new ModelMapper();
@@ -56,13 +60,14 @@ public class DiscountMapper {
         return modelMapper.map(discountUpdateDto, Discount.class);
     }
 
-    public UsedDiscountDtoResponse entityToUsedDiscountDto(Discount discount, ZonedDateTime usageDate) {
+    public UsedDiscountDtoResponse entityToUsedDiscountDto(Discount discount, ZonedDateTime usageDate, User user) {
         UsedDiscountDtoResponse usedDiscountDtoResponse = modelMapper.map(discount, UsedDiscountDtoResponse.class);
         usedDiscountDtoResponse.setUsageDate(usageDate);
+        usedDiscountDtoResponse.setUser(userMapper.entityToDto(user));
         return usedDiscountDtoResponse;
     }
 
     public Page<UsedDiscountDtoResponse> usedDiscountToUsedDiscountDtoResponse(Page<UsedDiscount> usedDiscounts) {
-        return usedDiscounts.map((el) -> entityToUsedDiscountDto(el.getDiscount(), el.getUsageDate()));
+        return usedDiscounts.map((el) -> entityToUsedDiscountDto(el.getDiscount(), el.getUsageDate(), el.getUser()));
     }
 }
