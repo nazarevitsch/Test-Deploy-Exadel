@@ -87,13 +87,12 @@ public class StatisticService {
                 startDate, endDate, userId, categoryId, subCategoryId, vendorId, country, city, null);
 
         List<StatisticResponseDto> response = new ArrayList<>();
-
         for (int i = 0; i < a.toList().size(); i++) {
             StatisticResponseDto statisticResponseDto = new StatisticResponseDto();
             statisticResponseDto.setName(a.toList().get(i).getDiscount().getName());
             statisticResponseDto.setCategoryName(a.toList().get(i).getDiscount().getCategory().getName());
             statisticResponseDto.setUserEmail(a.toList().get(i).getUser().getEmail());
-            statisticResponseDto.setUsageDate(a.toList().get(i).getUsageDate().toString());
+            statisticResponseDto.setUsageDate(a.toList().get(i).getUsageDate().toString().split("\\.")[0]);
             statisticResponseDto.setVendorName(a.toList().get(i).getDiscount().getVendor().getName());
             response.add(statisticResponseDto);
         }
