@@ -103,6 +103,13 @@ public class StatisticService {
         return new PageImpl<>(response, PageRequest.of(0,1), response.size());
     }
 
+    public Page<UsedDiscountDtoResponse> getUsedDiscountHistory2(ZonedDateTime startDate, ZonedDateTime endDate,
+                                                             UUID categoryId, UUID subCategoryId, UUID vendorId, UUID userId,
+                                                             String country, String city) {
+        return discountMapper.usedDiscountToUsedDiscountDtoResponse(usedDiscountCustomRepository.findAllByFilters(
+                startDate, endDate, userId, categoryId, subCategoryId, vendorId, country, city, null));
+    }
+
     public StatisticDiagramResponseDto getBestEntities() {
         StatisticDiagramResponseDto response = new StatisticDiagramResponseDto();
 

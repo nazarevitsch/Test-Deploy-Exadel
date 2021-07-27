@@ -80,7 +80,7 @@ public class StatisticController {
         String[] header = { "Id", "Name", "FullDescription", "UsageDate"};
         csvWriter.writeHeader(header);
 
-        Page<UsedDiscountDtoResponse> a = statisticService.getUsedDiscountHistory(
+        Page<UsedDiscountDtoResponse> a = statisticService.getUsedDiscountHistory2(
                 startDate, endDate, categoryId, subCategoryId, vendorId, userId, country, city);
 
         for (UsedDiscountDtoResponse usedDiscountDtoResponse : a.toList()) {
