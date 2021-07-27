@@ -35,14 +35,12 @@ public class UsedDiscountCustomRepository {
         List<Predicate> predicates = new ArrayList<>();
 
         if (startDate != null) {
-            Join<UsedDiscount, Discount> join1 = usedDiscountRoot.join("discount");
-            Predicate predicateStartDate = criteriaBuilder.greaterThanOrEqualTo(join1.get("startDate"), startDate);
+            Predicate predicateStartDate = criteriaBuilder.greaterThanOrEqualTo(usedDiscountRoot.get("usageDate"), startDate);
             predicates.add(predicateStartDate);
         }
 
         if (endDate != null) {
-            Join<UsedDiscount, Discount> join2 = usedDiscountRoot.join("discount");
-            Predicate predicateEndDate = criteriaBuilder.lessThanOrEqualTo(join2.get("endDate"), endDate);
+            Predicate predicateEndDate = criteriaBuilder.lessThanOrEqualTo(usedDiscountRoot.get("usageDate"), endDate);
             predicates.add(predicateEndDate);
         }
 

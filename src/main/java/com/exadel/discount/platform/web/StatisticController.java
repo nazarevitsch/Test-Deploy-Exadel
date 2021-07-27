@@ -73,7 +73,6 @@ public class StatisticController {
                      @RequestParam(value = "country", required = false) String country,
                      @RequestParam(value = "city", required = false) String city
     ) throws IOException {
-
         response.setContentType("text/csv");
         response.setHeader("Content-Disposition", String.format("attachment; filename=\"%s\"", "statistic" + new Date().toString() + ".csv"));
 
