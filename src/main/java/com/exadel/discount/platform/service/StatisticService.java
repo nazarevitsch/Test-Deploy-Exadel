@@ -6,17 +6,15 @@ import com.exadel.discount.platform.mapper.CategoryMapper;
 import com.exadel.discount.platform.mapper.DiscountMapper;
 import com.exadel.discount.platform.mapper.SubCategoryMapper;
 import com.exadel.discount.platform.model.VendorLocation;
-import com.exadel.discount.platform.model.dto.DiscountDtoResponse;
 import com.exadel.discount.platform.model.dto.MainStatisticDtoResponse;
+import com.exadel.discount.platform.model.dto.UsedDiscountDtoResponse;
 import com.exadel.discount.platform.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 
-import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.UUID;
 
@@ -70,8 +68,8 @@ public class StatisticService {
         return mainStatisticDtoResponse;
     }
 
-    public Page<DiscountDtoResponse> getUserHistory(int page, int size, ZonedDateTime startDate, ZonedDateTime endDate) {
-        return discountMapper.usedDiscountToDiscountDtoResponse(usedDiscountCustomRepository.
+    public Page<UsedDiscountDtoResponse> getUserHistory(int page, int size, ZonedDateTime startDate, ZonedDateTime endDate) {
+        return discountMapper.usedDiscountToUsedDiscountDtoResponse(usedDiscountCustomRepository.
                 findAllByFilters(startDate, endDate,
                         ((MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId(),
                         null, null, null, null, null,
@@ -79,10 +77,10 @@ public class StatisticService {
                 ));
     }
 
-    public Page<DiscountDtoResponse> getUsedDiscountHistory(int page, int size, ZonedDateTime startDate, ZonedDateTime endDate,
+    public Page<UsedDiscountDtoResponse> getUsedDiscountHistory(int page, int size, ZonedDateTime startDate, ZonedDateTime endDate,
                                                             UUID categoryId, UUID subCategoryId, UUID vendorId, UUID userId,
                                                             String country, String city) {
-        return discountMapper.usedDiscountToDiscountDtoResponse(usedDiscountCustomRepository.findAllByFilters(
+        return discountMapper.usedDiscountToUsedDiscountDtoResponse(usedDiscountCustomRepository.findAllByFilters(
                 startDate, endDate, userId, categoryId, subCategoryId, vendorId, country, city, PageRequest.of(page, size)));
     }
 }
