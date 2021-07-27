@@ -33,8 +33,6 @@ public class DiscountMapper {
     }
 
     public DiscountDtoResponse entityToDto(Discount discount) {
-        System.out.println("NOONONO");
-        System.out.println(discount.getId());
         DiscountDtoResponse discountDtoResponse = modelMapper.map(discount, DiscountDtoResponse.class);
         if (discount.getLikedByUsers() != null) {
             for (User user : discount.getLikedByUsers()) {

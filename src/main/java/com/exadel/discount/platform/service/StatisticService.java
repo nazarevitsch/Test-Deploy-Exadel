@@ -94,6 +94,7 @@ public class StatisticService {
             statisticResponseDto.setUserEmail(a.toList().get(i).getUser().getEmail());
             statisticResponseDto.setUsageDate(a.toList().get(i).getUsageDate().toString().split("\\.")[0]);
             statisticResponseDto.setVendorName(a.toList().get(i).getDiscount().getVendor().getName());
+            statisticResponseDto.setId(a.toList().get(i).getId());
             response.add(statisticResponseDto);
         }
 
@@ -113,7 +114,6 @@ public class StatisticService {
 
 
         response.setBestDiscounts(discountMapper.map(discountRepository.findAmountMaxUsedDiscount(5)));
-
 
         List<VendorStatisticResponseDto> vendors = vendorMapper.map(vendorRepository.getBestVendors(5));
         for (int i = 0; i < vendors.size(); i++) {
