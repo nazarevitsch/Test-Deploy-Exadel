@@ -9,5 +9,5 @@ public class UserDtoResponse {
 
     private UUID id;
 
-    private String name;
+    private String email;
 }
