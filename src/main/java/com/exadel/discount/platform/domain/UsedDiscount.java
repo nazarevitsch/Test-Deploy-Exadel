@@ -37,6 +37,10 @@ public class UsedDiscount {
     @JoinColumn(name = "ud_discount_id", referencedColumnName = "d_id", insertable = false, updatable = false)
     private Discount discount;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ud_user_id", referencedColumnName = "u_id", insertable = false, updatable = false)
+    private User user;
+
     @CreationTimestamp
     @Column(name = "ud_usage_date")
     private ZonedDateTime usageDate;

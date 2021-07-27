@@ -8,4 +8,6 @@ import java.time.ZonedDateTime;
 public class UsedDiscountDtoResponse extends DiscountDtoResponse{
 
     private ZonedDateTime usageDate;
+
+    private UserDtoResponse user;
 }
