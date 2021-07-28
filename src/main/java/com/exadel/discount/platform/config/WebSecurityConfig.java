@@ -80,7 +80,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements W
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("http://localhost:3000/", "https://stormy-shelf-54856.herokuapp.com/")
+                .allowedOrigins("http://localhost:3000/", "https://reactcourse-4fc5b.web.app/")
                 .allowedMethods("OPTIONS", "GET", "POST", "PUT", "DELETE")
                 .allowCredentials(true);
     }
